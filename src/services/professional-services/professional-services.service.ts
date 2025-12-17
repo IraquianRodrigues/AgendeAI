@@ -141,7 +141,8 @@ export class ProfessionalServicesService {
 
     if (error) {
       console.error("Erro ao criar associação:", error);
-      throw new Error("Falha ao criar associação");
+      // Passa a mensagem de erro original para ajudar no debug
+      throw new Error(error.message || "Falha ao criar associação");
     }
 
     return data;

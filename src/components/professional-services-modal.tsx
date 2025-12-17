@@ -184,8 +184,12 @@ export function ProfessionalServicesModal({
       toast.success("Serviço adicionado ao profissional!");
       setSelectedServiceId(null);
       setCustomDuration("");
-    } catch (error) {
-      toast.error("Erro ao adicionar serviço");
+    } catch (error: any) {
+      console.error("Erro ao adicionar serviço:", error);
+      const errorMessage = error?.message || "Erro desconhecido";
+      toast.error(
+        `Erro ao adicionar serviço: ${errorMessage}. Verifique se a tabela professional_services existe no banco.`
+      );
     }
   };
 

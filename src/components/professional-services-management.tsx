@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,27 +49,65 @@ export function ProfessionalServicesManagement({
   const updateMutation = useUpdateProfessionalService();
   const deleteMutation = useDeleteProfessionalService();
 
-  // Inicializa os estados dos serviços
+  // Chave de comparação estável
+  const servicesKey = useMemo(
+    () =>
+      allServices
+        .map((s) => s.id)
+        .sort()
+        .join(","),
+    [allServices]
+  );
+  const associationsKey = useMemo(
+    () =>
+      professionalServices
+        .map((ps) => `${ps.service_id}:${ps.id}:${ps.custom_duration_minutes}:${ps.is_active}`)
+        .sort()
+        .join(","),
+    [professionalServices]
+  );
+
+  const previousKeyRef = useRef<string>("");
+
+  // Inicializa os estados dos serviços apenas quando os dados mudarem
   useEffect(() => {
+    const currentKey = `${servicesKey}|${associationsKey}`;
+
+    // Só atualiza se a chave mudou
+    if (currentKey === previousKeyRef.current) {
+      return;
+    }
+
+    previousKeyRef.current = currentKey;
+
+    // Só atualiza se temos serviços carregados
+    if (allServices.length === 0) {
+      setServiceStates(new Map());
+      return;
+    }
+
     const newStates = new Map<number, ServiceState>();
+    const associationMap = new Map<number, typeof professionalServices[0]>();
+    professionalServices.forEach((ps) => {
+      associationMap.set(ps.service_id, ps);
+    });
 
     allServices.forEach((service) => {
-      const association = professionalServices.find(
-        (ps) => ps.service_id === service.id
-      );
+      const association = associationMap.get(service.id);
 
       newStates.set(service.id, {
         serviceId: service.id,
         associationId: association?.id || null,
         isActive: association?.is_active || false,
-        customDuration: association?.custom_duration_minutes || service.duration_minutes,
+        customDuration:
+          association?.custom_duration_minutes || service.duration_minutes,
         defaultDuration: service.duration_minutes,
         isEditing: false,
       });
     });
 
     setServiceStates(newStates);
-  }, [allServices, professionalServices]);
+  }, [servicesKey, associationsKey, allServices, professionalServices]);
 
   const handleToggleService = async (serviceId: number) => {
     const state = serviceStates.get(serviceId);
