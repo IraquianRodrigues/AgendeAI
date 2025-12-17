@@ -13,6 +13,7 @@ export interface Database {
           customer_phone: string;
           start_time: string;
           end_time: string;
+          completed_at: string | null;
         };
         Insert: Omit<
           Database["public"]["Tables"]["appointments"]["Row"],

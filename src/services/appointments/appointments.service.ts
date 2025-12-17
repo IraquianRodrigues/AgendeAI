@@ -113,6 +113,7 @@ export class AppointmentsService {
       customer_phone: string;
       start_time: string;
       end_time: string;
+      completed_at: string | null;
     }>
   ): Promise<void> {
     const { error } = await this.supabase
@@ -123,6 +124,59 @@ export class AppointmentsService {
     if (error) {
       console.error("Erro ao atualizar appointment:", error);
       throw new Error("Falha ao atualizar agendamento");
+    }
+  }
+
+  /**
+   * Marca um appointment como concluído
+   */
+  async markAsCompleted(id: number): Promise<void> {
+    const { error, data } = await this.supabase
+      .from("appointments")
+      .update({ completed_at: new Date().toISOString() })
+      .eq("id", id)
+      .select();
+
+    if (error) {
+      console.error("Erro ao marcar appointment como concluído:", error);
+      
+      // Verificar se o erro é devido à coluna não existir
+      if (error.code === "42703" || error.message?.includes("column") || error.message?.includes("completed_at")) {
+        throw new Error(
+          "A coluna 'completed_at' não existe no banco de dados. " +
+          "Por favor, execute o script SQL: scripts/add-completed-at-column.sql"
+        );
+      }
+      
+      throw new Error(
+        error.message || "Falha ao marcar agendamento como concluído"
+      );
+    }
+  }
+
+  /**
+   * Desmarca um appointment como concluído
+   */
+  async markAsNotCompleted(id: number): Promise<void> {
+    const { error } = await this.supabase
+      .from("appointments")
+      .update({ completed_at: null })
+      .eq("id", id);
+
+    if (error) {
+      console.error("Erro ao desmarcar appointment como concluído:", error);
+      
+      // Verificar se o erro é devido à coluna não existir
+      if (error.code === "42703" || error.message?.includes("column") || error.message?.includes("completed_at")) {
+        throw new Error(
+          "A coluna 'completed_at' não existe no banco de dados. " +
+          "Por favor, execute o script SQL: scripts/add-completed-at-column.sql"
+        );
+      }
+      
+      throw new Error(
+        error.message || "Falha ao desmarcar agendamento como concluído"
+      );
     }
   }
 

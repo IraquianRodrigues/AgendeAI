@@ -61,6 +61,30 @@ export function useDeleteAppointment() {
   });
 }
 
+export function useMarkAppointmentAsCompleted() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: number) => appointmentsService.markAsCompleted(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["appointments"] });
+      queryClient.invalidateQueries({ queryKey: ["appointment"] });
+    },
+  });
+}
+
+export function useMarkAppointmentAsNotCompleted() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: number) => appointmentsService.markAsNotCompleted(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["appointments"] });
+      queryClient.invalidateQueries({ queryKey: ["appointment"] });
+    },
+  });
+}
+
 /**
  * Hook para buscar serviços disponíveis para um profissional
  */
