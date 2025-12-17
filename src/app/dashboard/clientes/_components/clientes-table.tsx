@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,7 +14,7 @@ interface ClientesTableProps {
   isLoading?: boolean;
 }
 
-const ITEMS_PER_PAGE = 15;
+const ITEMS_PER_PAGE = 5;
 
 export function ClientesTable({
   clientes,
@@ -41,16 +41,18 @@ export function ClientesTable({
   const paginatedClientes = filteredClientes.slice(startIndex, endIndex);
 
   // Reset para primeira página quando filtrar
-  useMemo(() => {
+  useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery]);
 
   if (isLoading) {
     return (
-      <Card className="p-12">
+      <Card className="p-12 border shadow-sm">
         <div className="flex flex-col items-center justify-center gap-4">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-          <p className="text-muted-foreground">Carregando clientes...</p>
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-muted-foreground font-medium">
+            Carregando clientes...
+          </p>
         </div>
       </Card>
     );
@@ -58,9 +60,14 @@ export function ClientesTable({
 
   if (clientes.length === 0) {
     return (
-      <Card className="p-12">
-        <div className="text-center">
-          <p className="text-muted-foreground">Nenhum cliente cadastrado</p>
+      <Card className="p-12 border shadow-sm">
+        <div className="text-center space-y-2">
+          <p className="text-base font-medium text-muted-foreground">
+            Nenhum cliente cadastrado
+          </p>
+          <p className="text-sm text-muted-foreground/70">
+            Os clientes cadastrados aparecerão aqui
+          </p>
         </div>
       </Card>
     );
@@ -68,10 +75,12 @@ export function ClientesTable({
 
   return (
     <>
-      <Card>
-        <div className="p-6 space-y-4">
-          <div>
-            <h2 className="text-xl font-semibold">Lista de Clientes</h2>
+      <Card className="overflow-hidden border shadow-sm">
+        <div className="p-6 space-y-6 bg-gradient-to-br from-white to-muted/20">
+          <div className="space-y-1">
+            <h2 className="text-2xl font-bold tracking-tight">
+              Lista de Clientes
+            </h2>
             <p className="text-sm text-muted-foreground">
               Visualize e gerencie os clientes cadastrados
             </p>
@@ -82,7 +91,7 @@ export function ClientesTable({
               placeholder="Buscar por nome do cliente..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9"
+              className="pl-9 h-10 shadow-sm focus-visible:ring-2"
             />
           </div>
         </div>
@@ -90,17 +99,17 @@ export function ClientesTable({
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-y bg-muted/30">
-                <th className="text-left p-4 font-medium text-sm text-muted-foreground">
+              <tr className="border-b bg-gradient-to-r from-muted/50 to-muted/30">
+                <th className="text-left p-4 font-semibold text-sm text-foreground uppercase tracking-wider">
                   Nome
                 </th>
-                <th className="text-left p-4 font-medium text-sm text-muted-foreground">
+                <th className="text-left p-4 font-semibold text-sm text-foreground uppercase tracking-wider">
                   Telefone
                 </th>
-                <th className="text-left p-4 font-medium text-sm text-muted-foreground">
+                <th className="text-left p-4 font-semibold text-sm text-foreground uppercase tracking-wider">
                   Status
                 </th>
-                <th className="text-left p-4 font-medium text-sm text-muted-foreground">
+                <th className="text-left p-4 font-semibold text-sm text-foreground uppercase tracking-wider">
                   Ações
                 </th>
               </tr>
@@ -112,36 +121,61 @@ export function ClientesTable({
                     colSpan={4}
                     className="p-12 text-center text-muted-foreground"
                   >
-                    Nenhum cliente encontrado
+                    <div className="flex flex-col items-center gap-2">
+                      <p className="text-base">Nenhum cliente encontrado</p>
+                      <p className="text-sm text-muted-foreground/70">
+                        Tente ajustar a busca ou verificar os filtros
+                      </p>
+                    </div>
                   </td>
                 </tr>
               ) : (
                 paginatedClientes.map((cliente) => {
+                  const isBlocked = cliente.trava;
                   return (
                     <tr
                       key={cliente.id}
-                      className="border-b hover:bg-muted/20 transition-colors"
+                      className={`border-b transition-all hover:bg-gradient-to-r hover:from-primary/5 hover:to-primary/2 group ${
+                        isBlocked ? "bg-red-50/30" : ""
+                      }`}
                     >
                       <td className="p-4">
-                        <span className="font-medium">{cliente.nome}</span>
+                        <span
+                          className={`font-semibold group-hover:text-primary transition-colors ${
+                            isBlocked ? "text-red-700" : "text-foreground"
+                          }`}
+                        >
+                          {cliente.nome}
+                        </span>
                       </td>
                       <td className="p-4">
-                        <span className="text-sm text-muted-foreground">
+                        <span className="text-sm text-muted-foreground font-mono">
                           {cliente.telefone}
                         </span>
                       </td>
                       <td className="p-4">
                         {cliente.trava ? (
-                          <Badge variant="destructive">Bloqueado</Badge>
+                          <Badge
+                            variant="destructive"
+                            className="font-semibold shadow-sm"
+                          >
+                            Bloqueado
+                          </Badge>
                         ) : (
-                          <Badge variant="default">Ativo</Badge>
+                          <Badge
+                            variant="default"
+                            className="bg-green-600 hover:bg-green-700 text-white font-semibold shadow-sm"
+                          >
+                            Ativo
+                          </Badge>
                         )}
                       </td>
                       <td className="p-4">
                         <Button
-                          variant="ghost"
+                          variant="outline"
                           size="sm"
                           onClick={() => setSelectedCliente(cliente)}
+                          className="hover:bg-primary hover:text-primary-foreground transition-all shadow-sm hover:shadow-md"
                         >
                           Ver Detalhes
                         </Button>
@@ -156,11 +190,13 @@ export function ClientesTable({
 
         {/* Paginação */}
         {totalPages > 1 && (
-          <div className="p-4 border-t flex items-center justify-between">
-            <div className="text-sm text-muted-foreground">
-              Mostrando {startIndex + 1} a{" "}
-              {Math.min(endIndex, filteredClientes.length)} de{" "}
-              {filteredClientes.length} clientes
+          <div className="p-4 border-t bg-muted/20 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-sm text-muted-foreground font-medium">
+              Mostrando <span className="font-semibold text-foreground">{startIndex + 1}</span> a{" "}
+              <span className="font-semibold text-foreground">
+                {Math.min(endIndex, filteredClientes.length)}
+              </span>{" "}
+              de <span className="font-semibold text-foreground">{filteredClientes.length}</span> clientes
             </div>
             <div className="flex items-center gap-2">
               <Button
@@ -168,11 +204,12 @@ export function ClientesTable({
                 size="sm"
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
+                className="shadow-sm hover:shadow-md transition-all"
               >
                 <ChevronLeft className="h-4 w-4" />
                 Anterior
               </Button>
-              <div className="text-sm font-medium">
+              <div className="text-sm font-semibold px-3 py-1.5 bg-primary/10 text-primary rounded-md">
                 Página {currentPage} de {totalPages}
               </div>
               <Button
@@ -182,6 +219,7 @@ export function ClientesTable({
                   setCurrentPage((p) => Math.min(totalPages, p + 1))
                 }
                 disabled={currentPage === totalPages}
+                className="shadow-sm hover:shadow-md transition-all"
               >
                 Próxima
                 <ChevronRight className="h-4 w-4" />

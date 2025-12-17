@@ -15,6 +15,13 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Briefcase, Clock, Plus, Check, X, Loader2 } from "lucide-react";
 import type { ProfessionalRow, ServiceRow, ProfessionalServiceWithRelations } from "@/types/database.types";
 import { toast } from "sonner";
@@ -256,8 +263,8 @@ export function ProfessionalServicesModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl max-h-[80vh] p-0">
-        <DialogHeader className="px-6 pt-6 pb-4">
+      <DialogContent className="max-w-3xl max-h-[80vh] flex flex-col p-0">
+        <DialogHeader className="px-6 pt-6 pb-4 flex-shrink-0">
           <DialogTitle className="text-xl sm:text-2xl">
             Gerenciar Serviços - {professional.name}
           </DialogTitle>
@@ -267,7 +274,7 @@ export function ProfessionalServicesModal({
           </DialogDescription>
         </DialogHeader>
 
-        <ScrollArea className="h-[calc(80vh-180px)] px-6">
+        <ScrollArea className="flex-1 px-6 min-h-0">
           <div className="space-y-6 pb-6 pr-4">
             {/* Adicionar novo serviço */}
             <div className="space-y-4">
@@ -275,37 +282,39 @@ export function ProfessionalServicesModal({
                 <Plus className="h-5 w-5 text-primary" />
                 Adicionar Serviço
               </h3>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <div className="flex-1">
-                  <Label htmlFor="service-select" className="sr-only">
-                    Selecionar Serviço
+              <div className="flex flex-col sm:flex-row gap-3 items-end">
+                <div className="flex-1 w-full">
+                  <Label htmlFor="service-select" className="mb-2 block text-sm font-medium">
+                    Serviço
                   </Label>
-                  <select
-                    id="service-select"
-                    className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm"
-                    value={selectedServiceId || ""}
-                    onChange={(e) =>
-                      setSelectedServiceId(
-                        e.target.value ? Number(e.target.value) : null
-                      )
+                  <Select
+                    value={selectedServiceId?.toString() || ""}
+                    onValueChange={(value) =>
+                      setSelectedServiceId(value ? Number(value) : null)
                     }
                     disabled={isPending || availableServices.length === 0}
                   >
-                    <option value="">
-                      {availableServices.length === 0
-                        ? "Todos os serviços já adicionados"
-                        : "Selecione um serviço"}
-                    </option>
-                    {availableServices.map((service) => (
-                      <option key={service.id} value={service.id}>
-                        {service.code} ({service.duration_minutes} min padrão)
-                      </option>
-                    ))}
-                  </select>
+                    <SelectTrigger id="service-select" className="w-full h-10">
+                      <SelectValue
+                        placeholder={
+                          availableServices.length === 0
+                            ? "Todos os serviços já adicionados"
+                            : "Selecione um serviço"
+                        }
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {availableServices.map((service) => (
+                        <SelectItem key={service.id} value={service.id.toString()}>
+                          {service.code} ({service.duration_minutes} min padrão)
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="w-full sm:w-32">
-                  <Label htmlFor="duration-input" className="sr-only">
-                    Duração
+                  <Label htmlFor="duration-input" className="mb-2 block text-sm font-medium">
+                    Minutos
                   </Label>
                   <Input
                     id="duration-input"
@@ -315,6 +324,7 @@ export function ProfessionalServicesModal({
                     value={customDuration}
                     onChange={(e) => setCustomDuration(e.target.value)}
                     disabled={isPending || !selectedServiceId}
+                    className="h-10"
                   />
                 </div>
                 <Button
@@ -325,7 +335,7 @@ export function ProfessionalServicesModal({
                     !customDuration ||
                     parseInt(customDuration) <= 0
                   }
-                  className="gap-2"
+                  className="gap-2 h-10"
                 >
                   <Plus className="h-4 w-4" />
                   Adicionar
@@ -371,8 +381,12 @@ export function ProfessionalServicesModal({
           </div>
         </ScrollArea>
 
-        <DialogFooter className="px-6 pb-6 pt-4 border-t">
-          <Button onClick={onClose} variant="outline">
+        <DialogFooter className="px-6 pb-6 pt-4 border-t flex-shrink-0">
+          <Button 
+            onClick={onClose} 
+            variant="outline"
+            className="w-full sm:w-auto"
+          >
             Fechar
           </Button>
         </DialogFooter>
