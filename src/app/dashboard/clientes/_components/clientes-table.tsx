@@ -76,12 +76,12 @@ export function ClientesTable({
   return (
     <>
       <Card className="overflow-hidden border shadow-sm">
-        <div className="p-6 space-y-6 bg-gradient-to-br from-white to-muted/20">
+        <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 bg-gradient-to-br from-white to-muted/20">
           <div className="space-y-1">
-            <h2 className="text-2xl font-bold tracking-tight">
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight">
               Lista de Clientes
             </h2>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs sm:text-sm text-muted-foreground">
               Visualize e gerencie os clientes cadastrados
             </p>
           </div>
@@ -91,12 +91,81 @@ export function ClientesTable({
               placeholder="Buscar por nome do cliente..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 h-10 shadow-sm focus-visible:ring-2"
+              className="pl-9 h-10 text-sm shadow-sm focus-visible:ring-2"
             />
           </div>
         </div>
 
-        <div className="overflow-x-auto">
+        {/* Versão Mobile - Cards */}
+        <div className="block sm:hidden space-y-3 p-4">
+          {paginatedClientes.length === 0 ? (
+            <div className="p-12 text-center text-muted-foreground">
+              <div className="flex flex-col items-center gap-2">
+                <p className="text-base">Nenhum cliente encontrado</p>
+                <p className="text-sm text-muted-foreground/70">
+                  Tente ajustar a busca ou verificar os filtros
+                </p>
+              </div>
+            </div>
+          ) : (
+            paginatedClientes.map((cliente) => {
+              const isBlocked = cliente.trava;
+              return (
+                <Card
+                  key={cliente.id}
+                  className={`p-4 border shadow-sm transition-all hover:shadow-md ${
+                    isBlocked ? "bg-red-50/30 border-red-200" : ""
+                  }`}
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <h3
+                          className={`font-semibold text-base truncate ${
+                            isBlocked ? "text-red-700" : "text-foreground"
+                          }`}
+                        >
+                          {cliente.nome}
+                        </h3>
+                        <p className="text-sm text-muted-foreground font-mono mt-1">
+                          {cliente.telefone}
+                        </p>
+                      </div>
+                      <div className="flex-shrink-0">
+                        {cliente.trava ? (
+                          <Badge
+                            variant="destructive"
+                            className="font-semibold shadow-sm text-xs"
+                          >
+                            Bloqueado
+                          </Badge>
+                        ) : (
+                          <Badge
+                            variant="default"
+                            className="bg-green-600 hover:bg-green-700 text-white font-semibold shadow-sm text-xs"
+                          >
+                            Ativo
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSelectedCliente(cliente)}
+                      className="w-full hover:bg-primary hover:text-primary-foreground transition-all shadow-sm hover:shadow-md"
+                    >
+                      Ver Detalhes
+                    </Button>
+                  </div>
+                </Card>
+              );
+            })
+          )}
+        </div>
+
+        {/* Versão Desktop - Tabela */}
+        <div className="hidden sm:block overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b bg-gradient-to-r from-muted/50 to-muted/30">
@@ -190,27 +259,27 @@ export function ClientesTable({
 
         {/* Paginação */}
         {totalPages > 1 && (
-          <div className="p-4 border-t bg-muted/20 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="text-sm text-muted-foreground font-medium">
+          <div className="p-3 sm:p-4 border-t bg-muted/20 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+            <div className="text-xs sm:text-sm text-muted-foreground font-medium text-center sm:text-left">
               Mostrando <span className="font-semibold text-foreground">{startIndex + 1}</span> a{" "}
               <span className="font-semibold text-foreground">
                 {Math.min(endIndex, filteredClientes.length)}
               </span>{" "}
               de <span className="font-semibold text-foreground">{filteredClientes.length}</span> clientes
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-full sm:w-auto justify-center">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
-                className="shadow-sm hover:shadow-md transition-all"
+                className="shadow-sm hover:shadow-md transition-all flex-1 sm:flex-none"
               >
                 <ChevronLeft className="h-4 w-4" />
-                Anterior
+                <span className="hidden sm:inline">Anterior</span>
               </Button>
-              <div className="text-sm font-semibold px-3 py-1.5 bg-primary/10 text-primary rounded-md">
-                Página {currentPage} de {totalPages}
+              <div className="text-xs sm:text-sm font-semibold px-2 sm:px-3 py-1.5 bg-primary/10 text-primary rounded-md whitespace-nowrap">
+                {currentPage}/{totalPages}
               </div>
               <Button
                 variant="outline"
@@ -219,9 +288,9 @@ export function ClientesTable({
                   setCurrentPage((p) => Math.min(totalPages, p + 1))
                 }
                 disabled={currentPage === totalPages}
-                className="shadow-sm hover:shadow-md transition-all"
+                className="shadow-sm hover:shadow-md transition-all flex-1 sm:flex-none"
               >
-                Próxima
+                <span className="hidden sm:inline">Próxima</span>
                 <ChevronRight className="h-4 w-4" />
               </Button>
             </div>

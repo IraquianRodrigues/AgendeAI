@@ -61,23 +61,23 @@ function ServiceItem({
   const [isEditing, setIsEditing] = useState(false);
 
   return (
-    <div className="flex items-center gap-3 p-4 border rounded-lg">
-      <div className="flex-1">
-        <div className="flex items-center gap-2">
-          <span className="font-medium font-mono">{ps.service?.code}</span>
-          <Badge variant={ps.is_active ? "default" : "secondary"}>
+    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 p-2.5 sm:p-4 border rounded-lg">
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="font-medium font-mono text-xs sm:text-base break-all">{ps.service?.code}</span>
+          <Badge variant={ps.is_active ? "default" : "secondary"} className="text-xs">
             {ps.is_active ? "Ativo" : "Inativo"}
           </Badge>
         </div>
-        <div className="flex items-center gap-2 mt-1">
-          <Clock className="h-3 w-3 text-muted-foreground" />
+        <div className="flex items-center gap-2 mt-1 flex-wrap">
+          <Clock className="h-3 w-3 text-muted-foreground flex-shrink-0" />
           {isEditing ? (
             <Input
               type="number"
               min="1"
               value={editingDuration}
               onChange={(e) => setEditingDuration(e.target.value)}
-              className="w-20 h-7 text-sm"
+              className="w-18 sm:w-20 h-7 text-xs sm:text-sm"
               autoFocus
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
@@ -93,7 +93,7 @@ function ServiceItem({
           ) : (
             <button
               onClick={() => setIsEditing(true)}
-              className="text-sm text-muted-foreground hover:text-foreground"
+              className="text-xs sm:text-sm text-muted-foreground hover:text-foreground"
             >
               {ps.custom_duration_minutes} minutos
             </button>
@@ -106,22 +106,23 @@ function ServiceItem({
             )}
         </div>
       </div>
-      <div className="flex gap-2">
+      <div className="flex gap-1.5 sm:gap-2 flex-shrink-0">
         <Button
           variant="ghost"
           size="sm"
           onClick={() => onToggleActive(ps.id)}
           disabled={isPending}
+          className="text-xs sm:text-sm h-7 sm:h-8 px-2 sm:px-3"
         >
           {ps.is_active ? (
             <>
-              <X className="h-4 w-4 mr-1" />
-              Desativar
+              <X className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
+              <span className="hidden sm:inline">Desativar</span>
             </>
           ) : (
             <>
-              <Check className="h-4 w-4 mr-1" />
-              Ativar
+              <Check className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
+              <span className="hidden sm:inline">Ativar</span>
             </>
           )}
         </Button>
@@ -130,9 +131,10 @@ function ServiceItem({
           size="sm"
           onClick={() => onRemove(ps.id)}
           disabled={isPending}
-          className="text-destructive hover:text-destructive"
+          className="text-destructive hover:text-destructive text-xs sm:text-sm h-7 sm:h-8 px-2 sm:px-3"
         >
-          Remover
+          <span className="hidden sm:inline">Remover</span>
+          <span className="sm:hidden">Rem</span>
         </Button>
       </div>
     </div>
@@ -263,28 +265,28 @@ export function ProfessionalServicesModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl max-h-[80vh] flex flex-col p-0">
-        <DialogHeader className="px-6 pt-6 pb-4 flex-shrink-0">
-          <DialogTitle className="text-xl sm:text-2xl">
+      <DialogContent className="max-w-[90vw] sm:max-w-3xl max-h-[80vh] sm:max-h-[90vh] flex flex-col p-0">
+        <DialogHeader className="px-3 sm:px-6 pt-3 sm:pt-6 pb-2 sm:pb-4 flex-shrink-0">
+          <DialogTitle className="text-base sm:text-xl md:text-2xl leading-tight">
             Gerenciar Serviços - {professional.name}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-xs sm:text-sm">
             Configure quais serviços este profissional pode realizar e suas
             durações específicas
           </DialogDescription>
         </DialogHeader>
 
-        <ScrollArea className="flex-1 px-6 min-h-0">
-          <div className="space-y-6 pb-6 pr-4">
+        <ScrollArea className="flex-1 px-3 sm:px-6 min-h-0">
+          <div className="space-y-3 sm:space-y-6 pb-3 sm:pb-6 pr-2 sm:pr-4">
             {/* Adicionar novo serviço */}
-            <div className="space-y-4">
-              <h3 className="font-semibold text-base flex items-center gap-2">
-                <Plus className="h-5 w-5 text-primary" />
+            <div className="space-y-3 sm:space-y-4">
+              <h3 className="font-semibold text-sm sm:text-base flex items-center gap-2">
+                <Plus className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                 Adicionar Serviço
               </h3>
-              <div className="flex flex-col sm:flex-row gap-3 items-end">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 sm:items-end">
                 <div className="flex-1 w-full">
-                  <Label htmlFor="service-select" className="mb-2 block text-sm font-medium">
+                  <Label htmlFor="service-select" className="mb-1.5 sm:mb-2 block text-xs sm:text-sm font-medium">
                     Serviço
                   </Label>
                   <Select
@@ -294,7 +296,7 @@ export function ProfessionalServicesModal({
                     }
                     disabled={isPending || availableServices.length === 0}
                   >
-                    <SelectTrigger id="service-select" className="w-full h-10">
+                    <SelectTrigger id="service-select" className="w-full h-9 sm:h-10 text-xs sm:text-sm">
                       <SelectValue
                         placeholder={
                           availableServices.length === 0
@@ -312,8 +314,8 @@ export function ProfessionalServicesModal({
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="w-full sm:w-32">
-                  <Label htmlFor="duration-input" className="mb-2 block text-sm font-medium">
+                <div className="w-full sm:w-28">
+                  <Label htmlFor="duration-input" className="mb-1.5 sm:mb-2 block text-xs sm:text-sm font-medium">
                     Minutos
                   </Label>
                   <Input
@@ -324,7 +326,7 @@ export function ProfessionalServicesModal({
                     value={customDuration}
                     onChange={(e) => setCustomDuration(e.target.value)}
                     disabled={isPending || !selectedServiceId}
-                    className="h-10"
+                    className="h-9 sm:h-10 text-xs sm:text-sm"
                   />
                 </div>
                 <Button
@@ -335,9 +337,10 @@ export function ProfessionalServicesModal({
                     !customDuration ||
                     parseInt(customDuration) <= 0
                   }
-                  className="gap-2 h-10"
+                  className="gap-2 h-9 sm:h-10 w-full sm:w-auto text-xs sm:text-sm"
+                  size="sm"
                 >
-                  <Plus className="h-4 w-4" />
+                  <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
                   Adicionar
                 </Button>
               </div>
@@ -346,9 +349,9 @@ export function ProfessionalServicesModal({
             <Separator />
 
             {/* Lista de serviços do profissional */}
-            <div className="space-y-4">
-              <h3 className="font-semibold text-base flex items-center gap-2">
-                <Briefcase className="h-5 w-5 text-primary" />
+            <div className="space-y-3 sm:space-y-4">
+              <h3 className="font-semibold text-sm sm:text-base flex items-center gap-2">
+                <Briefcase className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                 Serviços Configurados
               </h3>
 
@@ -381,11 +384,12 @@ export function ProfessionalServicesModal({
           </div>
         </ScrollArea>
 
-        <DialogFooter className="px-6 pb-6 pt-4 border-t flex-shrink-0">
+        <DialogFooter className="px-3 sm:px-6 pb-3 sm:pb-6 pt-2 sm:pt-4 border-t flex-shrink-0">
           <Button 
             onClick={onClose} 
             variant="outline"
-            className="w-full sm:w-auto"
+            className="w-full sm:w-auto text-xs sm:text-sm h-8 sm:h-9"
+            size="sm"
           >
             Fechar
           </Button>

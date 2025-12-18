@@ -122,18 +122,18 @@ export function AppointmentDetailsModal({
 
   return (
     <Dialog open={!!appointment} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] p-0">
-        <DialogHeader className="px-6 pt-6 pb-4">
-          <DialogTitle className="text-xl sm:text-2xl">
+      <DialogContent className="max-w-2xl max-h-[90vh] p-0 flex flex-col">
+        <DialogHeader className="px-4 sm:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4 flex-shrink-0">
+          <DialogTitle className="text-lg sm:text-xl md:text-2xl">
             Detalhes do Agendamento
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-xs sm:text-sm">
             Informações completas sobre o agendamento selecionado
           </DialogDescription>
         </DialogHeader>
 
-        <ScrollArea className="h-[calc(90vh-180px)] px-6">
-          <div className="space-y-6 pb-6 pr-4">
+        <ScrollArea className="flex-1 min-h-0 px-4 sm:px-6">
+          <div className="space-y-4 sm:space-y-6 pb-4 sm:pb-6 pr-2 sm:pr-4">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
               <div className="flex items-center gap-2 flex-wrap">
                 {isLocked && (
@@ -245,11 +245,12 @@ export function AppointmentDetailsModal({
 
             <Separator />
 
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col gap-2 sm:gap-3 pt-2">
               <Button
                 onClick={handleWhatsApp}
                 variant="default"
-                className="flex-1 gap-2 cursor-pointer"
+                className="w-full gap-2 cursor-pointer"
+                size="sm"
               >
                 <MessageCircle className="h-4 w-4" />
                 Enviar WhatsApp
@@ -257,7 +258,8 @@ export function AppointmentDetailsModal({
               <Button
                 onClick={handleLockAppointment}
                 variant={isLocked ? "outline" : "secondary"}
-                className="flex-1 gap-2 cursor-pointer"
+                className="w-full gap-2 cursor-pointer"
+                size="sm"
                 disabled={updateClienteTravaMutation.isPending}
               >
                 <Lock className="h-4 w-4" />
@@ -271,7 +273,8 @@ export function AppointmentDetailsModal({
                 <Button
                   onClick={handleDeleteAppointment}
                   variant="destructive"
-                  className="flex-1 gap-2 cursor-pointer"
+                  className="w-full gap-2 cursor-pointer"
+                  size="sm"
                   disabled={
                     isLocked || isPastAppointment || deleteMutation.isPending
                   }

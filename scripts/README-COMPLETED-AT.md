@@ -65,3 +65,4 @@ Após executar o script:
 3. O card de estatísticas "Concluídos" será atualizado automaticamente
 4. Agendamentos concluídos aparecem com badge verde e fundo destacado
 
+

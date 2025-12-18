@@ -115,20 +115,20 @@ export function ServiceDetailsModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[70vh] p-0">
-        <DialogHeader className="px-4 pt-6 pb-4">
-          <DialogTitle className="text-xl sm:text-2xl">
+      <DialogContent className="max-w-2xl max-h-[90vh] p-0 flex flex-col">
+        <DialogHeader className="px-4 sm:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4 flex-shrink-0">
+          <DialogTitle className="text-lg sm:text-xl md:text-2xl">
             {isCreating ? "Novo Serviço" : "Editar Serviço"}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-xs sm:text-sm">
             {isCreating
               ? "Preencha as informações do serviço"
               : "Atualize as informações do serviço"}
           </DialogDescription>
         </DialogHeader>
 
-        <ScrollArea className="h-[calc(70vh-240px)] px-6">
-          <div className="space-y-6 pb-6 pr-4">
+        <ScrollArea className="flex-1 min-h-0 px-4 sm:px-6">
+          <div className="space-y-4 sm:space-y-6 pb-4 sm:pb-6 pr-2 sm:pr-4">
             {service && !isCreating && (
               <>
                 <div className="flex items-center justify-between">
@@ -240,25 +240,27 @@ export function ServiceDetailsModal({
           </div>
         </ScrollArea>
 
-        <DialogFooter className="px-6 pb-6 pt-4 border-t">
-          <div className="flex flex-col sm:flex-row gap-3 w-full">
+        <DialogFooter className="px-4 sm:px-6 pb-4 sm:pb-6 pt-3 sm:pt-4 border-t flex-shrink-0">
+          <div className="flex flex-col gap-2 sm:gap-3 w-full">
             {service && !isCreating && !isConfirmingDelete && (
               <Button
                 variant="destructive"
                 onClick={() => setIsConfirmingDelete(true)}
                 disabled={isPending}
-                className="gap-2"
+                className="gap-2 w-full sm:w-auto"
+                size="sm"
               >
                 <Trash2 className="h-4 w-4" />
                 Excluir
               </Button>
             )}
-            <div className="flex gap-2 flex-1 sm:ml-auto">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-2 w-full sm:ml-auto">
               <Button
                 variant="outline"
                 onClick={onClose}
                 disabled={isPending}
-                className="flex-1 sm:flex-none"
+                className="w-full sm:w-auto order-2 sm:order-1"
+                size="sm"
               >
                 Cancelar
               </Button>
@@ -271,7 +273,8 @@ export function ServiceDetailsModal({
                     !durationMinutes ||
                     parseInt(durationMinutes) <= 0
                   }
-                  className="flex-1 sm:flex-none"
+                  className="w-full sm:w-auto order-1 sm:order-2"
+                  size="sm"
                 >
                   {isPending ? "Salvando..." : isCreating ? "Criar" : "Salvar"}
                 </Button>

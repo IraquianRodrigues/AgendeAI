@@ -232,11 +232,11 @@ export function ProfessionalServicesManagement({
 
   return (
     <Card>
-      <div className="p-6">
+      <div className="p-4 sm:p-6">
         <div className="space-y-4">
           <div>
-            <h3 className="text-lg font-semibold">Serviços do Profissional</h3>
-            <p className="text-sm text-muted-foreground">
+            <h3 className="text-base sm:text-lg font-semibold">Serviços do Profissional</h3>
+            <p className="text-xs sm:text-sm text-muted-foreground">
               Gerencie quais serviços {professional.name} pode realizar e defina
               a duração específica para cada um
             </p>
@@ -245,7 +245,7 @@ export function ProfessionalServicesManagement({
           <Separator />
 
           {allServices.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
+            <div className="text-center py-8 text-muted-foreground text-sm">
               Nenhum serviço cadastrado no sistema
             </div>
           ) : (
@@ -257,25 +257,25 @@ export function ProfessionalServicesManagement({
                 return (
                   <div
                     key={service.id}
-                    className="flex items-center gap-4 p-4 border rounded-lg hover:bg-muted/20 transition-colors"
+                    className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-3 sm:p-4 border rounded-lg hover:bg-muted/20 transition-colors"
                   >
-                    <div className="flex-1 space-y-2">
-                      <div className="flex items-center gap-3">
-                        <span className="font-medium font-mono">
+                    <div className="flex-1 space-y-2 min-w-0">
+                      <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+                        <span className="font-medium font-mono text-sm sm:text-base break-all">
                           {service.code}
                         </span>
                         {state.isActive ? (
-                          <Badge variant="default">Ativo</Badge>
+                          <Badge variant="default" className="text-xs">Ativo</Badge>
                         ) : (
-                          <Badge variant="secondary">Inativo</Badge>
+                          <Badge variant="secondary" className="text-xs">Inativo</Badge>
                         )}
                       </div>
 
                       {state.isActive && (
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                           {state.isEditing ? (
-                            <div className="flex items-center gap-2">
-                              <Clock className="h-4 w-4 text-muted-foreground" />
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <Clock className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
                               <Input
                                 type="number"
                                 min="1"
@@ -286,10 +286,10 @@ export function ProfessionalServicesManagement({
                                     e.target.value
                                   )
                                 }
-                                className="w-24 h-8"
+                                className="w-20 sm:w-24 h-7 sm:h-8 text-sm"
                                 disabled={isPending}
                               />
-                              <span className="text-sm text-muted-foreground">
+                              <span className="text-xs sm:text-sm text-muted-foreground">
                                 minutos
                               </span>
                               <Button
@@ -302,14 +302,15 @@ export function ProfessionalServicesManagement({
                                   )
                                 }
                                 disabled={isPending}
+                                className="h-7 sm:h-8"
                               >
-                                <Save className="h-4 w-4" />
+                                <Save className="h-3 w-3 sm:h-4 sm:w-4" />
                               </Button>
                             </div>
                           ) : (
-                            <div className="flex items-center gap-2">
-                              <Clock className="h-4 w-4 text-muted-foreground" />
-                              <span className="text-sm">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <Clock className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
+                              <span className="text-xs sm:text-sm">
                                 {state.customDuration} minutos
                               </span>
                               {state.customDuration !==
@@ -323,6 +324,7 @@ export function ProfessionalServicesManagement({
                                 variant="ghost"
                                 onClick={() => toggleEditing(service.id)}
                                 disabled={isPending}
+                                className="h-7 sm:h-8 text-xs sm:text-sm"
                               >
                                 Editar
                               </Button>
@@ -332,20 +334,20 @@ export function ProfessionalServicesManagement({
                       )}
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-shrink-0">
                       <Button
                         size="sm"
                         variant={state.isActive ? "outline" : "default"}
                         onClick={() => handleToggleService(service.id)}
                         disabled={isPending}
-                        className="gap-2"
+                        className="gap-2 text-xs sm:text-sm h-7 sm:h-8"
                       >
                         {state.isActive ? (
-                          "Desativar"
+                          <span className="hidden sm:inline">Desativar</span>
                         ) : (
                           <>
-                            <Plus className="h-4 w-4" />
-                            Adicionar
+                            <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
+                            <span className="hidden sm:inline">Adicionar</span>
                           </>
                         )}
                       </Button>
@@ -356,8 +358,9 @@ export function ProfessionalServicesManagement({
                           variant="ghost"
                           onClick={() => handleDeleteService(service.id)}
                           disabled={isPending}
+                          className="h-7 sm:h-8"
                         >
-                          <Trash2 className="h-4 w-4 text-destructive" />
+                          <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 text-destructive" />
                         </Button>
                       )}
                     </div>

@@ -74,18 +74,18 @@ export function ClienteDetailsModal({
 
   return (
     <Dialog open={!!cliente} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] p-0">
-        <DialogHeader className="px-6 pt-6 pb-4">
-          <DialogTitle className="text-xl sm:text-2xl">
+      <DialogContent className="max-w-[90vw] sm:max-w-2xl max-h-[80vh] sm:max-h-[90vh] p-0 flex flex-col">
+        <DialogHeader className="px-3 sm:px-6 pt-3 sm:pt-6 pb-2 sm:pb-4 flex-shrink-0">
+          <DialogTitle className="text-base sm:text-xl md:text-2xl">
             Detalhes do Cliente
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-xs sm:text-sm">
             Informações completas sobre o cliente selecionado
           </DialogDescription>
         </DialogHeader>
 
-        <ScrollArea className="h-[calc(90vh-180px)] px-6">
-          <div className="space-y-6 pb-6 pr-4">
+        <ScrollArea className="flex-1 min-h-0 px-3 sm:px-6">
+          <div className="space-y-3 sm:space-y-6 pb-3 sm:pb-6 pr-2 sm:pr-4">
             {/* Status */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
               <div className="flex items-center gap-2 flex-wrap">
@@ -106,19 +106,19 @@ export function ClienteDetailsModal({
             <Separator />
 
             {/* Informações do Cliente */}
-            <div className="space-y-4">
-              <h3 className="font-semibold text-base sm:text-lg flex items-center gap-2">
-                <User className="h-5 w-5 text-primary" />
+            <div className="space-y-3 sm:space-y-4">
+              <h3 className="font-semibold text-sm sm:text-lg flex items-center gap-2">
+                <User className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                 Informações do Cliente
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pl-0 sm:pl-7">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pl-0 sm:pl-7">
                 <div>
-                  <p className="text-sm text-muted-foreground">Nome</p>
-                  <p className="font-medium break-words">{clienteAtual.nome}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Nome</p>
+                  <p className="font-medium break-words text-sm sm:text-base">{clienteAtual.nome}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Telefone</p>
-                  <p className="font-medium">{clienteAtual.telefone}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Telefone</p>
+                  <p className="font-medium text-sm sm:text-base">{clienteAtual.telefone}</p>
                 </div>
               </div>
             </div>
@@ -127,13 +127,13 @@ export function ClienteDetailsModal({
 
             {/* Informações Adicionais */}
             <div className="space-y-2">
-              <h3 className="font-semibold text-base sm:text-lg flex items-center gap-2">
-                <Phone className="h-5 w-5 text-primary" />
+              <h3 className="font-semibold text-sm sm:text-lg flex items-center gap-2">
+                <Phone className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                 Informações Adicionais
               </h3>
               <div className="pl-0 sm:pl-7">
-                <p className="text-sm text-muted-foreground">Cadastrado em</p>
-                <p className="font-medium">
+                <p className="text-xs sm:text-sm text-muted-foreground">Cadastrado em</p>
+                <p className="font-medium text-sm sm:text-base">
                   {formatDateTimeBR(clienteAtual.created_at)}
                 </p>
               </div>
@@ -142,11 +142,12 @@ export function ClienteDetailsModal({
             <Separator />
 
             {/* Actions */}
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col gap-2 sm:gap-3 pt-2">
               <Button
                 onClick={handleWhatsApp}
                 variant="default"
-                className="flex-1 gap-2"
+                className="w-full gap-2"
+                size="sm"
               >
                 <MessageCircle className="h-4 w-4" />
                 Enviar WhatsApp
@@ -154,7 +155,8 @@ export function ClienteDetailsModal({
               <Button
                 onClick={handleToggleLock}
                 variant={isLocked ? "outline" : "destructive"}
-                className="flex-1 gap-2"
+                className="w-full gap-2"
+                size="sm"
                 disabled={updateClienteTravaMutation.isPending}
               >
                 <Lock className="h-4 w-4" />

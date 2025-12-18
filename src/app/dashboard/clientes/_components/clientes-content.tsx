@@ -31,58 +31,58 @@ export default function ClientesContent() {
 
         {/* Cards de Estatísticas */}
         {!isLoading && !error && (
-          <div className="grid gap-4 sm:grid-cols-3">
-            <Card className="p-6 border shadow-sm hover:shadow-md transition-shadow bg-gradient-to-br from-white to-primary/5">
+          <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-3">
+            <Card className="p-4 sm:p-6 border shadow-sm hover:shadow-md transition-shadow bg-gradient-to-br from-white to-primary/5">
               <div className="flex items-start justify-between">
-                <div className="space-y-2">
-                  <p className="text-sm font-medium text-muted-foreground">
+                <div className="space-y-1 sm:space-y-2 flex-1 min-w-0">
+                  <p className="text-xs sm:text-sm font-medium text-muted-foreground">
                     Total de Clientes
                   </p>
-                  <p className="text-3xl font-bold">{stats.total}</p>
+                  <p className="text-2xl sm:text-3xl font-bold">{stats.total}</p>
                   <p className="text-xs text-muted-foreground">
                     clientes cadastrados
                   </p>
                 </div>
-                <div className="p-3 rounded-lg bg-primary/10">
-                  <Users className="h-5 w-5 text-primary" />
+                <div className="p-2 sm:p-3 rounded-lg bg-primary/10 flex-shrink-0">
+                  <Users className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                 </div>
               </div>
             </Card>
 
-            <Card className="p-6 border shadow-sm hover:shadow-md transition-shadow bg-gradient-to-br from-white to-green-50">
+            <Card className="p-4 sm:p-6 border shadow-sm hover:shadow-md transition-shadow bg-gradient-to-br from-white to-green-50">
               <div className="flex items-start justify-between">
-                <div className="space-y-2">
-                  <p className="text-sm font-medium text-muted-foreground">
+                <div className="space-y-1 sm:space-y-2 flex-1 min-w-0">
+                  <p className="text-xs sm:text-sm font-medium text-muted-foreground">
                     Ativos
                   </p>
-                  <p className="text-3xl font-bold text-green-600">
+                  <p className="text-2xl sm:text-3xl font-bold text-green-600">
                     {stats.active}
                   </p>
                   <p className="text-xs text-muted-foreground">
                     clientes ativos
                   </p>
                 </div>
-                <div className="p-3 rounded-lg bg-green-100">
-                  <UserCheck className="h-5 w-5 text-green-600" />
+                <div className="p-2 sm:p-3 rounded-lg bg-green-100 flex-shrink-0">
+                  <UserCheck className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
                 </div>
               </div>
             </Card>
 
-            <Card className="p-6 border shadow-sm hover:shadow-md transition-shadow bg-gradient-to-br from-white to-red-50">
+            <Card className="p-4 sm:p-6 border shadow-sm hover:shadow-md transition-shadow bg-gradient-to-br from-white to-red-50">
               <div className="flex items-start justify-between">
-                <div className="space-y-2">
-                  <p className="text-sm font-medium text-muted-foreground">
+                <div className="space-y-1 sm:space-y-2 flex-1 min-w-0">
+                  <p className="text-xs sm:text-sm font-medium text-muted-foreground">
                     Bloqueados
                   </p>
-                  <p className="text-3xl font-bold text-red-600">
+                  <p className="text-2xl sm:text-3xl font-bold text-red-600">
                     {stats.blocked}
                   </p>
                   <p className="text-xs text-muted-foreground">
                     clientes bloqueados
                   </p>
                 </div>
-                <div className="p-3 rounded-lg bg-red-100">
-                  <UserX className="h-5 w-5 text-red-600" />
+                <div className="p-2 sm:p-3 rounded-lg bg-red-100 flex-shrink-0">
+                  <UserX className="h-4 w-4 sm:h-5 sm:w-5 text-red-600" />
                 </div>
               </div>
             </Card>
