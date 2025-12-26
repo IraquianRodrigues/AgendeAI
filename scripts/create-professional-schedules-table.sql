@@ -44,3 +44,9 @@ COMMENT ON COLUMN professional_schedules.is_active IS 'Se este período está at
 
 
 
+
+
+
+
+
+

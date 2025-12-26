@@ -63,27 +63,30 @@ export function ProfessionalsTable({
 
   return (
     <>
-      <Card>
-        <div className="p-6 space-y-4">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h2 className="text-xl font-semibold">Lista de Profissionais</h2>
-              <p className="text-sm text-muted-foreground">
+      <div className="bg-white rounded-[32px] border border-gray-100 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.02)] overflow-hidden">
+        <div className="p-8 space-y-6 border-b border-gray-50">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <h2 className="text-xl font-semibold text-gray-900">Lista de Profissionais</h2>
+              <p className="text-sm text-gray-400 font-medium">
                 Visualize e gerencie os profissionais cadastrados
               </p>
             </div>
-            <Button onClick={() => setIsCreating(true)} className="gap-2">
-              <Plus className="h-4 w-4" />
+            <Button
+              onClick={() => setIsCreating(true)}
+              className="bg-gray-900 hover:bg-gray-800 text-white rounded-xl shadow-lg shadow-gray-900/10 hover:shadow-xl hover:shadow-gray-900/20 transition-all hover:-translate-y-0.5"
+            >
+              <Plus className="h-4 w-4 mr-2" />
               Novo Profissional
             </Button>
           </div>
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <div className="relative group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within:text-gray-900 transition-colors" />
             <Input
               placeholder="Buscar por nome do profissional..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9"
+              className="pl-11 h-12 bg-gray-50/50 border-gray-100 focus-visible:bg-white focus-visible:ring-2 focus-visible:ring-gray-900/5 transition-all rounded-2xl font-medium text-gray-700"
             />
           </div>
         </div>
@@ -91,39 +94,43 @@ export function ProfessionalsTable({
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-y bg-muted/30">
-                <th className="text-left p-4 font-medium text-sm text-muted-foreground">
+              <tr className="border-b border-gray-50 bg-gray-50/30">
+                <th className="text-left p-6 font-medium text-xs text-gray-400 uppercase tracking-wider">
                   Nome
                 </th>
-                <th className="text-left p-4 font-medium text-sm text-muted-foreground">
+                <th className="text-left p-6 font-medium text-xs text-gray-400 uppercase tracking-wider">
                   Especialidade
                 </th>
-                <th className="text-left p-4 font-medium text-sm text-muted-foreground">
+                <th className="text-left p-6 font-medium text-xs text-gray-400 uppercase tracking-wider">
                   Código
                 </th>
-                <th className="text-right p-4 font-medium text-sm text-muted-foreground">
+                <th className="text-right p-6 font-medium text-xs text-gray-400 uppercase tracking-wider">
                   Ações
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-50">
               {professionals.length === 0 ? (
                 <tr>
                   <td
                     colSpan={4}
-                    className="p-12 text-center text-muted-foreground"
+                    className="p-12 text-center text-gray-500"
                   >
-                    Nenhum profissional cadastrado. Clique em "Novo
-                    Profissional" para adicionar.
+                    <div className="flex flex-col items-center gap-2">
+                      <p className="text-base font-medium">Nenhum profissional cadastrado</p>
+                      <p className="text-sm text-gray-400">Clique em "Novo Profissional" para adicionar.</p>
+                    </div>
                   </td>
                 </tr>
               ) : paginatedProfessionals.length === 0 ? (
                 <tr>
                   <td
                     colSpan={4}
-                    className="p-12 text-center text-muted-foreground"
+                    className="p-12 text-center text-gray-500"
                   >
-                    Nenhum profissional encontrado
+                    <div className="flex flex-col items-center gap-2">
+                      <p className="text-base font-medium">Nenhum profissional encontrado</p>
+                    </div>
                   </td>
                 </tr>
               ) : (
@@ -131,37 +138,39 @@ export function ProfessionalsTable({
                   return (
                     <tr
                       key={professional.id}
-                      className="border-b hover:bg-muted/20 transition-colors"
+                      className="group transition-colors hover:bg-gray-50/50"
                     >
-                      <td className="p-4">
-                        <span className="font-medium">{professional.name}</span>
+                      <td className="p-6">
+                        <span className="font-medium text-gray-700 group-hover:text-gray-900 transition-colors">
+                          {professional.name}
+                        </span>
                       </td>
-                      <td className="p-4">
-                        <span className="text-sm text-muted-foreground">
+                      <td className="p-6">
+                        <span className="text-sm text-gray-500 font-medium">
                           {professional.specialty || "Não informada"}
                         </span>
                       </td>
-                      <td className="p-4">
-                        <span className="text-sm text-muted-foreground font-mono">
+                      <td className="p-6">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-lg text-xs font-medium bg-gray-100 text-gray-600 font-mono">
                           {professional.code}
                         </span>
                       </td>
-                      <td className="p-4">
-                        <div className="flex items-center justify-end gap-2">
+                      <td className="p-6">
+                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => setProfessionalForServices(professional)}
-                            className="cursor-pointer gap-1"
+                            className="h-9 px-4 text-xs font-medium border-gray-200 hover:bg-white hover:border-gray-300 hover:text-gray-900 rounded-lg transition-all"
                           >
-                            <Briefcase className="h-3 w-3" />
+                            <Briefcase className="h-3.5 w-3.5 mr-1.5" />
                             Serviços
                           </Button>
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => setSelectedProfessional(professional)}
-                            className="cursor-pointer"
+                            className="h-9 px-4 text-xs font-medium text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                           >
                             Editar
                           </Button>
@@ -177,24 +186,27 @@ export function ProfessionalsTable({
 
         {/* Paginação */}
         {totalPages > 1 && (
-          <div className="p-4 border-t flex items-center justify-between">
-            <div className="text-sm text-muted-foreground">
-              Mostrando {startIndex + 1} a{" "}
-              {Math.min(endIndex, filteredProfessionals.length)} de{" "}
-              {filteredProfessionals.length} profissionais
+          <div className="p-6 border-t border-gray-50 bg-gray-50/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-sm text-gray-500 font-medium text-center sm:text-left">
+              Mostrando <span className="font-bold text-gray-900">{startIndex + 1}</span> a{" "}
+              <span className="font-bold text-gray-900">
+                {Math.min(endIndex, filteredProfessionals.length)}
+              </span>{" "}
+              de <span className="font-bold text-gray-900">{filteredProfessionals.length}</span> profissionais
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-full sm:w-auto justify-center">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
+                className="h-10 px-4 rounded-xl border-gray-200 hover:bg-white hover:border-gray-300 hover:text-gray-900 transition-all disabled:opacity-50"
               >
-                <ChevronLeft className="h-4 w-4" />
+                <ChevronLeft className="h-4 w-4 mr-2" />
                 Anterior
               </Button>
-              <div className="text-sm font-medium">
-                Página {currentPage} de {totalPages}
+              <div className="text-sm font-bold w-10 h-10 flex items-center justify-center bg-gray-900 text-white rounded-xl">
+                {currentPage}
               </div>
               <Button
                 variant="outline"
@@ -203,14 +215,15 @@ export function ProfessionalsTable({
                   setCurrentPage((p) => Math.min(totalPages, p + 1))
                 }
                 disabled={currentPage === totalPages}
+                className="h-10 px-4 rounded-xl border-gray-200 hover:bg-white hover:border-gray-300 hover:text-gray-900 transition-all disabled:opacity-50"
               >
                 Próxima
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className="h-4 w-4 ml-2" />
               </Button>
             </div>
           </div>
         )}
-      </Card>
+      </div>
 
       <ProfessionalDetailsModal
         professional={selectedProfessional}

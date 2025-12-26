@@ -87,35 +87,42 @@ export function ServicesTable({
           <table className="w-full">
             <thead>
               <tr className="border-y bg-muted/30">
-                <th className="text-left p-4 font-medium text-sm text-muted-foreground">
+                <th className="text-left p-6 font-medium text-xs text-gray-400 uppercase tracking-wider">
                   Código
                 </th>
-                <th className="text-left p-4 font-medium text-sm text-muted-foreground">
+                <th className="text-left p-6 font-medium text-xs text-gray-400 uppercase tracking-wider">
                   Duração
                 </th>
-                <th className="text-left p-4 font-medium text-sm text-muted-foreground">
+                <th className="text-left p-6 font-medium text-xs text-gray-400 uppercase tracking-wider">
+                  Valor
+                </th>
+                <th className="text-right p-6 font-medium text-xs text-gray-400 uppercase tracking-wider">
                   Ações
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-50">
               {services.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={3}
-                    className="p-12 text-center text-muted-foreground"
+                    colSpan={4}
+                    className="p-12 text-center text-gray-500"
                   >
-                    Nenhum serviço cadastrado. Clique em "Novo Serviço" para
-                    adicionar.
+                    <div className="flex flex-col items-center gap-2">
+                      <p className="text-base font-medium">Nenhum serviço cadastrado</p>
+                      <p className="text-sm text-gray-400">Clique em "Novo Serviço" para adicionar.</p>
+                    </div>
                   </td>
                 </tr>
               ) : paginatedServices.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={3}
-                    className="p-12 text-center text-muted-foreground"
+                    colSpan={4}
+                    className="p-12 text-center text-gray-500"
                   >
-                    Nenhum serviço encontrado
+                    <div className="flex flex-col items-center gap-2">
+                      <p className="text-base font-medium">Nenhum serviço encontrado</p>
+                    </div>
                   </td>
                 </tr>
               ) : (
@@ -123,24 +130,34 @@ export function ServicesTable({
                   return (
                     <tr
                       key={service.id}
-                      className="border-b hover:bg-muted/20 transition-colors"
+                      className="group transition-colors hover:bg-gray-50/50"
                     >
-                      <td className="p-4">
-                        <span className="font-medium font-mono">
+                      <td className="p-6">
+                        <span className="font-medium font-mono text-gray-700 group-hover:text-gray-900 transition-colors">
                           {service.code}
                         </span>
                       </td>
-                      <td className="p-4">
-                        <span className="text-sm text-muted-foreground">
+                      <td className="p-6">
+                        <span className="text-sm text-gray-500 font-medium">
                           {service.duration_minutes} minutos
                         </span>
                       </td>
-                      <td className="p-4">
+                      <td className="p-6">
+                        <span className="text-sm text-gray-500 font-medium">
+                          {service.price
+                            ? new Intl.NumberFormat("pt-BR", {
+                              style: "currency",
+                              currency: "BRL",
+                            }).format(service.price)
+                            : "-"}
+                        </span>
+                      </td>
+                      <td className="p-6">
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => setSelectedService(service)}
-                          className="cursor-pointer"
+                          className="h-9 px-4 text-xs font-medium text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
                         >
                           Editar
                         </Button>

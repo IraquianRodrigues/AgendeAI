@@ -48,86 +48,101 @@ export function LoginContent() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 p-4">
-      {/* Decorative background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-400/20 rounded-full blur-3xl animate-pulse delay-1000" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-[#FDFDFD]">
+      {/* Premium Ambient Background */}
+      <div className="absolute inset-0 w-full h-full overflow-hidden -z-10">
+        <div className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] rounded-full bg-gradient-to-br from-blue-50/80 to-indigo-50/80 blur-[120px] opacity-60 animate-pulse delay-75" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[70%] h-[70%] rounded-full bg-gradient-to-tl from-purple-50/80 to-pink-50/80 blur-[120px] opacity-60 animate-pulse delay-1000" />
       </div>
 
-      <Card className="w-full max-w-md relative z-10 border-0 shadow-2xl bg-white/80 backdrop-blur-sm">
-        <CardHeader className="space-y-4 text-center pb-8">
-          <div className="mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-lg shadow-primary/25 transition-transform hover:scale-105">
-            <LogIn className="h-8 w-8 text-white" />
-          </div>
-          <div className="space-y-2">
-            <CardTitle className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-              {clinicName}
-            </CardTitle>
-            <CardDescription className="text-base">
-              Entre com suas credenciais para acessar o sistema
-            </CardDescription>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <form onSubmit={handleLogin} className="space-y-5">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-semibold text-foreground/90">
-                Email
-              </Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground/60" />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="seu@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  disabled={isLoading}
-                  className="pl-10 h-12 border-2 focus-visible:ring-2 focus-visible:ring-primary/20 transition-all shadow-sm"
-                />
+      <div className="w-full max-w-[420px] animate-in fade-in slide-in-from-bottom-4 duration-1000">
+        <div className="relative group">
+          {/* Subtle glow effect behind card */}
+          <div className="absolute -inset-1 bg-gradient-to-r from-gray-200 to-gray-100 rounded-[35px] blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+
+          <div className="relative bg-white/60 backdrop-blur-xl rounded-[32px] shadow-[0_8px_40px_-12px_rgba(0,0,0,0.05)] p-8 md:p-12 border border-white/50">
+            <div className="text-center space-y-8 mb-10">
+              <div className="relative mx-auto w-16 h-16">
+                <div className="absolute inset-0 bg-gradient-to-tr from-gray-900 to-gray-800 rounded-2xl rotate-6 opacity-20 blur-sm"></div>
+                <div className="relative w-full h-full bg-gradient-to-tr from-gray-900 to-gray-800 rounded-2xl flex items-center justify-center shadow-lg text-white">
+                  <LogIn className="w-8 h-8" />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+                  {clinicName}
+                </h1>
+                <p className="text-sm text-gray-500 font-medium tracking-wide uppercase opacity-80">
+                  Sistema de Gestão
+                </p>
               </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-sm font-semibold text-foreground/90">
-                Senha
-              </Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground/60" />
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  disabled={isLoading}
-                  className="pl-10 h-12 border-2 focus-visible:ring-2 focus-visible:ring-primary/20 transition-all shadow-sm"
-                />
+
+            <form onSubmit={handleLogin} className="space-y-6">
+              <div className="space-y-5">
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">
+                    Email Corporativo
+                  </Label>
+                  <div className="relative group/input">
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within/input:text-gray-900 transition-colors duration-300" />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="seu@email.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      disabled={isLoading}
+                      className="pl-12 h-14 bg-gray-50/50 border-gray-100 hover:bg-gray-50/80 focus-visible:bg-white focus-visible:ring-2 focus-visible:ring-gray-900/5 focus-visible:border-gray-200 rounded-2xl transition-all duration-300 font-medium text-gray-900 placeholder:text-gray-400"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between pl-1">
+                    <Label htmlFor="password" className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                      Senha
+                    </Label>
+                  </div>
+                  <div className="relative group/input">
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within/input:text-gray-900 transition-colors duration-300" />
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      disabled={isLoading}
+                      className="pl-12 h-14 bg-gray-50/50 border-gray-100 hover:bg-gray-50/80 focus-visible:bg-white focus-visible:ring-2 focus-visible:ring-gray-900/5 focus-visible:border-gray-200 rounded-2xl transition-all duration-300 font-medium text-gray-900 placeholder:text-gray-400"
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-            <Button 
-              type="submit" 
-              className="w-full h-12 text-base font-semibold bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all hover:scale-[1.02] active:scale-[0.98]" 
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <>
+
+              <Button
+                type="submit"
+                className="w-full h-14 bg-gray-900 hover:bg-gray-800 text-white rounded-2xl font-bold tracking-wide shadow-xl shadow-gray-900/10 hover:shadow-2xl hover:shadow-gray-900/20 transition-all duration-300 transform hover:-translate-y-0.5 active:scale-[0.98]"
+                disabled={isLoading}
+              >
+                {isLoading ? (
                   <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Entrando...
-                </>
-              ) : (
-                <>
-                  Entrar
-                  <LogIn className="ml-2 h-5 w-5" />
-                </>
-              )}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+                ) : (
+                  "Acessar Sistema"
+                )}
+              </Button>
+            </form>
+
+            <div className="mt-10 text-center">
+              <p className="text-xs text-gray-400 font-medium">
+                © {new Date().getFullYear()} {clinicName}.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

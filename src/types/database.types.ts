@@ -27,6 +27,7 @@ export interface Database {
           created_at: string;
           code: string;
           duration_minutes: number;
+          price: number | null;
         };
         Insert: Omit<
           Database["public"]["Tables"]["services"]["Row"],

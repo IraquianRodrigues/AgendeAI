@@ -66,3 +66,9 @@ Após executar o script:
 4. Agendamentos concluídos aparecem com badge verde e fundo destacado
 
 
+
+
+
+
+
+

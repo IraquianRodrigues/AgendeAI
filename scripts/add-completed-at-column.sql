@@ -15,3 +15,9 @@ WHERE completed_at IS NOT NULL;
 COMMENT ON COLUMN appointments.completed_at IS 'Data e hora em que o agendamento foi marcado como concluído. NULL indica que o agendamento ainda não foi concluído.';
 
 
+
+
+
+
+
+

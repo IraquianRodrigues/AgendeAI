@@ -75,23 +75,21 @@ export function ClientesTable({
 
   return (
     <>
-      <Card className="overflow-hidden border shadow-sm">
-        <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 bg-gradient-to-br from-white to-muted/20">
+      <div className="bg-white rounded-[32px] border border-gray-100 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.02)] overflow-hidden">
+        <div className="p-8 space-y-6 border-b border-gray-50">
           <div className="space-y-1">
-            <h2 className="text-xl sm:text-2xl font-bold tracking-tight">
-              Lista de Clientes
-            </h2>
-            <p className="text-xs sm:text-sm text-muted-foreground">
+            <h2 className="text-xl font-semibold text-gray-900">Lista de Clientes</h2>
+            <p className="text-sm text-gray-400 font-medium">
               Visualize e gerencie os clientes cadastrados
             </p>
           </div>
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <div className="relative group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within:text-gray-900 transition-colors" />
             <Input
               placeholder="Buscar por nome do cliente..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 h-10 text-sm shadow-sm focus-visible:ring-2"
+              className="pl-11 h-12 bg-gray-50/50 border-gray-100 focus-visible:bg-white focus-visible:ring-2 focus-visible:ring-gray-900/5 transition-all rounded-2xl font-medium text-gray-700"
             />
           </div>
         </div>
@@ -99,10 +97,10 @@ export function ClientesTable({
         {/* Versão Mobile - Cards */}
         <div className="block sm:hidden space-y-3 p-4">
           {paginatedClientes.length === 0 ? (
-            <div className="p-12 text-center text-muted-foreground">
+            <div className="p-12 text-center text-gray-500">
               <div className="flex flex-col items-center gap-2">
-                <p className="text-base">Nenhum cliente encontrado</p>
-                <p className="text-sm text-muted-foreground/70">
+                <p className="text-base font-medium">Nenhum cliente encontrado</p>
+                <p className="text-sm text-gray-400">
                   Tente ajustar a busca ou verificar os filtros
                 </p>
               </div>
@@ -111,23 +109,21 @@ export function ClientesTable({
             paginatedClientes.map((cliente) => {
               const isBlocked = cliente.trava;
               return (
-                <Card
+                <div
                   key={cliente.id}
-                  className={`p-4 border shadow-sm transition-all hover:shadow-md ${
-                    isBlocked ? "bg-red-50/30 border-red-200" : ""
-                  }`}
+                  className={`p-4 border rounded-2xl transition-all ${isBlocked ? "bg-red-50/30 border-red-100" : "bg-white border-gray-100"
+                    }`}
                 >
                   <div className="space-y-3">
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
                         <h3
-                          className={`font-semibold text-base truncate ${
-                            isBlocked ? "text-red-700" : "text-foreground"
-                          }`}
+                          className={`font-semibold text-base truncate ${isBlocked ? "text-red-700" : "text-gray-900"
+                            }`}
                         >
                           {cliente.nome}
                         </h3>
-                        <p className="text-sm text-muted-foreground font-mono mt-1">
+                        <p className="text-sm text-gray-500 font-medium mt-1">
                           {cliente.telefone}
                         </p>
                       </div>
@@ -135,14 +131,13 @@ export function ClientesTable({
                         {cliente.trava ? (
                           <Badge
                             variant="destructive"
-                            className="font-semibold shadow-sm text-xs"
+                            className="font-semibold shadow-none text-xs rounded-lg px-2"
                           >
                             Bloqueado
                           </Badge>
                         ) : (
                           <Badge
-                            variant="default"
-                            className="bg-green-600 hover:bg-green-700 text-white font-semibold shadow-sm text-xs"
+                            className="bg-green-100 text-green-700 hover:bg-green-200 border-0 font-semibold shadow-none text-xs rounded-lg px-2"
                           >
                             Ativo
                           </Badge>
@@ -153,12 +148,12 @@ export function ClientesTable({
                       variant="outline"
                       size="sm"
                       onClick={() => setSelectedCliente(cliente)}
-                      className="w-full hover:bg-primary hover:text-primary-foreground transition-all shadow-sm hover:shadow-md"
+                      className="w-full rounded-xl border-gray-200 hover:bg-gray-50 hover:text-gray-900 transition-all font-medium"
                     >
                       Ver Detalhes
                     </Button>
                   </div>
-                </Card>
+                </div>
               );
             })
           )}
@@ -168,31 +163,31 @@ export function ClientesTable({
         <div className="hidden sm:block overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b bg-gradient-to-r from-muted/50 to-muted/30">
-                <th className="text-left p-4 font-semibold text-sm text-foreground uppercase tracking-wider">
+              <tr className="border-b border-gray-50 bg-gray-50/30">
+                <th className="text-left p-6 font-medium text-xs text-gray-400 uppercase tracking-wider">
                   Nome
                 </th>
-                <th className="text-left p-4 font-semibold text-sm text-foreground uppercase tracking-wider">
+                <th className="text-left p-6 font-medium text-xs text-gray-400 uppercase tracking-wider">
                   Telefone
                 </th>
-                <th className="text-left p-4 font-semibold text-sm text-foreground uppercase tracking-wider">
+                <th className="text-left p-6 font-medium text-xs text-gray-400 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="text-left p-4 font-semibold text-sm text-foreground uppercase tracking-wider">
+                <th className="text-left p-6 font-medium text-xs text-gray-400 uppercase tracking-wider">
                   Ações
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-50">
               {paginatedClientes.length === 0 ? (
                 <tr>
                   <td
                     colSpan={4}
-                    className="p-12 text-center text-muted-foreground"
+                    className="p-12 text-center text-gray-500"
                   >
                     <div className="flex flex-col items-center gap-2">
-                      <p className="text-base">Nenhum cliente encontrado</p>
-                      <p className="text-sm text-muted-foreground/70">
+                      <p className="text-base font-medium">Nenhum cliente encontrado</p>
+                      <p className="text-sm text-gray-400">
                         Tente ajustar a busca ou verificar os filtros
                       </p>
                     </div>
@@ -204,47 +199,44 @@ export function ClientesTable({
                   return (
                     <tr
                       key={cliente.id}
-                      className={`border-b transition-all hover:bg-gradient-to-r hover:from-primary/5 hover:to-primary/2 group ${
-                        isBlocked ? "bg-red-50/30" : ""
-                      }`}
+                      className={`group transition-colors hover:bg-gray-50/50 ${isBlocked ? "bg-red-50/10" : ""
+                        }`}
                     >
-                      <td className="p-4">
+                      <td className="p-6">
                         <span
-                          className={`font-semibold group-hover:text-primary transition-colors ${
-                            isBlocked ? "text-red-700" : "text-foreground"
-                          }`}
+                          className={`font-medium transition-colors ${isBlocked ? "text-red-700" : "text-gray-700 group-hover:text-gray-900"
+                            }`}
                         >
                           {cliente.nome}
                         </span>
                       </td>
-                      <td className="p-4">
-                        <span className="text-sm text-muted-foreground font-mono">
+                      <td className="p-6">
+                        <span className="text-sm text-gray-500 font-medium">
                           {cliente.telefone}
                         </span>
                       </td>
-                      <td className="p-4">
+                      <td className="p-6">
                         {cliente.trava ? (
                           <Badge
                             variant="destructive"
-                            className="font-semibold shadow-sm"
+                            className="font-semibold shadow-none rounded-lg px-2.5 py-0.5"
                           >
                             Bloqueado
                           </Badge>
                         ) : (
                           <Badge
-                            variant="default"
-                            className="bg-green-600 hover:bg-green-700 text-white font-semibold shadow-sm"
+                            className="bg-green-100 text-green-700 hover:bg-green-200 border-0 font-semibold shadow-none rounded-lg px-2.5 py-0.5"
                           >
                             Ativo
                           </Badge>
                         )}
                       </td>
-                      <td className="p-4">
+                      <td className="p-6">
                         <Button
-                          variant="outline"
+                          variant="ghost"
                           size="sm"
                           onClick={() => setSelectedCliente(cliente)}
-                          className="hover:bg-primary hover:text-primary-foreground transition-all shadow-sm hover:shadow-md"
+                          className="h-9 px-4 text-sm font-medium text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                         >
                           Ver Detalhes
                         </Button>
@@ -259,13 +251,13 @@ export function ClientesTable({
 
         {/* Paginação */}
         {totalPages > 1 && (
-          <div className="p-3 sm:p-4 border-t bg-muted/20 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
-            <div className="text-xs sm:text-sm text-muted-foreground font-medium text-center sm:text-left">
-              Mostrando <span className="font-semibold text-foreground">{startIndex + 1}</span> a{" "}
-              <span className="font-semibold text-foreground">
+          <div className="p-6 border-t border-gray-50 bg-gray-50/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-sm text-gray-500 font-medium text-center sm:text-left">
+              Mostrando <span className="font-bold text-gray-900">{startIndex + 1}</span> a{" "}
+              <span className="font-bold text-gray-900">
                 {Math.min(endIndex, filteredClientes.length)}
               </span>{" "}
-              de <span className="font-semibold text-foreground">{filteredClientes.length}</span> clientes
+              de <span className="font-bold text-gray-900">{filteredClientes.length}</span> clientes
             </div>
             <div className="flex items-center gap-2 w-full sm:w-auto justify-center">
               <Button
@@ -273,30 +265,28 @@ export function ClientesTable({
                 size="sm"
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
-                className="shadow-sm hover:shadow-md transition-all flex-1 sm:flex-none"
+                className="h-10 px-4 rounded-xl border-gray-200 hover:bg-white hover:border-gray-300 hover:text-gray-900 transition-all disabled:opacity-50"
               >
-                <ChevronLeft className="h-4 w-4" />
-                <span className="hidden sm:inline">Anterior</span>
+                <ChevronLeft className="h-4 w-4 mr-2" />
+                Anterior
               </Button>
-              <div className="text-xs sm:text-sm font-semibold px-2 sm:px-3 py-1.5 bg-primary/10 text-primary rounded-md whitespace-nowrap">
-                {currentPage}/{totalPages}
+              <div className="text-sm font-bold w-10 h-10 flex items-center justify-center bg-gray-900 text-white rounded-xl">
+                {currentPage}
               </div>
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() =>
-                  setCurrentPage((p) => Math.min(totalPages, p + 1))
-                }
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
-                className="shadow-sm hover:shadow-md transition-all flex-1 sm:flex-none"
+                className="h-10 px-4 rounded-xl border-gray-200 hover:bg-white hover:border-gray-300 hover:text-gray-900 transition-all disabled:opacity-50"
               >
-                <span className="hidden sm:inline">Próxima</span>
-                <ChevronRight className="h-4 w-4" />
+                Próxima
+                <ChevronRight className="h-4 w-4 ml-2" />
               </Button>
             </div>
           </div>
         )}
-      </Card>
+      </div>
 
       <ClienteDetailsModal
         cliente={selectedCliente}

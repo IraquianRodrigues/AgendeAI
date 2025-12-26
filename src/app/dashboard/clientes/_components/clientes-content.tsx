@@ -18,74 +18,73 @@ export default function ClientesContent() {
   }, [clientes]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-      <div className="container mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+    <div className="min-h-screen bg-gray-50/50">
+      <div className="container mx-auto p-6 lg:p-10 space-y-8">
         <div className="space-y-1">
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">
             Clientes
           </h1>
-          <p className="text-sm sm:text-base text-muted-foreground font-medium">
-            Gerencie os clientes cadastrados
+          <p className="text-sm text-gray-500 font-medium">
+            Gerencie os clientes cadastrados no sistema
           </p>
         </div>
 
         {/* Cards de Estatísticas */}
         {!isLoading && !error && (
-          <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-3">
-            <Card className="p-4 sm:p-6 border shadow-sm hover:shadow-md transition-shadow bg-gradient-to-br from-white to-primary/5">
+          <div className="grid gap-6 sm:grid-cols-3">
+            <div className="p-6 bg-white rounded-3xl border border-gray-100 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.02)] transition-all hover:shadow-[0_8px_30px_-6px_rgba(0,0,0,0.03)] hover:-translate-y-0.5">
               <div className="flex items-start justify-between">
-                <div className="space-y-1 sm:space-y-2 flex-1 min-w-0">
-                  <p className="text-xs sm:text-sm font-medium text-muted-foreground">
-                    Total de Clientes
-                  </p>
-                  <p className="text-2xl sm:text-3xl font-bold">{stats.total}</p>
-                  <p className="text-xs text-muted-foreground">
-                    clientes cadastrados
-                  </p>
-                </div>
-                <div className="p-2 sm:p-3 rounded-lg bg-primary/10 flex-shrink-0">
-                  <Users className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                <div className="space-y-4">
+                  <div className="h-12 w-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 transition-colors">
+                    <Users className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <p className="text-3xl font-semibold tracking-tight text-gray-900 leading-none mb-1">
+                      {stats.total}
+                    </p>
+                    <p className="text-sm font-medium text-gray-400">
+                      Total de Clientes
+                    </p>
+                  </div>
                 </div>
               </div>
-            </Card>
+            </div>
 
-            <Card className="p-4 sm:p-6 border shadow-sm hover:shadow-md transition-shadow bg-gradient-to-br from-white to-green-50">
+            <div className="p-6 bg-white rounded-3xl border border-gray-100 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.02)] transition-all hover:shadow-[0_8px_30px_-6px_rgba(0,0,0,0.03)] hover:-translate-y-0.5">
               <div className="flex items-start justify-between">
-                <div className="space-y-1 sm:space-y-2 flex-1 min-w-0">
-                  <p className="text-xs sm:text-sm font-medium text-muted-foreground">
-                    Ativos
-                  </p>
-                  <p className="text-2xl sm:text-3xl font-bold text-green-600">
-                    {stats.active}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    clientes ativos
-                  </p>
-                </div>
-                <div className="p-2 sm:p-3 rounded-lg bg-green-100 flex-shrink-0">
-                  <UserCheck className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
+                <div className="space-y-4">
+                  <div className="h-12 w-12 rounded-full bg-green-50 flex items-center justify-center text-green-600 transition-colors">
+                    <UserCheck className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <p className="text-3xl font-semibold tracking-tight text-gray-900 leading-none mb-1">
+                      {stats.active}
+                    </p>
+                    <p className="text-sm font-medium text-gray-400">
+                      Clientes Ativos
+                    </p>
+                  </div>
                 </div>
               </div>
-            </Card>
+            </div>
 
-            <Card className="p-4 sm:p-6 border shadow-sm hover:shadow-md transition-shadow bg-gradient-to-br from-white to-red-50">
+            <div className="p-6 bg-white rounded-3xl border border-gray-100 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.02)] transition-all hover:shadow-[0_8px_30px_-6px_rgba(0,0,0,0.03)] hover:-translate-y-0.5">
               <div className="flex items-start justify-between">
-                <div className="space-y-1 sm:space-y-2 flex-1 min-w-0">
-                  <p className="text-xs sm:text-sm font-medium text-muted-foreground">
-                    Bloqueados
-                  </p>
-                  <p className="text-2xl sm:text-3xl font-bold text-red-600">
-                    {stats.blocked}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    clientes bloqueados
-                  </p>
-                </div>
-                <div className="p-2 sm:p-3 rounded-lg bg-red-100 flex-shrink-0">
-                  <UserX className="h-4 w-4 sm:h-5 sm:w-5 text-red-600" />
+                <div className="space-y-4">
+                  <div className="h-12 w-12 rounded-full bg-red-50 flex items-center justify-center text-red-600 transition-colors">
+                    <UserX className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <p className="text-3xl font-semibold tracking-tight text-gray-900 leading-none mb-1">
+                      {stats.blocked}
+                    </p>
+                    <p className="text-sm font-medium text-gray-400">
+                      Bloqueados
+                    </p>
+                  </div>
                 </div>
               </div>
-            </Card>
+            </div>
           </div>
         )}
 

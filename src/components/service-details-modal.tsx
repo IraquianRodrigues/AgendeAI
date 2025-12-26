@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Briefcase, Trash2, Clock } from "lucide-react";
+import { Briefcase, Trash2, Clock, Banknote } from "lucide-react";
 import type { ServiceRow } from "@/types/database.types";
 import { formatDateTimeBR } from "@/lib/date-utils";
 import { toast } from "sonner";
@@ -37,6 +37,7 @@ export function ServiceDetailsModal({
 }: ServiceDetailsModalProps) {
   const [code, setCode] = useState("");
   const [durationMinutes, setDurationMinutes] = useState("");
+  const [price, setPrice] = useState("");
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
 
   const createMutation = useCreateService();
@@ -47,9 +48,11 @@ export function ServiceDetailsModal({
     if (service) {
       setCode(service.code);
       setDurationMinutes(service.duration_minutes.toString());
+      setPrice(service.price ? service.price.toString() : "");
     } else if (isCreating) {
       setCode("");
       setDurationMinutes("");
+      setPrice("");
     }
   }, [service, isCreating]);
 
@@ -73,11 +76,14 @@ export function ServiceDetailsModal({
       return;
     }
 
+    const priceValue = price ? parseFloat(price) : null;
+
     try {
       if (isCreating) {
         await createMutation.mutateAsync({
           code: code.trim(),
           duration_minutes: duration,
+          price: priceValue,
         });
         toast.success("Serviço criado com sucesso!");
       } else if (service) {
@@ -85,6 +91,7 @@ export function ServiceDetailsModal({
           id: service.id,
           code: code.trim(),
           duration_minutes: duration,
+          price: priceValue,
         });
         toast.success("Serviço atualizado com sucesso!");
       }
@@ -178,6 +185,27 @@ export function ServiceDetailsModal({
                   />
                   <p className="text-xs text-muted-foreground">
                     Tempo estimado em minutos para realização do serviço
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="price" className="flex items-center gap-2">
+                    <Banknote className="h-4 w-4" />
+                    Valor (R$)
+                  </Label>
+                  <Input
+                    id="price"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    placeholder="Ex: 150.00"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    disabled={isPending}
+                    className="w-full"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Valor base do serviço (opcional)
                   </p>
                 </div>
               </div>

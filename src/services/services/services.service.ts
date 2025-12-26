@@ -63,12 +63,14 @@ export class ServicesService {
   async createService(params: {
     code: string;
     duration_minutes: number;
+    price?: number | null;
   }): Promise<ServiceRow> {
     const { data, error } = await this.supabase
       .from("services")
       .insert({
         code: params.code,
         duration_minutes: params.duration_minutes,
+        price: params.price ?? null,
       })
       .select()
       .single();
@@ -88,12 +90,14 @@ export class ServicesService {
     id: number;
     code: string;
     duration_minutes: number;
+    price?: number | null;
   }): Promise<ServiceRow> {
     const { data, error } = await this.supabase
       .from("services")
       .update({
         code: params.code,
         duration_minutes: params.duration_minutes,
+        price: params.price ?? null,
       })
       .eq("id", params.id)
       .select()

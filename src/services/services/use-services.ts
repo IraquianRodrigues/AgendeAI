@@ -43,7 +43,7 @@ export function useCreateService() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (params: { code: string; duration_minutes: number }) =>
+    mutationFn: (params: { code: string; duration_minutes: number; price?: number | null }) =>
       servicesService.createService(params),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["services"] });
@@ -58,8 +58,12 @@ export function useUpdateService() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (params: { id: number; code: string; duration_minutes: number }) =>
-      servicesService.updateService(params),
+    mutationFn: (params: {
+      id: number;
+      code: string;
+      duration_minutes: number;
+      price?: number | null;
+    }) => servicesService.updateService(params),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["services"] });
     },

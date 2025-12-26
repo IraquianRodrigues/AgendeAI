@@ -97,22 +97,22 @@ export function AppointmentsTable({
 
   return (
     <>
-      <Card className="overflow-hidden border shadow-sm">
-        <div className="p-6 space-y-6 bg-gradient-to-br from-white to-muted/20">
+      <div className="bg-white rounded-[32px] border border-gray-100 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.02)] overflow-hidden">
+        <div className="p-8 space-y-6 border-b border-gray-50">
           <div className="space-y-1">
-            <h2 className="text-2xl font-bold tracking-tight">Agendamentos do Dia</h2>
-            <p className="text-sm text-muted-foreground">
+            <h2 className="text-xl font-semibold text-gray-900">Agendamentos do Dia</h2>
+            <p className="text-sm text-gray-400 font-medium">
               Visualize e gerencie os atendimentos agendados
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <div className="relative flex-1 group">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within:text-gray-900 transition-colors" />
               <Input
                 placeholder="Buscar por nome do cliente..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 h-10 shadow-sm focus-visible:ring-2"
+                className="pl-11 h-12 bg-gray-50/50 border-gray-100 focus-visible:bg-white focus-visible:ring-2 focus-visible:ring-gray-900/5 transition-all rounded-2xl font-medium text-gray-700"
               />
             </div>
             <div className="flex gap-2">
@@ -121,7 +121,7 @@ export function AppointmentsTable({
                 onValueChange={setSelectedProfessionalId}
                 disabled={isLoadingProfessionals}
               >
-                <SelectTrigger className="w-full sm:w-[250px] h-10 shadow-sm">
+                <SelectTrigger className="w-full sm:w-[250px] h-12 bg-gray-50/50 border-gray-100 focus:bg-white focus:ring-2 focus:ring-gray-900/5 transition-all rounded-2xl font-medium text-gray-700">
                   <SelectValue placeholder="Todos os profissionais" />
                 </SelectTrigger>
                 <SelectContent>
@@ -142,7 +142,7 @@ export function AppointmentsTable({
                 onClick={onRefresh}
                 disabled={isRefreshing || !onRefresh}
                 title="Atualizar agendamentos"
-                className="h-10 w-10 shadow-sm"
+                className="h-10 w-10 border-gray-200 hover:bg-gray-50 text-gray-500"
               >
                 <RefreshCw
                   className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`}
@@ -155,34 +155,34 @@ export function AppointmentsTable({
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b bg-gradient-to-r from-muted/50 to-muted/30">
-                <th className="text-left p-4 font-semibold text-sm text-foreground uppercase tracking-wider">
+              <tr className="border-b border-gray-100 bg-gray-50/50">
+                <th className="text-left p-4 font-medium text-xs text-gray-500 uppercase tracking-wider">
                   Cliente
                 </th>
-                <th className="text-left p-4 font-semibold text-sm text-foreground uppercase tracking-wider">
+                <th className="text-left p-4 font-medium text-xs text-gray-500 uppercase tracking-wider">
                   Telefone
                 </th>
-                <th className="text-left p-4 font-semibold text-sm text-foreground uppercase tracking-wider">
+                <th className="text-left p-4 font-medium text-xs text-gray-500 uppercase tracking-wider">
                   Horário Início
                 </th>
-                <th className="text-left p-4 font-semibold text-sm text-foreground uppercase tracking-wider">
+                <th className="text-left p-4 font-medium text-xs text-gray-500 uppercase tracking-wider">
                   Horário Fim
                 </th>
-                <th className="text-left p-4 font-semibold text-sm text-foreground uppercase tracking-wider">
+                <th className="text-left p-4 font-medium text-xs text-gray-500 uppercase tracking-wider">
                   Ações
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-100">
               {filteredAppointments.length === 0 ? (
                 <tr>
                   <td
                     colSpan={5}
-                    className="p-12 text-center text-muted-foreground"
+                    className="p-12 text-center text-gray-500"
                   >
                     <div className="flex flex-col items-center gap-2">
-                      <p className="text-base">Nenhum agendamento encontrado</p>
-                      <p className="text-sm text-muted-foreground/70">
+                      <p className="text-base font-medium">Nenhum agendamento encontrado</p>
+                      <p className="text-sm text-gray-400">
                         Tente ajustar os filtros ou selecionar outra data
                       </p>
                     </div>
@@ -194,19 +194,17 @@ export function AppointmentsTable({
                   return (
                     <tr
                       key={appointment.id}
-                      className={`border-b transition-all hover:bg-gradient-to-r hover:from-primary/5 hover:to-primary/2 group ${
-                        isCompleted ? "bg-green-50/50" : ""
-                      }`}
+                      className={`group transition-colors hover:bg-gray-50/50 ${isCompleted ? "bg-green-50/30" : ""
+                        }`}
                     >
                       <td className="p-4">
                         <div className="flex items-center gap-2">
-                          <span className={`font-semibold group-hover:text-primary transition-colors ${
-                            isCompleted ? "text-green-700" : "text-foreground"
-                          }`}>
+                          <span className={`font-medium transition-colors ${isCompleted ? "text-green-700" : "text-gray-900 group-hover:text-blue-600"
+                            }`}>
                             {appointment.customer_name}
                           </span>
                           {isCompleted && (
-                            <Badge variant="outline" className="bg-green-100 text-green-700 border-green-300 text-xs">
+                            <Badge variant="outline" className="bg-green-100/50 text-green-700 border-green-200 text-[10px] px-1.5 py-0 h-5">
                               <CheckCircle2 className="h-3 w-3 mr-1" />
                               Concluído
                             </Badge>
@@ -214,17 +212,17 @@ export function AppointmentsTable({
                         </div>
                       </td>
                       <td className="p-4">
-                        <span className="text-sm text-muted-foreground font-mono">
+                        <span className="text-sm text-gray-500 font-mono">
                           {appointment.customer_phone}
                         </span>
                       </td>
                       <td className="p-4">
-                        <Badge variant="secondary" className="font-mono font-semibold">
+                        <Badge variant="secondary" className="bg-gray-100 text-gray-700 hover:bg-gray-200 border-0 font-mono font-medium">
                           {formatTimeBR(appointment.start_time)}
                         </Badge>
                       </td>
                       <td className="p-4">
-                        <Badge variant="secondary" className="font-mono font-semibold">
+                        <Badge variant="secondary" className="bg-gray-100 text-gray-700 hover:bg-gray-200 border-0 font-mono font-medium">
                           {formatTimeBR(appointment.end_time)}
                         </Badge>
                       </td>
@@ -248,9 +246,9 @@ export function AppointmentsTable({
                                 }
                               }}
                               disabled={markAsNotCompletedMutation.isPending}
-                              className="bg-green-600 hover:bg-green-700 text-white transition-all shadow-sm hover:shadow-md"
+                              className="bg-green-600 hover:bg-green-700 text-white h-8 px-3 text-xs shadow-none border border-transparent"
                             >
-                              <CheckCircle2 className="h-4 w-4 mr-1" />
+                              <CheckCircle2 className="h-3.5 w-3.5 mr-1.5" />
                               Concluído
                             </Button>
                           ) : (
@@ -271,17 +269,17 @@ export function AppointmentsTable({
                                 }
                               }}
                               disabled={markAsCompletedMutation.isPending}
-                              className="hover:bg-green-50 hover:text-green-700 hover:border-green-300 transition-all shadow-sm hover:shadow-md"
+                              className="h-8 px-3 text-xs border-green-200 text-green-700 hover:bg-green-50 hover:text-green-800"
                             >
-                              <CheckCircle2 className="h-4 w-4 mr-1" />
+                              <CheckCircle2 className="h-3.5 w-3.5 mr-1.5" />
                               Concluir
                             </Button>
                           )}
                           <Button
-                            variant="outline"
+                            variant="ghost"
                             size="sm"
                             onClick={() => setSelectedAppointment(appointment)}
-                            className="hover:bg-primary hover:text-primary-foreground transition-all shadow-sm hover:shadow-md"
+                            className="h-8 px-3 text-xs text-gray-500 hover:text-blue-600 hover:bg-blue-50"
                           >
                             Ver Detalhes
                           </Button>
@@ -294,7 +292,7 @@ export function AppointmentsTable({
             </tbody>
           </table>
         </div>
-      </Card>
+      </div>
 
       <AppointmentDetailsModal
         appointment={selectedAppointment}

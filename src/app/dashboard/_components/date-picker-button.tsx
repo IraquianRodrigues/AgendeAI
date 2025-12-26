@@ -25,18 +25,20 @@ export function DatePickerButton({
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
+          variant="ghost"
           className={cn(
-            "w-full sm:w-[280px] justify-start text-left font-medium shadow-sm hover:shadow-md transition-all border-2",
-            !date && "text-muted-foreground"
+            "w-full sm:w-[280px] justify-start text-left font-normal text-gray-700 hover:bg-transparent hover:text-gray-900",
+            !date && "text-gray-400"
           )}
         >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? (
-            format(date, "PPP", { locale: ptBR })
-          ) : (
-            <span>Selecione uma data</span>
-          )}
+          <CalendarIcon className="mr-2 h-4 w-4 text-gray-500" />
+          <span className="capitalize">
+            {date ? (
+              format(date, "PPP", { locale: ptBR })
+            ) : (
+              <span>Selecione uma data</span>
+            )}
+          </span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="end">
