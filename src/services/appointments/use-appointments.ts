@@ -14,6 +14,14 @@ export function useAppointments(params?: GetAppointmentsParams) {
   });
 }
 
+export function useAppointmentsByPhone(phone: string | null) {
+  return useQuery({
+    queryKey: ["appointments-history", phone],
+    queryFn: () => phone ? appointmentsService.getAppointmentsByPhone(phone) : Promise.resolve([]),
+    enabled: !!phone,
+  });
+}
+
 export function useAppointment(id: number | null) {
   return useQuery({
     queryKey: ["appointment", id],
@@ -85,6 +93,19 @@ export function useMarkAppointmentAsNotCompleted() {
   });
 }
 
+export function useUpdateAppointmentStatus() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, status }: { id: number; status: string }) =>
+      appointmentsService.updateStatus(id, status),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["appointments"] });
+      queryClient.invalidateQueries({ queryKey: ["appointment"] });
+    },
+  });
+}
+
 /**
  * Hook para buscar serviços disponíveis para um profissional
  */
@@ -96,8 +117,8 @@ export function useAvailableServicesForProfessional(
     queryFn: () =>
       professionalId
         ? appointmentsService.getAvailableServicesForProfessional(
-            professionalId
-          )
+          professionalId
+        )
         : Promise.resolve([]),
     enabled: professionalId !== null,
     staleTime: 1000 * 60 * 5,
@@ -131,11 +152,29 @@ export function useDurationForProfessionalService(
     queryFn: () =>
       professionalId && serviceId
         ? appointmentsService.getDurationForProfessionalService(
-            professionalId,
-            serviceId
-          )
+          professionalId,
+          serviceId
+        )
         : Promise.resolve(null),
     enabled: professionalId !== null && serviceId !== null,
     staleTime: 1000 * 60 * 5,
+  });
+}
+/**
+ * Hook para buscar estatísticas do dashboard
+ */
+export function useDashboardStats(startDate: Date, endDate: Date) {
+  return useQuery({
+    queryKey: ["dashboard-stats", startDate, endDate],
+    queryFn: async () => {
+      // Reutiliza o serviço existente para buscar appointments no intervalo
+      const appointments = await appointmentsService.getAppointments({
+        startDate,
+        endDate
+      });
+
+      return appointments;
+    },
+    staleTime: 1000 * 60 * 5, // 5 minutos de cache
   });
 }

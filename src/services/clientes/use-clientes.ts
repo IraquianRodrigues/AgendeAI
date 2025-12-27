@@ -45,3 +45,21 @@ export function useUpdateClienteTrava() {
     },
   });
 }
+
+/**
+ * Hook para atualizar anotações do cliente
+ */
+export function useUpdateClienteNotes() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ telefone, notes }: { telefone: string; notes: string }) =>
+      clientesService.updateClienteNotes(telefone, notes),
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ["cliente", variables.telefone],
+      });
+      queryClient.invalidateQueries({ queryKey: ["clientes"] });
+    },
+  });
+}

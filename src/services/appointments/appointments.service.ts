@@ -29,6 +29,8 @@ export class AppointmentsService {
         professional:professionals!appointments_professional_code_fkey(*)
       `
       )
+      .is("completed_at", null) // Filter out completed appointments
+      .neq("status", "completed") // Double check
       .order("start_time", { ascending: true });
 
     // Filtro por data específica
@@ -102,6 +104,37 @@ export class AppointmentsService {
   }
 
   /**
+   * Busca histórico de appointments de um cliente pelo telefone
+   */
+  async getAppointmentsByPhone(telefone: string): Promise<AppointmentWithRelations[]> {
+    const { data, error } = await this.supabase
+      .from("appointments")
+      .select(
+        `
+        *,
+        service:services!appointments_service_code_fkey(*),
+        professional:professionals!appointments_professional_code_fkey(*)
+      `
+      )
+      .eq("customer_phone", telefone)
+      .order("start_time", { ascending: false });
+
+    if (error) {
+      console.error("Erro ao buscar histórico do cliente:", error);
+      return [];
+    }
+
+    return (data as any[]).map((item) => ({
+      ...item,
+      service: Array.isArray(item.service) ? item.service[0] : item.service,
+      professional: Array.isArray(item.professional)
+        ? item.professional[0]
+        : item.professional,
+    })) as AppointmentWithRelations[];
+  }
+
+
+  /**
    * Atualiza um appointment
    */
   async updateAppointment(
@@ -133,13 +166,13 @@ export class AppointmentsService {
   async markAsCompleted(id: number): Promise<void> {
     const { error, data } = await this.supabase
       .from("appointments")
-      .update({ completed_at: new Date().toISOString() })
+      .update({ completed_at: new Date().toISOString(), status: 'completed' })
       .eq("id", id)
       .select();
 
     if (error) {
       console.error("Erro ao marcar appointment como concluído:", error);
-      
+
       // Verificar se o erro é devido à coluna não existir
       if (error.code === "42703" || error.message?.includes("column") || error.message?.includes("completed_at")) {
         throw new Error(
@@ -147,10 +180,40 @@ export class AppointmentsService {
           "Por favor, execute o script SQL: scripts/add-completed-at-column.sql"
         );
       }
-      
+
       throw new Error(
         error.message || "Falha ao marcar agendamento como concluído"
       );
+    }
+  }
+
+  /**
+   * Atualiza o status de um appointment
+   */
+  async updateStatus(id: number, status: string): Promise<void> {
+    const { error } = await this.supabase
+      .from("appointments")
+      .update({ status })
+      .eq("id", id);
+
+    if (error) {
+      console.error("Erro ao atualizar status:", error);
+
+      // Check for missing column error (Postgres code 42703)
+      if (error.code === '42703' || error.message?.includes("column") || error.details?.includes("status")) {
+        throw new Error("A coluna 'status' ainda não foi criada no banco de dados. Execute o script de migração: supabase/migrations/add_status_to_appointments.sql");
+      }
+
+      throw new Error(`Falha ao atualizar status: ${error.message || 'Erro desconhecido'}`);
+    }
+
+    // Se o status for completed, também atualiza completed_at se estiver nulo
+    if (status === 'completed') {
+      await this.markAsCompleted(id);
+    } else if (status !== 'completed') {
+      // Se mudar de completed para outro, talvez devessemos limpar o completed_at?
+      // Por enquanto vamos manter simples, mas idealmente sim:
+      await this.markAsNotCompleted(id);
     }
   }
 
@@ -160,12 +223,12 @@ export class AppointmentsService {
   async markAsNotCompleted(id: number): Promise<void> {
     const { error } = await this.supabase
       .from("appointments")
-      .update({ completed_at: null })
+      .update({ completed_at: null, status: 'pending' })
       .eq("id", id);
 
     if (error) {
       console.error("Erro ao desmarcar appointment como concluído:", error);
-      
+
       // Verificar se o erro é devido à coluna não existir
       if (error.code === "42703" || error.message?.includes("column") || error.message?.includes("completed_at")) {
         throw new Error(
@@ -173,7 +236,7 @@ export class AppointmentsService {
           "Por favor, execute o script SQL: scripts/add-completed-at-column.sql"
         );
       }
-      
+
       throw new Error(
         error.message || "Falha ao desmarcar agendamento como concluído"
       );

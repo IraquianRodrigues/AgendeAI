@@ -14,6 +14,7 @@ export interface Database {
           start_time: string;
           end_time: string;
           completed_at: string | null;
+          status: string;
         };
         Insert: Omit<
           Database["public"]["Tables"]["appointments"]["Row"],
@@ -58,6 +59,7 @@ export interface Database {
           nome: string;
           telefone: string;
           trava: boolean;
+          notes: string | null;
         };
         Insert: Omit<
           Database["public"]["Tables"]["clientes"]["Row"],

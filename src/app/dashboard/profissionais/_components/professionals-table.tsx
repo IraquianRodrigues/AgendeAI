@@ -16,6 +16,39 @@ interface ProfessionalsTableProps {
 
 const ITEMS_PER_PAGE = 15;
 
+const getInitials = (name: string) => {
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+};
+
+const getAvatarColor = (name: string) => {
+  const colors = [
+    "bg-red-100 text-red-600",
+    "bg-orange-100 text-orange-600",
+    "bg-amber-100 text-amber-600",
+    "bg-green-100 text-green-600",
+    "bg-emerald-100 text-emerald-600",
+    "bg-teal-100 text-teal-600",
+    "bg-cyan-100 text-cyan-600",
+    "bg-blue-100 text-blue-600",
+    "bg-indigo-100 text-indigo-600",
+    "bg-violet-100 text-violet-600",
+    "bg-purple-100 text-purple-600",
+    "bg-fuchsia-100 text-fuchsia-600",
+    "bg-pink-100 text-pink-600",
+    "bg-rose-100 text-rose-600",
+  ];
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return colors[Math.abs(hash) % colors.length];
+};
+
 export function ProfessionalsTable({
   professionals,
   isLoading = false,
@@ -96,7 +129,7 @@ export function ProfessionalsTable({
             <thead>
               <tr className="border-b border-gray-50 bg-gray-50/30">
                 <th className="text-left p-6 font-medium text-xs text-gray-400 uppercase tracking-wider">
-                  Nome
+                  Profissional
                 </th>
                 <th className="text-left p-6 font-medium text-xs text-gray-400 uppercase tracking-wider">
                   Especialidade
@@ -141,13 +174,24 @@ export function ProfessionalsTable({
                       className="group transition-colors hover:bg-gray-50/50"
                     >
                       <td className="p-6">
-                        <span className="font-medium text-gray-700 group-hover:text-gray-900 transition-colors">
-                          {professional.name}
-                        </span>
+                        <div className="flex items-center gap-4">
+                          <div
+                            className={`h-10 w-10 rounded-full flex items-center justify-center text-sm font-bold shadow-sm ${getAvatarColor(
+                              professional.name
+                            )}`}
+                          >
+                            {getInitials(professional.name)}
+                          </div>
+                          <div>
+                            <span className="block font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
+                              {professional.name}
+                            </span>
+                          </div>
+                        </div>
                       </td>
                       <td className="p-6">
-                        <span className="text-sm text-gray-500 font-medium">
-                          {professional.specialty || "Não informada"}
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
+                          {professional.specialty || "Geral"}
                         </span>
                       </td>
                       <td className="p-6">
@@ -156,7 +200,7 @@ export function ProfessionalsTable({
                         </span>
                       </td>
                       <td className="p-6">
-                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex items-center justify-end gap-2">
                           <Button
                             variant="outline"
                             size="sm"

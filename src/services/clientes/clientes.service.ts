@@ -72,6 +72,34 @@ export class ClientesService {
 
     return data;
   }
+
+  /**
+   * Atualiza as anotações de um cliente
+   */
+  async updateClienteNotes(
+    telefone: string,
+    notes: string
+  ): Promise<ClienteRow | null> {
+    const { data, error } = await this.supabase
+      .from("clientes")
+      .update({ notes })
+      .eq("telefone", telefone)
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Erro ao atualizar anotações do cliente:", error);
+
+      // Check for missing column error (Postgres code 42703)
+      if (error.code === '42703' || error.message?.includes("column") || error.details?.includes("notes")) {
+        throw new Error("A coluna 'notes' ainda não existe no banco. Execute o script: supabase/migrations/add_notes_to_clientes.sql");
+      }
+
+      throw new Error("Falha ao atualizar anotações do cliente");
+    }
+
+    return data;
+  }
 }
 
 // Singleton instance
