@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Loader2, Plus, Save, Trash2, Clock } from "lucide-react";
+import { Loader2, Plus, Save, Trash2, Clock, Search, Edit2 } from "lucide-react";
 import type { ProfessionalRow, ServiceRow } from "@/types/database.types";
 import { toast } from "sonner";
 import { useServices } from "@/services/services/use-services";
@@ -108,6 +108,8 @@ export function ProfessionalServicesManagement({
 
     setServiceStates(newStates);
   }, [servicesKey, associationsKey, allServices, professionalServices]);
+
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleToggleService = async (serviceId: number) => {
     const state = serviceStates.get(serviceId);
@@ -213,6 +215,10 @@ export function ProfessionalServicesManagement({
     });
   };
 
+  const filteredServices = allServices.filter((service) =>
+    service.code.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const isLoading = isLoadingServices || isLoadingProfessionalServices;
   const isPending =
     createMutation.isPending ||
@@ -231,145 +237,127 @@ export function ProfessionalServicesManagement({
   }
 
   return (
-    <Card>
-      <div className="p-4 sm:p-6">
-        <div className="space-y-4">
-          <div>
-            <h3 className="text-base sm:text-lg font-semibold">Serviços do Profissional</h3>
-            <p className="text-xs sm:text-sm text-muted-foreground">
-              Gerencie quais serviços {professional.name} pode realizar e defina
-              a duração específica para cada um
+    <Card className="bg-slate-50/50 dark:bg-slate-900/20">
+      <div className="p-4 sm:p-6 space-y-6">
+        <div className="flex flex-col gap-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Buscar por nome do serviço..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-9 bg-white dark:bg-slate-950"
+            />
+          </div>
+        </div>
+
+        <Separator />
+
+        {filteredServices.length === 0 ? (
+          <div className="text-center py-12 border-2 border-dashed rounded-lg bg-white/50 dark:bg-slate-950/50">
+            <p className="text-muted-foreground text-sm">
+              {searchTerm
+                ? "Nenhum serviço encontrado para sua busca"
+                : "Nenhum serviço disponível"}
             </p>
           </div>
+        ) : (
+          <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+            {filteredServices.map((service) => {
+              const state = serviceStates.get(service.id);
+              if (!state) return null;
 
-          <Separator />
+              const isAssigned = state.isActive;
 
-          {allServices.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground text-sm">
-              Nenhum serviço cadastrado no sistema
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {allServices.map((service) => {
-                const state = serviceStates.get(service.id);
-                if (!state) return null;
-
-                return (
-                  <div
-                    key={service.id}
-                    className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-3 sm:p-4 border rounded-lg hover:bg-muted/20 transition-colors"
-                  >
-                    <div className="flex-1 space-y-2 min-w-0">
-                      <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-                        <span className="font-medium font-mono text-sm sm:text-base break-all">
-                          {service.code}
-                        </span>
-                        {state.isActive ? (
-                          <Badge variant="default" className="text-xs">Ativo</Badge>
-                        ) : (
-                          <Badge variant="secondary" className="text-xs">Inativo</Badge>
-                        )}
-                      </div>
-
-                      {state.isActive && (
-                        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-                          {state.isEditing ? (
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <Clock className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
+              return (
+                <div
+                  key={service.id}
+                  className={`
+                    flex items-center justify-between p-3 rounded-lg border transition-all duration-200
+                    ${isAssigned
+                      ? "bg-blue-50/50 dark:bg-blue-900/10 border-blue-200 dark:border-blue-800"
+                      : "bg-white dark:bg-slate-950 border-transparent hover:border-slate-200 dark:hover:border-slate-800"
+                    }
+                  `}
+                >
+                  <div className="flex items-center gap-4 flex-1 min-w-0">
+                    <div className="flex flex-col">
+                      <span className={`font-medium text-sm ${isAssigned ? "text-blue-700 dark:text-blue-300" : "text-slate-700 dark:text-slate-300"}`}>
+                        {service.code}
+                      </span>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <Clock className="w-3 h-3 text-slate-400" />
+                        {isAssigned ? (
+                          state.isEditing ? (
+                            <div className="flex items-center gap-2">
                               <Input
                                 type="number"
                                 min="1"
                                 value={state.customDuration}
                                 onChange={(e) =>
-                                  handleDurationChange(
-                                    service.id,
-                                    e.target.value
-                                  )
+                                  handleDurationChange(service.id, e.target.value)
                                 }
-                                className="w-20 sm:w-24 h-7 sm:h-8 text-sm"
-                                disabled={isPending}
+                                className="w-16 h-6 text-xs px-1.5 py-0 bg-white"
+                                autoFocus
+                                onBlur={() => handleUpdateDuration(service.id, state.customDuration)}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') handleUpdateDuration(service.id, state.customDuration);
+                                }}
                               />
-                              <span className="text-xs sm:text-sm text-muted-foreground">
-                                minutos
-                              </span>
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={() =>
-                                  handleUpdateDuration(
-                                    service.id,
-                                    state.customDuration
-                                  )
-                                }
-                                disabled={isPending}
-                                className="h-7 sm:h-8"
-                              >
-                                <Save className="h-3 w-3 sm:h-4 sm:w-4" />
-                              </Button>
+                              <span className="text-[10px] text-slate-500">min</span>
                             </div>
                           ) : (
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <Clock className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
-                              <span className="text-xs sm:text-sm">
-                                {state.customDuration} minutos
+                            <div
+                              className="flex items-center gap-1.5 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 px-1.5 py-0.5 rounded transition-colors"
+                              onClick={() => toggleEditing(service.id)}
+                              title="Clique para editar o tempo"
+                            >
+                              <span className="text-xs text-slate-600 dark:text-slate-400">
+                                {state.customDuration} min
                               </span>
-                              {state.customDuration !==
-                                state.defaultDuration && (
-                                <span className="text-xs text-muted-foreground">
-                                  (padrão: {state.defaultDuration}min)
-                                </span>
+                              {state.customDuration !== state.defaultDuration && (
+                                <span className="text-[10px] text-slate-400">(padrão: {state.defaultDuration})</span>
                               )}
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={() => toggleEditing(service.id)}
-                                disabled={isPending}
-                                className="h-7 sm:h-8 text-xs sm:text-sm"
-                              >
-                                Editar
-                              </Button>
+                              <Edit2 className="w-3 h-3 text-slate-400 opacity-50" />
                             </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-2 flex-shrink-0">
-                      <Button
-                        size="sm"
-                        variant={state.isActive ? "outline" : "default"}
-                        onClick={() => handleToggleService(service.id)}
-                        disabled={isPending}
-                        className="gap-2 text-xs sm:text-sm h-7 sm:h-8"
-                      >
-                        {state.isActive ? (
-                          <span className="hidden sm:inline">Desativar</span>
+                          )
                         ) : (
-                          <>
-                            <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
-                            <span className="hidden sm:inline">Adicionar</span>
-                          </>
+                          <span className="text-xs text-slate-400">
+                            {state.defaultDuration} min
+                          </span>
                         )}
-                      </Button>
-
-                      {state.associationId && (
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => handleDeleteService(service.id)}
-                          disabled={isPending}
-                          className="h-7 sm:h-8"
-                        >
-                          <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 text-destructive" />
-                        </Button>
-                      )}
+                      </div>
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
+
+                  <div className="flex items-center gap-2">
+                    {isAssigned ? (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => handleToggleService(service.id)}
+                        disabled={isPending}
+                        className="h-8 w-8 p-0 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleToggleService(service.id)}
+                        disabled={isPending}
+                        className="h-8 text-xs font-medium border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                      >
+                        Adicionar
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </Card>
   );

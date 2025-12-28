@@ -144,9 +144,6 @@ export function LoginContent() {
                   <Label htmlFor="password" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                     Senha
                   </Label>
-                  <a href="#" className="text-xs font-medium text-blue-600 hover:text-blue-500">
-                    Esqueceu a senha?
-                  </a>
                 </div>
                 <div className="relative group">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
