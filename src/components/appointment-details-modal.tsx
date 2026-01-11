@@ -19,6 +19,7 @@ import {
   MessageCircle,
   Lock,
   XCircle,
+  DollarSign,
 } from "lucide-react";
 import type { AppointmentWithRelations } from "@/types/database.types";
 import {
@@ -33,6 +34,8 @@ import {
   useClienteByTelefone,
   useUpdateClienteTrava,
 } from "@/services/clientes/use-clientes";
+import { CompleteAppointmentPaymentModal } from "@/components/complete-appointment-payment-modal";
+import { useState } from "react";
 
 interface AppointmentDetailsModalProps {
   appointment: AppointmentWithRelations | null;
@@ -45,6 +48,7 @@ export function AppointmentDetailsModal({
   onClose,
   onUpdate,
 }: AppointmentDetailsModalProps) {
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const deleteMutation = useDeleteAppointment();
   const updateClienteTravaMutation = useUpdateClienteTrava();
 
@@ -246,6 +250,16 @@ export function AppointmentDetailsModal({
               <Separator />
 
               <div className="flex flex-col gap-2 sm:gap-3 pt-2">
+                {/* Botão de Registrar Pagamento */}
+                <Button
+                  onClick={() => setIsPaymentModalOpen(true)}
+                  className="w-full gap-2 cursor-pointer bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                  size="sm"
+                >
+                  <DollarSign className="h-4 w-4" />
+                  Concluir e Registrar Pagamento
+                </Button>
+
                 <Button
                   onClick={handleWhatsApp}
                   variant="default"
@@ -294,6 +308,17 @@ export function AppointmentDetailsModal({
             </div>
           </div>
       </DialogContent>
+
+      {/* Payment Modal */}
+      <CompleteAppointmentPaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        appointment={appointment}
+        onSuccess={() => {
+          onUpdate();
+          setIsPaymentModalOpen(false);
+        }}
+      />
     </Dialog>
   );
 }

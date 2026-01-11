@@ -32,7 +32,7 @@ export default function DashboardContent() {
 
   return (
     <div className="min-h-screen bg-muted/40 transition-colors duration-300">
-      <div className="container mx-auto p-6 lg:p-10 space-y-8">
+      <div className="container mx-auto p-4 lg:p-10 space-y-8">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="space-y-1">
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground transition-colors">

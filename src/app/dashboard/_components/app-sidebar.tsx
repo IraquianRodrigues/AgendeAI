@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, Users, UserCog, Briefcase, ChevronLeft, ChevronRight, Menu, X } from "lucide-react";
+import { Calendar, Users, UserCog, Briefcase, DollarSign, ChevronLeft, ChevronRight, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -27,6 +27,11 @@ const navItems = [
     href: "/dashboard/servicos",
     label: "Serviços",
     icon: Briefcase,
+  },
+  {
+    href: "/dashboard/financeiro",
+    label: "Financeiro",
+    icon: DollarSign,
   },
 ];
 
@@ -123,6 +128,7 @@ export function AppSidebar() {
           )}
         </div>
 
+
         {/* Navigation Items */}
         <nav className="flex-1 px-3 py-4 space-y-1">
           {navItems.map((item) => {
@@ -135,7 +141,7 @@ export function AppSidebar() {
                 href={item.href}
                 className={cn(
                   "flex items-center gap-3 rounded-xl transition-all duration-200 group relative",
-                  isCollapsed ? "px-3 py-3 justify-center" : "px-4 py-3",
+                  isCollapsed ? "md:px-3 md:py-3 md:justify-center px-4 py-3" : "px-4 py-3",
                   isActive
                     ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
@@ -146,18 +152,18 @@ export function AppSidebar() {
                   "h-5 w-5 transition-all flex-shrink-0",
                   isActive ? "text-white" : "text-muted-foreground group-hover:text-foreground"
                 )} />
-                {!isCollapsed && (
-                  <span className={cn(
-                    "font-medium text-sm transition-colors",
-                    isActive ? "text-white" : ""
-                  )}>
-                    {item.label}
-                  </span>
-                )}
+                {/* Show label on mobile always, hide on desktop only when collapsed */}
+                <span className={cn(
+                  "font-medium text-sm transition-colors",
+                  isCollapsed ? "md:hidden" : "",
+                  isActive ? "text-white" : ""
+                )}>
+                  {item.label}
+                </span>
                 
-                {/* Tooltip for collapsed state */}
+                {/* Tooltip for collapsed state - desktop only */}
                 {isCollapsed && (
-                  <div className="absolute left-full ml-2 px-3 py-1.5 bg-popover text-popover-foreground text-sm rounded-lg shadow-lg border border-border opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+                  <div className="hidden md:block absolute left-full ml-2 px-3 py-1.5 bg-popover text-popover-foreground text-sm rounded-lg shadow-lg border border-border opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
                     {item.label}
                   </div>
                 )}
@@ -166,10 +172,11 @@ export function AppSidebar() {
           })}
         </nav>
 
-        {/* Collapse Toggle Button - Floating on the right edge */}
+
+        {/* Collapse Toggle Button - Floating on the right edge - Desktop Only */}
         <button
           onClick={toggleCollapsed}
-          className="absolute -right-3 top-20 z-50 h-6 w-6 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center hover:scale-110 border-2 border-background"
+          className="hidden md:flex absolute -right-3 top-20 z-50 h-6 w-6 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg hover:shadow-xl transition-all duration-200 items-center justify-center hover:scale-110 border-2 border-background"
           title={isCollapsed ? "Expandir sidebar" : "Minimizar sidebar"}
         >
           {isCollapsed ? (

@@ -16,6 +16,7 @@ import { Search, Loader2, RefreshCw, CheckCircle2 } from "lucide-react";
 import type { AppointmentWithRelations } from "@/types/database.types";
 import { formatTimeBR } from "@/lib/date-utils";
 import { AppointmentDetailsModal } from "@/components/appointment-details-modal";
+import { CompleteAppointmentPaymentModal } from "@/components/complete-appointment-payment-modal";
 import { useProfessionals } from "@/services/professionals/use-professionals";
 import {
   useMarkAppointmentAsCompleted,
@@ -37,6 +38,8 @@ export function AppointmentsTable({
   isRefreshing = false,
 }: AppointmentsTableProps) {
   const [selectedAppointment, setSelectedAppointment] =
+    useState<AppointmentWithRelations | null>(null);
+  const [appointmentForPayment, setAppointmentForPayment] =
     useState<AppointmentWithRelations | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedProfessionalId, setSelectedProfessionalId] =
@@ -152,7 +155,138 @@ export function AppointmentsTable({
           </div>
         </div>
 
-        <div className="overflow-x-auto">
+        {/* Versão Mobile - Cards */}
+        <div className="block lg:hidden space-y-3 p-4">
+          {filteredAppointments.length === 0 ? (
+            <div className="p-12 text-center text-muted-foreground">
+              <div className="flex flex-col items-center gap-2">
+                <p className="text-base font-medium">Nenhum agendamento encontrado</p>
+                <p className="text-sm text-muted-foreground/70">
+                  Tente ajustar os filtros ou selecionar outra data
+                </p>
+              </div>
+            </div>
+          ) : (
+            filteredAppointments.map((appointment) => {
+              const isCompleted = appointment.completed_at !== null;
+              return (
+                <div
+                  key={appointment.id}
+                  className={`p-4 border rounded-2xl transition-all ${
+                    isCompleted
+                      ? "bg-green-50/30 border-green-100 dark:bg-green-900/20 dark:border-green-900/50"
+                      : "bg-card border-border"
+                  }`}
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3
+                            className={`font-semibold text-base truncate ${
+                              isCompleted
+                                ? "text-green-700 dark:text-green-400"
+                                : "text-card-foreground"
+                            }`}
+                          >
+                            {appointment.customer_name}
+                          </h3>
+                          {isCompleted && (
+                            <Badge
+                              variant="outline"
+                              className="bg-green-100/50 dark:bg-green-900/40 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800 text-[10px] px-1.5 py-0 h-5"
+                            >
+                              <CheckCircle2 className="h-3 w-3 mr-1" />
+                              Concluído
+                            </Badge>
+                          )}
+                        </div>
+                        <p className="text-sm text-muted-foreground font-mono">
+                          {appointment.customer_phone}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div>
+                        <p className="text-xs text-muted-foreground mb-1">Médico</p>
+                        <p className="font-medium text-foreground">
+                          {appointment.professional?.name || "N/A"}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground mb-1">Procedimento</p>
+                        <p className="font-medium text-foreground truncate">
+                          {appointment.service?.code || "N/A"}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground mb-1">Início</p>
+                        <Badge variant="secondary" className="bg-muted text-muted-foreground hover:bg-muted/80 border-0 font-mono font-medium">
+                          {formatTimeBR(appointment.start_time)}
+                        </Badge>
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground mb-1">Fim</p>
+                        <Badge variant="secondary" className="bg-muted text-muted-foreground hover:bg-muted/80 border-0 font-mono font-medium">
+                          {formatTimeBR(appointment.end_time)}
+                        </Badge>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2 pt-2">
+                      {appointment.completed_at ? (
+                        <Button
+                          variant="default"
+                          size="sm"
+                          onClick={async () => {
+                            try {
+                              await markAsNotCompletedMutation.mutateAsync(
+                                appointment.id
+                              );
+                              toast.success("Agendamento desmarcado como concluído");
+                            } catch (error: any) {
+                              const errorMessage = error?.message || "Erro ao desmarcar agendamento";
+                              toast.error(errorMessage, {
+                                duration: 5000,
+                              });
+                            }
+                          }}
+                          disabled={markAsNotCompletedMutation.isPending}
+                          className="flex-1 bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 text-white h-9 text-xs shadow-none border border-transparent"
+                        >
+                          <CheckCircle2 className="h-3.5 w-3.5 mr-1.5" />
+                          Concluído
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setAppointmentForPayment(appointment)}
+                          className="flex-1 h-9 text-xs border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-800 dark:hover:text-green-300 transition-colors"
+                        >
+                          <CheckCircle2 className="h-3.5 w-3.5 mr-1.5" />
+                          Concluir
+                        </Button>
+                      )}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setSelectedAppointment(appointment)}
+                        className="flex-1 h-9 text-xs rounded-xl border-input hover:bg-muted hover:text-foreground transition-all font-medium"
+                      >
+                        Ver Detalhes
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+
+        {/* Versão Desktop - Tabela */}
+        <div className="hidden lg:block overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-border bg-muted/50">
@@ -271,20 +405,7 @@ export function AppointmentsTable({
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={async () => {
-                                try {
-                                  await markAsCompletedMutation.mutateAsync(
-                                    appointment.id
-                                  );
-                                  toast.success("Agendamento marcado como concluído");
-                                } catch (error: any) {
-                                  const errorMessage = error?.message || "Erro ao marcar agendamento como concluído";
-                                  toast.error(errorMessage, {
-                                    duration: 5000,
-                                  });
-                                }
-                              }}
-                              disabled={markAsCompletedMutation.isPending}
+                              onClick={() => setAppointmentForPayment(appointment)}
                               className="h-8 px-3 text-xs border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-800 dark:hover:text-green-300 transition-colors"
                             >
                               <CheckCircle2 className="h-3.5 w-3.5 mr-1.5" />
@@ -315,6 +436,25 @@ export function AppointmentsTable({
         onClose={() => setSelectedAppointment(null)}
         onUpdate={() => {
           setSelectedAppointment(null);
+          onRefresh?.();
+        }}
+      />
+
+      <CompleteAppointmentPaymentModal
+        isOpen={!!appointmentForPayment}
+        onClose={() => setAppointmentForPayment(null)}
+        appointment={appointmentForPayment}
+        onSuccess={async () => {
+          if (appointmentForPayment) {
+            try {
+              await markAsCompletedMutation.mutateAsync(appointmentForPayment.id);
+              toast.success("Agendamento concluído e pagamento registrado!");
+              setAppointmentForPayment(null);
+              onRefresh?.();
+            } catch (error) {
+              toast.error("Erro ao marcar agendamento como concluído");
+            }
+          }
         }}
       />
     </>

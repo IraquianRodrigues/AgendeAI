@@ -36,7 +36,7 @@ export function AppHeader() {
 
   return (
     <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-md border-b border-border shadow-sm transition-colors duration-300">
-      <div className="h-16 px-6 flex items-center justify-between">
+      <div className="h-16 px-4 pl-16 md:pl-6 flex items-center justify-between">
         {/* Page Title - will be dynamic based on route */}
         <div className="flex items-center gap-3">
           <div className="hidden md:flex items-center gap-2">
