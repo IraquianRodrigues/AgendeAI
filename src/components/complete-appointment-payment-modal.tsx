@@ -68,18 +68,24 @@ export function CompleteAppointmentPaymentModal({
 
     setIsSubmitting(true);
 
+
     try {
+      // Debug: ver dados do appointment
+      console.log('📋 Appointment:', appointment);
+      console.log('👨‍⚕️ Professional ID:', appointment.professional_id);
+      console.log('👨‍⚕️ Professional Code:', appointment.professional_code);
+      
       // Criar transação financeira
       const result = await FinancialService.createTransaction({
         client_id: cliente.id.toString(),
-        appointment_id: appointment.id.toString(),
+        professional_id: appointment.professional_code, // Usar professional_code ao invés de professional_id
         type: "receita",
         category: appointment.service?.code || "Consulta",
-        description: `Pagamento - ${appointment.customer_name} - ${appointment.service?.code || "Consulta"}`,
+        description: "",
         amount: amount,
         payment_method: paymentMethod,
         status: "pago",
-        due_date: appointment.start_time.split("T")[0],
+        due_date: new Date().toISOString().split("T")[0],
         paid_date: new Date().toISOString().split("T")[0],
       });
 

@@ -129,6 +129,7 @@ export function FinancialTable({ transactions, isLoading, onRefresh }: Financial
           <TableRow className="bg-muted/50">
             <TableHead>Data</TableHead>
             <TableHead>Cliente</TableHead>
+            <TableHead>Profissional</TableHead>
             <TableHead>Descrição</TableHead>
             <TableHead>Tipo</TableHead>
             <TableHead>Categoria</TableHead>
@@ -144,10 +145,13 @@ export function FinancialTable({ transactions, isLoading, onRefresh }: Financial
                 {formatDate(transaction.due_date)}
               </TableCell>
               <TableCell>
-                {transaction.client?.name || "N/A"}
+                {transaction.client?.nome || "N/A"}
+              </TableCell>
+              <TableCell>
+                {transaction.professional?.name || "N/A"}
               </TableCell>
               <TableCell className="max-w-xs truncate">
-                {transaction.description || transaction.category}
+                {transaction.category}
               </TableCell>
               <TableCell>{getTypeBadge(transaction.type)}</TableCell>
               <TableCell className="text-muted-foreground">

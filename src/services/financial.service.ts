@@ -15,6 +15,7 @@ export class FinancialService {
     clientId?: string;
     status?: string;
     type?: string;
+    professionalId?: number;
     startDate?: string;
     endDate?: string;
   }) {
@@ -23,7 +24,8 @@ export class FinancialService {
         .from("transactions")
         .select(`
           *,
-          client:clientes(id, nome, telefone)
+          client:clientes(id, nome, telefone),
+          professional:professionals(id, name)
         `)
         .order("due_date", { ascending: false });
 
@@ -35,6 +37,9 @@ export class FinancialService {
       }
       if (filters?.type) {
         query = query.eq("type", filters.type);
+      }
+      if (filters?.professionalId) {
+        query = query.eq("professional_id", filters.professionalId);
       }
       if (filters?.startDate) {
         query = query.gte("due_date", filters.startDate);
@@ -58,7 +63,8 @@ export class FinancialService {
         .from("transactions")
         .select(`
           *,
-          client:clientes(id, nome, telefone)
+          client:clientes(id, nome, telefone),
+          professional:professionals(id, name)
         `)
         .eq("id", id)
         .single();

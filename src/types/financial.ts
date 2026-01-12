@@ -9,6 +9,7 @@ export interface Transaction {
   id: string;
   client_id: string;
   appointment_id?: string | null;
+  professional_id?: number | null;
   type: TransactionType;
   category: string;
   description?: string | null;
@@ -22,10 +23,13 @@ export interface Transaction {
   updated_at: string;
   // Joined data
   client?: {
-    id: string;
+    id: number;
+    nome: string;
+    telefone?: string;
+  };
+  professional?: {
+    id: number;
     name: string;
-    email?: string;
-    phone?: string;
   };
 }
 
@@ -87,6 +91,7 @@ export interface FinancialMetrics {
 export interface CreateTransactionInput {
   client_id?: string; // Opcional para despesas
   appointment_id?: string;
+  professional_id?: number;
   type: TransactionType;
   category: string;
   description?: string;

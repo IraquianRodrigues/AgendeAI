@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { User, Phone, Lock, MessageCircle, DollarSign, CalendarClock, Star } from "lucide-react";
+import { User, Phone, Lock, MessageCircle, DollarSign, CalendarClock, Star, FileText } from "lucide-react";
 import type { ClienteRow } from "@/types/database.types";
 import { formatDateTimeBR } from "@/lib/date-utils";
 import { toast } from "sonner";
@@ -24,6 +24,8 @@ import { useAppointmentsByPhone } from "@/services/appointments/use-appointments
 import { Textarea } from "@/components/ui/textarea";
 import { useMemo, useState } from "react";
 import { useUpdateClienteNotes } from "@/services/clientes/use-clientes";
+import { useLatestMedicalRecord, useCreateMedicalRecord, useUpdateMedicalRecord } from "@/services/medical-records/use-medical-records";
+import { useMedicalRecords } from "@/services/medical-records/use-medical-records";
 
 interface ClienteDetailsModalProps {
   cliente: ClienteRow | null;
@@ -50,6 +52,14 @@ export function ClienteDetailsModal({
 
   const [activeTab, setActiveTab] = useState("overview");
   const [notes, setNotes] = useState(cliente?.notes || "");
+  const [clinicalNotes, setClinicalNotes] = useState("");
+  const [observations, setObservations] = useState("");
+
+  // Fetch medical records
+  const { data: latestRecord, isLoading: isLoadingRecord } = useLatestMedicalRecord(cliente?.id || null);
+  const { data: medicalRecords = [], isLoading: isLoadingMedicalRecords } = useMedicalRecords(cliente?.id || null);
+  const createRecordMutation = useCreateMedicalRecord();
+  const updateRecordMutation = useUpdateMedicalRecord();
 
   // Update local notes state when client data updates from server
   useMemo(() => {
@@ -59,6 +69,14 @@ export function ClienteDetailsModal({
       setNotes(cliente.notes);
     }
   }, [clienteAtualizado, cliente]);
+
+  // Update medical record state when data loads
+  useMemo(() => {
+    if (latestRecord) {
+      setClinicalNotes(latestRecord.clinical_notes || "");
+      setObservations(latestRecord.observations || "");
+    }
+  }, [latestRecord]);
 
   if (!cliente) return null;
 
@@ -182,7 +200,7 @@ export function ClienteDetailsModal({
             <div className="inline-flex bg-muted/50 p-1 rounded-xl">
               <button
                 onClick={() => setActiveTab("overview")}
-                className={`px-6 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${activeTab === 'overview'
+                className={`px-4 sm:px-6 py-2 rounded-lg text-sm font-semibold transition-all duration-200 whitespace-nowrap ${activeTab === 'overview'
                   ? 'bg-background text-foreground shadow-sm ring-1 ring-black/5 dark:ring-white/10'
                   : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
                   }`}
@@ -191,12 +209,21 @@ export function ClienteDetailsModal({
               </button>
               <button
                 onClick={() => setActiveTab("history")}
-                className={`px-6 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${activeTab === 'history'
+                className={`px-4 sm:px-6 py-2 rounded-lg text-sm font-semibold transition-all duration-200 whitespace-nowrap ${activeTab === 'history'
                   ? 'bg-background text-foreground shadow-sm ring-1 ring-black/5 dark:ring-white/10'
                   : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
                   }`}
               >
                 Histórico
+              </button>
+              <button
+                onClick={() => setActiveTab("prontuario")}
+                className={`px-4 sm:px-6 py-2 rounded-lg text-sm font-semibold transition-all duration-200 whitespace-nowrap ${activeTab === 'prontuario'
+                  ? 'bg-background text-foreground shadow-sm ring-1 ring-black/5 dark:ring-white/10'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
+                  }`}
+              >
+                Prontuário
               </button>
             </div>
           </div>
@@ -315,6 +342,157 @@ export function ClienteDetailsModal({
                       </div>
                     ))
                   )}
+                </div>
+              )}
+
+              {activeTab === "prontuario" && (
+                <div className="space-y-6">
+                  {/* Clinical Notes Section */}
+                  <div className="flex flex-col gap-3">
+                    <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider ml-1 flex items-center gap-2">
+                      <FileText className="h-3.5 w-3.5 text-purple-400 fill-purple-400" />
+                      Evolução Clínica
+                    </h3>
+                    <div className="relative group">
+                      <Textarea
+                        value={clinicalNotes}
+                        onChange={(e) => setClinicalNotes(e.target.value)}
+                        onBlur={async () => {
+                          if (!latestRecord) {
+                            // Create new record
+                            if (clinicalNotes.trim()) {
+                              try {
+                                await createRecordMutation.mutateAsync({
+                                  client_id: clienteAtual.id,
+                                  clinical_notes: clinicalNotes,
+                                  observations: observations,
+                                });
+                                toast.success("Prontuário salvo com sucesso");
+                              } catch (error) {
+                                toast.error("Erro ao salvar prontuário");
+                              }
+                            }
+                          } else if (clinicalNotes !== (latestRecord.clinical_notes || "")) {
+                            // Update existing record
+                            try {
+                              await updateRecordMutation.mutateAsync({
+                                id: latestRecord.id,
+                                input: { clinical_notes: clinicalNotes },
+                              });
+                              toast.success("Prontuário atualizado");
+                            } catch (error) {
+                              toast.error("Erro ao atualizar prontuário");
+                            }
+                          }
+                        }}
+                        placeholder="Registre aqui a evolução clínica do paciente, procedimentos realizados, observações importantes..."
+                        className="min-h-[150px] bg-card border-border hover:border-purple-200 dark:hover:border-purple-800 focus:bg-background focus:border-purple-300 dark:focus:border-purple-700 focus:ring-4 focus:ring-purple-100/50 dark:focus:ring-purple-900/20 resize-none placeholder:text-muted-foreground text-foreground leading-relaxed shadow-[0_2px_8px_rgba(0,0,0,0.02)] dark:shadow-none p-5 rounded-2xl text-sm transition-all duration-300"
+                      />
+                      <div className="absolute bottom-4 right-4 pointer-events-none">
+                        {(createRecordMutation.isPending || updateRecordMutation.isPending) ? (
+                          <span className="flex items-center gap-1.5 text-xs font-medium text-purple-600 bg-purple-50 dark:bg-purple-900/30 px-2 py-1 rounded-full border border-purple-100/50 dark:border-purple-800/50 shadow-sm animate-pulse">
+                            <div className="h-1.5 w-1.5 rounded-full bg-purple-500" />
+                            Salvando
+                          </span>
+                        ) : (
+                          <span className="text-[10px] text-muted-foreground/60 transition-colors bg-background/50 backdrop-blur-sm px-2 py-1 rounded-md">
+                            Salvo autom.
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Observations Section */}
+                  <div className="flex flex-col gap-3">
+                    <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider ml-1">
+                      Observações Importantes
+                    </h3>
+                    <Textarea
+                      value={observations}
+                      onChange={(e) => setObservations(e.target.value)}
+                      onBlur={async () => {
+                        if (!latestRecord) {
+                          if (observations.trim()) {
+                            try {
+                              await createRecordMutation.mutateAsync({
+                                client_id: clienteAtual.id,
+                                clinical_notes: clinicalNotes,
+                                observations: observations,
+                              });
+                              toast.success("Observações salvas");
+                            } catch (error) {
+                              toast.error("Erro ao salvar observações");
+                            }
+                          }
+                        } else if (observations !== (latestRecord.observations || "")) {
+                          try {
+                            await updateRecordMutation.mutateAsync({
+                              id: latestRecord.id,
+                              input: { observations: observations },
+                            });
+                            toast.success("Observações atualizadas");
+                          } catch (error) {
+                            toast.error("Erro ao atualizar observações");
+                          }
+                        }
+                      }}
+                      placeholder="Alergias, condições especiais, restrições..."
+                      className="min-h-[80px] bg-amber-50/50 dark:bg-amber-900/10 border-amber-200 dark:border-amber-800 hover:border-amber-300 dark:hover:border-amber-700 focus:bg-background focus:border-amber-400 dark:focus:border-amber-600 focus:ring-4 focus:ring-amber-100/50 dark:focus:ring-amber-900/20 resize-none placeholder:text-muted-foreground text-foreground leading-relaxed p-4 rounded-xl text-sm transition-all duration-300"
+                    />
+                  </div>
+
+                  {/* Procedure Summary */}
+                  <div className="flex flex-col gap-3 pt-2">
+                    <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider ml-1">
+                      Resumo de Procedimentos
+                    </h3>
+                    {isLoadingHistory ? (
+                      <div className="flex items-center justify-center py-8 text-muted-foreground">
+                        <div className="h-6 w-6 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                      </div>
+                    ) : appointmentsHistory.length === 0 ? (
+                      <div className="text-center py-8 px-4 bg-muted/20 rounded-xl border border-dashed border-border">
+                        <p className="text-sm text-muted-foreground">Nenhum procedimento registrado</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        {appointmentsHistory.slice(0, 5).map((apt: any) => (
+                          <div key={apt.id} className="flex items-center justify-between p-3 rounded-xl bg-muted/30 border border-border">
+                            <div className="flex items-center gap-3 flex-1 min-w-0">
+                              <div className={`h-2 w-2 rounded-full flex-shrink-0 ${
+                                apt.completed_at ? 'bg-green-500' : 'bg-blue-500'
+                              }`} />
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium text-foreground truncate">
+                                  {apt.service?.code || "Procedimento"}
+                                </p>
+                                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                  <span>{formatDateTimeBR(apt.created_at)}</span>
+                                  {apt.professional?.name && (
+                                    <>
+                                      <span>•</span>
+                                      <span className="truncate">Dr(a). {apt.professional.name}</span>
+                                    </>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                            <span className={`text-xs font-medium px-2 py-1 rounded flex-shrink-0 ml-2 ${
+                              apt.completed_at
+                                ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
+                                : 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400'
+                            }`}>
+                              {apt.completed_at ? 'Concluído' : 'Agendado'}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Espaço extra no final */}
+                  <div className="h-8"></div>
                 </div>
               )}
             </div>

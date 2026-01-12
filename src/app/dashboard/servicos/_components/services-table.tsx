@@ -133,17 +133,17 @@ export function ServicesTable({
                       className="group transition-colors hover:bg-gray-50/50"
                     >
                       <td className="p-6">
-                        <span className="font-medium font-mono text-gray-700 group-hover:text-gray-900 transition-colors">
+                        <span className="font-medium font-mono text-foreground transition-colors">
                           {service.code}
                         </span>
                       </td>
                       <td className="p-6">
-                        <span className="text-sm text-gray-500 font-medium">
+                        <span className="text-sm text-muted-foreground font-medium">
                           {service.duration_minutes} minutos
                         </span>
                       </td>
                       <td className="p-6">
-                        <span className="text-sm text-gray-500 font-medium">
+                        <span className="text-sm text-muted-foreground font-medium">
                           {service.price
                             ? new Intl.NumberFormat("pt-BR", {
                               style: "currency",
@@ -157,7 +157,7 @@ export function ServicesTable({
                           variant="ghost"
                           size="sm"
                           onClick={() => setSelectedService(service)}
-                          className="h-9 px-4 text-xs font-medium text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
+                          className="h-9 px-4 text-xs font-medium text-muted-foreground hover:text-primary hover:bg-accent rounded-lg transition-colors cursor-pointer"
                         >
                           Editar
                         </Button>

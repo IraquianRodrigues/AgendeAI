@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { useUserRole } from "@/hooks/use-user-role";
 
 const navItems = [
   {
@@ -32,6 +33,7 @@ const navItems = [
     href: "/dashboard/financeiro",
     label: "Financeiro",
     icon: DollarSign,
+    requiresAdmin: true, // Apenas admin pode ver
   },
 ];
 
@@ -39,6 +41,15 @@ export function AppSidebar() {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const { hasFinancialAccess } = useUserRole();
+
+  // Filtrar itens de navegação baseado em permissões
+  const filteredNavItems = navItems.filter(item => {
+    if (item.requiresAdmin) {
+      return hasFinancialAccess;
+    }
+    return true;
+  });
 
   // Load collapsed state from localStorage on mount
   useEffect(() => {
@@ -131,45 +142,46 @@ export function AppSidebar() {
 
         {/* Navigation Items */}
         <nav className="flex-1 px-3 py-4 space-y-1">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = pathname === item.href;
+            {filteredNavItems.map((item) => {
+              const isActive = pathname === item.href;
+              const Icon = item.icon;
 
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-3 rounded-xl transition-all duration-200 group relative",
-                  isCollapsed ? "md:px-3 md:py-3 md:justify-center px-4 py-3" : "px-4 py-3",
-                  isActive
-                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                )}
-                title={isCollapsed ? item.label : undefined}
-              >
-                <Icon className={cn(
-                  "h-5 w-5 transition-all flex-shrink-0",
-                  isActive ? "text-white" : "text-muted-foreground group-hover:text-foreground"
-                )} />
-                {/* Show label on mobile always, hide on desktop only when collapsed */}
-                <span className={cn(
-                  "font-medium text-sm transition-colors",
-                  isCollapsed ? "md:hidden" : "",
-                  isActive ? "text-white" : ""
-                )}>
-                  {item.label}
-                </span>
-                
-                {/* Tooltip for collapsed state - desktop only */}
-                {isCollapsed && (
-                  <div className="hidden md:block absolute left-full ml-2 px-3 py-1.5 bg-popover text-popover-foreground text-sm rounded-lg shadow-lg border border-border opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setIsMobileOpen(false)}
+                  className={cn(
+                    "group relative flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium transition-all duration-200",
+                    isActive
+                      ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30"
+                      : "text-muted-foreground hover:bg-accent hover:text-foreground",
+                    isCollapsed && "md:justify-center md:px-2"
+                  )}
+                >
+                  <Icon className={cn("h-5 w-5 flex-shrink-0", isActive && "text-white")} />
+                  <span
+                    className={cn(
+                      "truncate transition-all duration-200",
+                      isCollapsed ? "md:hidden" : "block"
+                    )}
+                  >
                     {item.label}
-                  </div>
-                )}
-              </Link>
-            );
-          })}
+                  </span>
+
+                  {/* Tooltip para quando está colapsado - apenas desktop */}
+                  {isCollapsed && (
+                    <div className="hidden md:block absolute left-full ml-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded-md shadow-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">
+                      {item.label}
+                    </div>
+                  )}
+
+                  {isActive && (
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 opacity-10 animate-pulse" />
+                  )}
+                </Link>
+              );
+            })}
         </nav>
 
 

@@ -100,8 +100,20 @@ export type ProfessionalServiceRow =
 
 // Tipo de appointment com dados relacionados
 export interface AppointmentWithRelations extends AppointmentRow {
-  service: ServiceRow | null;
-  professional: ProfessionalRow | null;
+  customer_name: string;
+  customer_phone: string;
+  professional_id?: number;
+  professional?: {
+    id: number;
+    name: string;
+    code: string;
+  };
+  service?: {
+    id: number;
+    code: string;
+    duration_minutes: number;
+    price: number | null;
+  };
 }
 
 // Tipo de professional_service com dados relacionados
