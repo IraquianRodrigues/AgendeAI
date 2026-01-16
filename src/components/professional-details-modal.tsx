@@ -23,7 +23,6 @@ import {
   useUpdateProfessional,
   useDeleteProfessional,
 } from "@/services/professionals/use-professionals";
-import { ProfessionalServicesManagement } from "./professional-services-management";
 
 interface ProfessionalDetailsModalProps {
   professional: ProfessionalRow | null;
@@ -203,9 +202,6 @@ export function ProfessionalDetailsModal({
                     </p>
                   </div>
                 </div>
-
-                <Separator />
-                <ProfessionalServicesManagement professional={professional} />
               </>
             )}
 

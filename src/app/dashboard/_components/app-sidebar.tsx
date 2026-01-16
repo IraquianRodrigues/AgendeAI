@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, Users, UserCog, Briefcase, DollarSign, FileText, ChevronLeft, ChevronRight, Menu, X, Activity } from "lucide-react";
+import { Calendar, Users, UserCog, Briefcase, DollarSign, FileText, ChevronLeft, ChevronRight, Menu, X, Activity, CalendarDays } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -13,6 +13,11 @@ const navItems = [
     href: "/dashboard",
     label: "Dashboard",
     icon: Calendar,
+  },
+  {
+    href: "/dashboard/agenda",
+    label: "Agenda",
+    icon: CalendarDays,
   },
   {
     href: "/dashboard/clientes",
