@@ -11,9 +11,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { User, Phone, Lock, MessageCircle, DollarSign, CalendarClock, Star, FileText, TrendingUp, Activity, Clock, CheckCircle2, Calendar } from "lucide-react";
+import { User, Phone, Lock, MessageCircle, DollarSign, CalendarClock, Star, FileText, TrendingUp, Activity, Clock, CheckCircle2, Calendar, MapPin, Cake, Edit } from "lucide-react";
 import type { ClienteRow } from "@/types/database.types";
 import { formatDateTimeBR } from "@/lib/date-utils";
+import { calculateAge, formatBirthDate } from "@/lib/utils/date-utils";
 import { toast } from "sonner";
 import {
   useClienteByTelefone,
@@ -28,6 +29,7 @@ import { useMedicalRecords } from "@/services/medical-records/use-medical-record
 import { format, formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { createClient } from "@/lib/supabase/client";
+import { EditClienteModal } from "@/components/edit-cliente-modal";
 
 interface ClienteDetailsModalProps {
   cliente: ClienteRow | null;
@@ -71,6 +73,7 @@ export function ClienteDetailsModal({
   const [clinicalNotes, setClinicalNotes] = useState("");
   const [observations, setObservations] = useState("");
   const [professionalId, setProfessionalId] = useState<number | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   // Fetch medical records
   const { data: latestRecord, isLoading: isLoadingRecord } = useLatestMedicalRecord(cliente?.id || null);
@@ -188,10 +191,12 @@ export function ClienteDetailsModal({
                 )}
               </div>
               
-              <div className="flex-1 text-center sm:text-left space-y-2">
+              <div className="flex-1 text-center sm:text-left space-y-3">
                 <DialogTitle className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground mb-2">
                   {clienteAtual.nome}
                 </DialogTitle>
+                
+                {/* Badges Row 1: Phone, Status, Desde */}
                 <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
                   <Badge variant="outline" className="px-3 py-1 text-sm font-medium">
                     <Phone className="w-3.5 h-3.5 mr-1.5" />
@@ -205,6 +210,24 @@ export function ClienteDetailsModal({
                     Desde {format(new Date(clienteAtual.created_at), 'MMM yyyy', { locale: ptBR })}
                   </Badge>
                 </div>
+
+                {/* Badges Row 2: Birth Date & Address */}
+                {(clienteAtual.data_nascimento || clienteAtual.endereco || clienteAtual.bairro || clienteAtual.cidade) && (
+                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                    {clienteAtual.data_nascimento && (
+                      <Badge variant="outline" className="px-3 py-1 text-sm font-medium">
+                        <Cake className="w-3.5 h-3.5 mr-1.5" />
+                        {formatBirthDate(clienteAtual.data_nascimento)} • {calculateAge(clienteAtual.data_nascimento)} {calculateAge(clienteAtual.data_nascimento) === 1 ? 'ano' : 'anos'}
+                      </Badge>
+                    )}
+                    {(clienteAtual.endereco || clienteAtual.bairro || clienteAtual.cidade) && (
+                      <Badge variant="outline" className="px-3 py-1 text-sm font-medium">
+                        <MapPin className="w-3.5 h-3.5 mr-1.5" />
+                        {[clienteAtual.endereco, clienteAtual.bairro, clienteAtual.cidade].filter(Boolean).join(' • ')}
+                      </Badge>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -484,6 +507,14 @@ export function ClienteDetailsModal({
           </Button>
           <div className="flex flex-1 gap-3">
             <Button 
+              onClick={() => setIsEditModalOpen(true)} 
+              variant="outline"
+              className="flex-1 h-12 rounded-xl font-bold transition-all hover:scale-105 border-2 border-border hover:bg-background hover:border-primary"
+            >
+              <Edit className="h-4 w-4 mr-2" />
+              Editar
+            </Button>
+            <Button 
               onClick={handleToggleLock} 
               variant={isLocked ? "secondary" : "destructive"} 
               className={`flex-1 h-12 rounded-xl font-bold transition-all hover:scale-105 ${
@@ -505,6 +536,13 @@ export function ClienteDetailsModal({
           </div>
         </div>
       </DialogContent>
+
+      {/* Edit Modal */}
+      <EditClienteModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        cliente={clienteAtual}
+      />
     </Dialog>
   );
 }

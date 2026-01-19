@@ -3,12 +3,15 @@
 import { ClientesTable } from "./clientes-table";
 import { useClientes } from "@/services/clientes/use-clientes";
 import { Card } from "@/components/ui/card";
-import { useMemo } from "react";
-import { Users, UserCheck, UserX, AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useState, useMemo } from "react";
+import { Users, UserCheck, UserX, AlertCircle, UserPlus } from "lucide-react";
 import { StatCard } from "@/app/dashboard/_components/stat-card";
+import { AddClienteModal } from "@/components/add-cliente-modal";
 
 export default function ClientesContent() {
   const { data: clientes = [], isLoading, error } = useClientes();
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const stats = useMemo(() => {
     const total = clientes.length;
@@ -26,13 +29,22 @@ export default function ClientesContent() {
     <div className="min-h-screen bg-muted/40 transition-colors duration-300">
       <div className="container mx-auto p-4 lg:p-10 space-y-8">
         {/* Header */}
-        <div className="space-y-1">
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground transition-colors">
-            Clientes
-          </h1>
-          <p className="text-sm text-muted-foreground font-medium transition-colors">
-            Gerencie os clientes cadastrados no sistema
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="space-y-1">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground transition-colors">
+              Clientes
+            </h1>
+            <p className="text-sm text-muted-foreground font-medium transition-colors">
+              Gerencie os clientes cadastrados no sistema
+            </p>
+          </div>
+          <Button
+            onClick={() => setIsAddModalOpen(true)}
+            className="h-11 px-6 bg-primary hover:bg-primary/90 shadow-sm"
+          >
+            <UserPlus className="h-4 w-4 mr-2" />
+            Adicionar Cliente
+          </Button>
         </div>
 
         {/* Stats Cards */}
@@ -111,6 +123,12 @@ export default function ClientesContent() {
           </div>
         )}
       </div>
+
+      {/* Add Cliente Modal */}
+      <AddClienteModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+      />
     </div>
   );
 }

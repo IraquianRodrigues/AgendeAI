@@ -100,6 +100,69 @@ export class ClientesService {
 
     return data;
   }
+
+  /**
+   * Cria um novo cliente
+   */
+  async createCliente(
+    data: Omit<ClienteRow, "id" | "created_at">
+  ): Promise<ClienteRow> {
+    const { data: cliente, error } = await this.supabase
+      .from("clientes")
+      .insert({
+        nome: data.nome,
+        telefone: data.telefone,
+        trava: data.trava ?? false,
+        notes: data.notes ?? null,
+        endereco: data.endereco ?? null,
+        cidade: data.cidade ?? null,
+        bairro: data.bairro ?? null,
+        data_nascimento: data.data_nascimento ?? null,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Erro ao criar cliente:", error);
+      
+      // Check for duplicate phone number
+      if (error.code === "23505") {
+        throw new Error("Já existe um cliente cadastrado com este telefone");
+      }
+      
+      throw new Error("Falha ao criar cliente");
+    }
+
+    return cliente;
+  }
+
+  /**
+   * Atualiza um cliente existente
+   */
+  async updateCliente(
+    id: number,
+    data: Partial<Omit<ClienteRow, "id" | "created_at">>
+  ): Promise<ClienteRow> {
+    const { data: cliente, error } = await this.supabase
+      .from("clientes")
+      .update(data)
+      .eq("id", id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Erro ao atualizar cliente:", error);
+      
+      // Check for duplicate phone number
+      if (error.code === "23505") {
+        throw new Error("Já existe um cliente cadastrado com este telefone");
+      }
+      
+      throw new Error("Falha ao atualizar cliente");
+    }
+
+    return cliente;
+  }
 }
 
 // Singleton instance

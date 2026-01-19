@@ -60,6 +60,10 @@ export interface Database {
           telefone: string;
           trava: boolean;
           notes: string | null;
+          endereco: string | null;
+          cidade: string | null;
+          bairro: string | null;
+          data_nascimento: string | null;
         };
         Insert: Omit<
           Database["public"]["Tables"]["clientes"]["Row"],
