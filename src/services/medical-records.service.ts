@@ -140,6 +140,53 @@ export class MedicalRecordsService {
     }
   }
 
+  // Get all patients (for admin users)
+  static async getAllPatients() {
+    try {
+      // Get all unique clients who have appointments
+      const { data, error } = await supabase
+        .from("clientes")
+        .select(`
+          id,
+          nome,
+          telefone
+        `)
+        .order("nome", { ascending: true });
+
+      if (error) throw error;
+
+      // For each client, get appointment and record counts
+      const patientsWithStats = await Promise.all(
+        (data || []).map(async (client) => {
+          const { data: appointments } = await supabase
+            .from("appointments")
+            .select("start_time")
+            .eq("customer_phone", client.telefone)
+            .order("start_time", { ascending: false });
+
+          const { data: records } = await supabase
+            .from("medical_records")
+            .select("id")
+            .eq("client_id", client.id);
+
+          return {
+            client_id: client.id,
+            client_name: client.nome,
+            client_phone: client.telefone,
+            last_appointment: appointments?.[0]?.start_time || null,
+            total_appointments: appointments?.length || 0,
+            total_records: records?.length || 0,
+            professional_id: 0, // Not applicable for admin view
+          } as PatientSummary;
+        })
+      );
+
+      return { success: true, data: patientsWithStats };
+    } catch (error: any) {
+      return { success: false, error: error.message };
+    }
+  }
+
   // Get latest medical record for a client
   static async getLatestMedicalRecord(clientId: number, professionalId?: number) {
     try {

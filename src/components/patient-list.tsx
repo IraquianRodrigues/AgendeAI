@@ -17,15 +17,20 @@ interface PatientListProps {
 }
 
 export function PatientList({ searchQuery, onPatientClick }: PatientListProps) {
-  const { profile } = useUserRole();
+  const { profile, isAdmin } = useUserRole();
 
-  // Buscar pacientes do profissional
+  // Buscar pacientes - todos para admin, apenas do profissional para dentistas
   const { data: patientsData, isLoading } = useQuery({
-    queryKey: ["professional-patients", profile?.id],
+    queryKey: ["patients", profile?.id, isAdmin],
     queryFn: async () => {
       if (!profile?.id) return { success: false, data: [] };
       
-      // Buscar o ID do profissional baseado no email
+      // Se for admin, buscar todos os pacientes
+      if (isAdmin) {
+        return MedicalRecordsService.getAllPatients();
+      }
+      
+      // Se for profissional, buscar apenas seus pacientes
       const { createClient } = await import("@/lib/supabase/client");
       const supabase = createClient();
       const { data: professionals } = await supabase
