@@ -163,6 +163,27 @@ export class ClientesService {
 
     return cliente;
   }
+
+  /**
+   * Deleta um cliente
+   */
+  async deleteCliente(id: number): Promise<void> {
+    const { error } = await this.supabase
+      .from("clientes")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      console.error("Erro ao deletar cliente:", error);
+      
+      // Check for foreign key constraint violations
+      if (error.code === "23503") {
+        throw new Error("Não é possível excluir este cliente pois existem registros relacionados (agendamentos, prontuários, etc.)");
+      }
+      
+      throw new Error("Falha ao excluir cliente");
+    }
+  }
 }
 
 // Singleton instance

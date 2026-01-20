@@ -24,6 +24,7 @@ import { useCreateAppointment } from "@/services/appointments/use-appointments";
 import { useProfessionals } from "@/services/professionals/use-professionals";
 import { useServices } from "@/services/services/use-services";
 import { useClientes } from "@/services/clientes/use-clientes";
+import { useServicesByProfessional } from "@/services/professional-services/use-professional-services";
 
 interface NewAppointmentModalProps {
   isOpen: boolean;
@@ -47,6 +48,17 @@ export function NewAppointmentModal({
   const { data: professionals = [], isLoading: loadingProfessionals } = useProfessionals();
   const { data: services = [], isLoading: loadingServices } = useServices();
   const { data: clientes = [], isLoading: loadingClientes } = useClientes();
+  
+  // Buscar serviços do profissional selecionado
+  const { data: professionalServices = [] } = useServicesByProfessional(selectedProfessional);
+  
+  // Filtrar apenas serviços ativos do profissional
+  const availableServices = selectedProfessional
+    ? professionalServices
+        .filter(ps => ps.is_active)
+        .map(ps => ps.service)
+        .filter(Boolean)
+    : services;
 
   // Reset form when modal closes
   useEffect(() => {
@@ -59,6 +71,11 @@ export function NewAppointmentModal({
       setAppointmentTime("");
     }
   }, [isOpen]);
+  
+  // Reset service when professional changes
+  useEffect(() => {
+    setSelectedService(null);
+  }, [selectedProfessional]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -242,14 +259,23 @@ export function NewAppointmentModal({
               <Select
                 value={selectedService?.toString()}
                 onValueChange={(value) => setSelectedService(parseInt(value))}
+                disabled={!selectedProfessional}
               >
-                <SelectTrigger id="service" disabled={loadingServices}>
-                  <SelectValue placeholder={loadingServices ? "Carregando..." : "Selecione o serviço"} />
+                <SelectTrigger id="service" disabled={loadingServices || !selectedProfessional}>
+                  <SelectValue placeholder={
+                    !selectedProfessional 
+                      ? "Selecione um profissional primeiro" 
+                      : loadingServices 
+                      ? "Carregando..." 
+                      : availableServices.length === 0
+                      ? "Nenhum serviço disponível para este profissional"
+                      : "Selecione o serviço"
+                  } />
                 </SelectTrigger>
                 <SelectContent>
-                  {services.map((service) => (
-                    <SelectItem key={service.id} value={service.id.toString()}>
-                      {service.code} ({service.duration_minutes} min)
+                  {availableServices.map((service) => (
+                    <SelectItem key={service!.id} value={service!.id.toString()}>
+                      {service!.code} ({service!.duration_minutes} min)
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -291,7 +317,7 @@ export function NewAppointmentModal({
 
         {/* Footer com ações */}
         <div className="border-t bg-gradient-to-br from-muted/30 to-transparent px-6 py-4">
-          <div className="flex gap-3 justify-end">
+          <div className="flex gap-3 justify-center">
             <Button
               type="button"
               variant="outline"

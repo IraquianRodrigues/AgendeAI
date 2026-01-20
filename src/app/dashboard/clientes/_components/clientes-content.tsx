@@ -38,12 +38,9 @@ export default function ClientesContent() {
               Gerencie os clientes cadastrados no sistema
             </p>
           </div>
-          <Button
-            onClick={() => setIsAddModalOpen(true)}
-            className="h-11 px-6 bg-primary hover:bg-primary/90 shadow-sm"
-          >
-            <UserPlus className="h-4 w-4 mr-2" />
-            Adicionar Cliente
+          <Button onClick={() => setIsAddModalOpen(true)}>
+            <UserPlus className="mr-2 h-4 w-4" />
+            Cadastrar Cliente
           </Button>
         </div>
 

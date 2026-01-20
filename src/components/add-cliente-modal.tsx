@@ -188,7 +188,7 @@ export function AddClienteModal({ isOpen, onClose }: AddClienteModalProps) {
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold flex items-center gap-2">
             <User className="h-6 w-6 text-primary" />
-            Adicionar Novo Cliente
+            Cadastrar Cliente
           </DialogTitle>
           <DialogDescription>
             Preencha os dados do cliente. Campos marcados com * são

@@ -64,3 +64,18 @@ export function useUpdateClienteNotes() {
     },
   });
 }
+
+/**
+ * Hook para deletar cliente
+ */
+export function useDeleteCliente() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: number) => clientesService.deleteCliente(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["clientes"] });
+    },
+  });
+}
+

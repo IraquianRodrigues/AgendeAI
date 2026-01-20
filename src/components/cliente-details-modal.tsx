@@ -7,11 +7,21 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { User, Phone, Lock, MessageCircle, DollarSign, CalendarClock, Star, FileText, TrendingUp, Activity, Clock, CheckCircle2, Calendar, MapPin, Cake, Edit } from "lucide-react";
+import { User, Phone, Lock, MessageCircle, DollarSign, CalendarClock, Star, FileText, TrendingUp, Activity, Clock, CheckCircle2, Calendar, MapPin, Cake, Edit, Trash2 } from "lucide-react";
 import type { ClienteRow } from "@/types/database.types";
 import { formatDateTimeBR } from "@/lib/date-utils";
 import { calculateAge, formatBirthDate } from "@/lib/utils/date-utils";
@@ -19,6 +29,7 @@ import { toast } from "sonner";
 import {
   useClienteByTelefone,
   useUpdateClienteTrava,
+  useDeleteCliente,
 } from "@/services/clientes/use-clientes";
 import { useAppointmentsByPhone } from "@/services/appointments/use-appointments";
 import { Textarea } from "@/components/ui/textarea";
@@ -42,6 +53,7 @@ export function ClienteDetailsModal({
 }: ClienteDetailsModalProps) {
   const updateClienteTravaMutation = useUpdateClienteTrava();
   const updateClienteNotesMutation = useUpdateClienteNotes();
+  const deleteClienteMutation = useDeleteCliente();
 
   // Busca o cliente atualizado em tempo real
   const { data: clienteAtualizado } = useClienteByTelefone(
@@ -74,6 +86,7 @@ export function ClienteDetailsModal({
   const [observations, setObservations] = useState("");
   const [professionalId, setProfessionalId] = useState<number | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   // Fetch medical records
   const { data: latestRecord, isLoading: isLoadingRecord } = useLatestMedicalRecord(cliente?.id || null);
@@ -167,16 +180,22 @@ export function ClienteDetailsModal({
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      await deleteClienteMutation.mutateAsync(clienteAtual.id);
+      toast.success("Cliente excluído com sucesso");
+      setIsDeleteDialogOpen(false);
+      onClose();
+    } catch (error: any) {
+      toast.error(error.message || "Erro ao excluir cliente");
+    }
+  };
+
   return (
     <Dialog open={!!cliente} onOpenChange={onClose}>
       <DialogContent className="max-w-[95vw] sm:max-w-4xl max-h-[90vh] p-0 flex flex-col bg-background overflow-hidden shadow-2xl border rounded-2xl">
         {/* Header Clean e Neutro */}
         <div className="relative overflow-hidden bg-muted/30 dark:bg-muted/20 px-6 sm:px-8 pt-8 pb-20 flex-shrink-0 border-b">
-          {/* Subtle Pattern */}
-          <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.05]">
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:2rem_2rem]"></div>
-          </div>
-
           <div className="relative z-10">
             {/* Avatar e Info Principal */}
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-6">
@@ -239,7 +258,7 @@ export function ClienteDetailsModal({
             {/* Total Investido */}
             <div className="bg-card rounded-2xl p-4 shadow-xl border border-border hover:shadow-2xl transition-all hover:-translate-y-1">
               <div className="flex items-center gap-3 mb-2">
-                <div className="p-2.5 rounded-xl bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400">
+                <div className="p-2.5 rounded-xl bg-muted text-muted-foreground">
                   <DollarSign className="w-5 h-5" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -254,7 +273,7 @@ export function ClienteDetailsModal({
             {/* Total Visitas */}
             <div className="bg-card rounded-2xl p-4 shadow-xl border border-border hover:shadow-2xl transition-all hover:-translate-y-1">
               <div className="flex items-center gap-3 mb-2">
-                <div className="p-2.5 rounded-xl bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
+                <div className="p-2.5 rounded-xl bg-muted text-muted-foreground">
                   <CalendarClock className="w-5 h-5" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -267,7 +286,7 @@ export function ClienteDetailsModal({
             {/* Ticket Médio */}
             <div className="bg-card rounded-2xl p-4 shadow-xl border border-border hover:shadow-2xl transition-all hover:-translate-y-1">
               <div className="flex items-center gap-3 mb-2">
-                <div className="p-2.5 rounded-xl bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400">
+                <div className="p-2.5 rounded-xl bg-muted text-muted-foreground">
                   <TrendingUp className="w-5 h-5" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -282,7 +301,7 @@ export function ClienteDetailsModal({
             {/* Última Visita */}
             <div className="bg-card rounded-2xl p-4 shadow-xl border border-border hover:shadow-2xl transition-all hover:-translate-y-1">
               <div className="flex items-center gap-3 mb-2">
-                <div className="p-2.5 rounded-xl bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400">
+                <div className="p-2.5 rounded-xl bg-muted text-muted-foreground">
                   <Clock className="w-5 h-5" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -527,6 +546,14 @@ export function ClienteDetailsModal({
               {isLocked ? "Desbloquear" : "Bloquear"}
             </Button>
             <Button 
+              onClick={() => setIsDeleteDialogOpen(true)} 
+              variant="destructive"
+              className="flex-1 h-12 rounded-xl font-bold transition-all hover:scale-105 shadow-lg shadow-red-500/30"
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Excluir
+            </Button>
+            <Button 
               variant="outline" 
               onClick={onClose} 
               className="px-8 h-12 border-2 border-border hover:bg-background hover:border-foreground rounded-xl font-bold transition-all"
@@ -543,6 +570,33 @@ export function ClienteDetailsModal({
         onClose={() => setIsEditModalOpen(false)}
         cliente={clienteAtual}
       />
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Tem certeza que deseja excluir este cliente?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta ação não pode ser desfeita. O cliente <strong>{clienteAtual.nome}</strong> será permanentemente removido do sistema.
+              {appointmentsHistory.length > 0 && (
+                <span className="block mt-2 text-amber-600 dark:text-amber-500 font-semibold">
+                  ⚠️ Atenção: Este cliente possui {appointmentsHistory.length} agendamento(s) registrado(s).
+                </span>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-red-600 hover:bg-red-700 text-white"
+              disabled={deleteClienteMutation.isPending}
+            >
+              {deleteClienteMutation.isPending ? "Excluindo..." : "Excluir Cliente"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Dialog>
   );
 }
