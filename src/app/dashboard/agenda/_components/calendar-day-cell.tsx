@@ -29,15 +29,15 @@ export function CalendarDayCell({
       className={cn(
         "group relative aspect-square rounded-xl border transition-all duration-200",
         "hover:shadow-md hover:scale-105 hover:z-10",
-        "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
+        "focus:outline-none focus:ring-2 focus:ring-foreground/50 focus:ring-offset-2",
         // Current month vs other months
         isCurrentMonth
           ? "bg-card border-border"
           : "bg-muted/30 border-muted",
         // Today highlight
-        isToday && "ring-2 ring-blue-500 ring-offset-2 bg-blue-50 dark:bg-blue-950/20",
+        isToday && "ring-2 ring-foreground ring-offset-2 bg-muted",
         // Has appointments
-        hasAppointments && isCurrentMonth && "border-blue-200 dark:border-blue-800"
+        hasAppointments && isCurrentMonth && "border-foreground/20"
       )}
     >
       <div className="absolute inset-0 p-2 flex flex-col">
@@ -49,7 +49,7 @@ export function CalendarDayCell({
               isCurrentMonth
                 ? "text-foreground"
                 : "text-muted-foreground",
-              isToday && "text-blue-600 dark:text-blue-400"
+              isToday && "text-foreground font-bold"
             )}
           >
             {dayNumber}
@@ -61,7 +61,7 @@ export function CalendarDayCell({
               variant="secondary"
               className={cn(
                 "h-5 min-w-5 px-1.5 text-[10px] font-bold rounded-full",
-                "bg-gradient-to-r from-blue-600 to-indigo-600 text-white",
+                "bg-foreground text-background",
                 "group-hover:scale-110 transition-transform"
               )}
             >
@@ -77,9 +77,9 @@ export function CalendarDayCell({
             <div 
               className={cn(
                 "w-full h-1 rounded-full",
-                "bg-gradient-to-r from-blue-600 to-indigo-600",
+                "bg-foreground",
                 "group-hover:h-1.5 transition-all duration-200",
-                "shadow-sm shadow-blue-500/50"
+                "shadow-sm"
               )}
               style={{ 
                 opacity: Math.min(0.4 + (appointments.length * 0.15), 1)
@@ -93,9 +93,9 @@ export function CalendarDayCell({
                     key={apt.id}
                     className={cn(
                       "w-2 h-2 rounded-full",
-                      "bg-gradient-to-r from-blue-600 to-indigo-600",
+                      "bg-foreground",
                       "group-hover:scale-125 transition-transform",
-                      "shadow-sm shadow-blue-500/50"
+                      "shadow-sm"
                     )}
                     style={{ transitionDelay: `${idx * 50}ms` }}
                   />
@@ -106,7 +106,7 @@ export function CalendarDayCell({
         )}
 
         {/* Hover Effect Overlay */}
-        <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-500/0 to-indigo-500/0 group-hover:from-blue-500/5 group-hover:to-indigo-500/5 transition-all duration-200 pointer-events-none" />
+        <div className="absolute inset-0 rounded-xl bg-foreground/0 group-hover:bg-foreground/5 transition-all duration-200 pointer-events-none" />
       </div>
     </button>
   );

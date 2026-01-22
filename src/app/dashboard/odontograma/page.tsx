@@ -179,8 +179,8 @@ export default function OdontogramaPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold flex items-center gap-3">
-            <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl p-3 flex items-center justify-center shadow-lg shadow-blue-500/20">
-              <Activity className="h-6 w-6 text-white" />
+            <div className="bg-foreground rounded-xl p-3 flex items-center justify-center shadow-lg">
+              <Activity className="h-6 w-6 text-background" />
             </div>
             Odontograma
           </h1>

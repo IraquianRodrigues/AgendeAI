@@ -61,8 +61,8 @@ export default function CalendarView() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="space-y-1">
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground transition-colors flex items-center gap-3">
-              <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl p-2.5 flex items-center justify-center shadow-lg shadow-blue-500/20">
-                <CalendarIcon className="h-6 w-6 text-white" />
+              <div className="bg-foreground rounded-xl p-2.5 flex items-center justify-center shadow-lg">
+                <CalendarIcon className="h-6 w-6 text-background" />
               </div>
               Agenda
             </h1>
