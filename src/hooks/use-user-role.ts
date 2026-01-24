@@ -35,7 +35,6 @@ export function useUserRole() {
   const isProfessional = role === 'dentista' || role === 'medico';
   const hasFinancialAccess = role === 'admin'; // Admin tem acesso financeiro
   const hasMedicalRecordsAccess = isProfessional || role === 'admin'; // Admin tem acesso total
-  const hasOdontogramAccess = role === 'dentista' || role === 'admin'; // Admin tem acesso total
   const canManageUsers = role === 'admin';
   const canManageProfessionals = role === 'admin';
   const canManageServices = role === 'admin';
@@ -49,7 +48,6 @@ export function useUserRole() {
     isProfessional,
     hasFinancialAccess,
     hasMedicalRecordsAccess,
-    hasOdontogramAccess,
     canManageUsers,
     canManageProfessionals,
     canManageServices,

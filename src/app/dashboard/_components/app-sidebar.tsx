@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, Users, UserCog, Briefcase, DollarSign, FileText, ChevronLeft, ChevronRight, Menu, X, Activity, CalendarDays, LogOut, User } from "lucide-react";
+import { Calendar, Users, UserCog, Briefcase, DollarSign, ChevronLeft, ChevronRight, Menu, X, CalendarDays, LogOut, User, Settings } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -26,18 +26,6 @@ const navItems = [
     icon: Users,
   },
   {
-    href: "/dashboard/prontuarios",
-    label: "Prontuários",
-    icon: FileText,
-    requiresProfessional: true,
-  },
-  {
-    href: "/dashboard/odontograma",
-    label: "Odontograma",
-    icon: Activity,
-    requiresDentist: true,
-  },
-  {
     href: "/dashboard/profissionais",
     label: "Profissionais",
     icon: UserCog,
@@ -53,6 +41,12 @@ const navItems = [
     icon: DollarSign,
     requiresAdmin: true,
   },
+  {
+    href: "/dashboard/configuracoes",
+    label: "Configurações",
+    icon: Settings,
+    requiresAdmin: true,
+  },
 ];
 
 export function AppSidebar() {
@@ -61,19 +55,13 @@ export function AppSidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const { hasFinancialAccess, hasMedicalRecordsAccess, hasOdontogramAccess, profile, role } = useUserRole();
+  const { hasFinancialAccess, hasMedicalRecordsAccess, profile, role } = useUserRole();
   const supabase = createClient();
 
   // Filtrar itens de navegação baseado em permissões
   const filteredNavItems = navItems.filter(item => {
     if (item.requiresAdmin) {
       return hasFinancialAccess;
-    }
-    if (item.requiresProfessional) {
-      return hasMedicalRecordsAccess;
-    }
-    if (item.requiresDentist) {
-      return hasOdontogramAccess;
     }
     return true;
   });

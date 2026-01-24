@@ -153,7 +153,7 @@ export function ClienteDetailsModal({
   const handleWhatsApp = () => {
     const phoneNumber = clienteAtual.telefone.replace(/\D/g, "");
     const message = encodeURIComponent(
-      `Olá ${clienteAtual.nome}, tudo bem? Aqui é da clínica. Estamos entrando em contato.`
+      `Olá ${clienteAtual.nome}, tudo bem? Estamos entrando em contato para confirmar seu agendamento.`
     );
     window.open(
       `https://web.whatsapp.com/send?phone=55${phoneNumber}&text=${message}`,
@@ -381,9 +381,9 @@ export function ClienteDetailsModal({
                             <Calendar className="w-5 h-5 text-green-600 dark:text-green-400" />
                           </div>
                           <div className="flex-1">
-                            <p className="text-xs font-bold text-green-600 dark:text-green-400 uppercase tracking-wider mb-1">Próxima Consulta</p>
+                            <p className="text-xs font-bold text-green-600 dark:text-green-400 uppercase tracking-wider mb-1">Próximo Atendimento</p>
                             <p className="font-bold text-foreground">{format(new Date(stats.nextAppointment.start_time), "dd/MM/yyyy 'às' HH:mm")}</p>
-                            <p className="text-xs text-muted-foreground mt-1">{stats.nextAppointment.service?.code || 'Procedimento'}</p>
+                            <p className="text-xs text-muted-foreground mt-1">{stats.nextAppointment.service?.code || 'Serviço'}</p>
                           </div>
                         </div>
                       </div>
@@ -401,7 +401,7 @@ export function ClienteDetailsModal({
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
                         onBlur={handleNotesBlur}
-                        placeholder="Adicione observações importantes sobre o paciente..."
+                        placeholder="Adicione observações importantes sobre o cliente..."
                         className="min-h-[140px] bg-card border-2 border-border hover:border-amber-300 dark:hover:border-amber-700 focus:border-amber-400 dark:focus:border-amber-600 focus:ring-4 focus:ring-amber-100 dark:focus:ring-amber-900/30 resize-none text-foreground leading-relaxed p-5 rounded-2xl text-sm transition-all duration-300 shadow-sm"
                       />
                       <div className="absolute bottom-4 right-4 pointer-events-none">
@@ -433,7 +433,7 @@ export function ClienteDetailsModal({
                     <div className="text-center py-20 px-4 bg-muted/30 rounded-3xl border-2 border-dashed border-border">
                       <Activity className="h-16 w-16 text-muted-foreground mx-auto mb-4 opacity-50" />
                       <p className="text-lg font-bold text-foreground mb-1">Nenhum histórico encontrado</p>
-                      <p className="text-sm text-muted-foreground">Este paciente ainda não realizou consultas.</p>
+                      <p className="text-sm text-muted-foreground">Este cliente ainda não realizou atendimentos.</p>
                     </div>
                   ) : (
                     <div className="relative">
@@ -462,12 +462,12 @@ export function ClienteDetailsModal({
                                 <div className="flex items-start justify-between gap-4 mb-3">
                                   <div className="flex-1">
                                     <h4 className="font-bold text-lg text-foreground mb-1">
-                                      {apt.service?.code || "Procedimento"}
+                                      {apt.service?.code || "Serviço"}
                                     </h4>
                                     <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
                                       <span className="flex items-center gap-1">
                                         <User className="w-3.5 h-3.5" />
-                                        Dr(a). {apt.professional?.name || "N/A"}
+                                        {apt.professional?.name || "N/A"}
                                       </span>
                                       <span>•</span>
                                       <span className="flex items-center gap-1">

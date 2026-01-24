@@ -127,20 +127,21 @@ export class FinancialService {
     try {
       const today = new Date().toISOString().split('T')[0];
       
-      // Get today's appointments with service prices
-      const { data: appointments, error } = await supabase
+      // Get today's appointments
+      const { data: appointments, error: appointmentsError } = await supabase
         .from("appointments")
-        .select(`
-          id,
-          start_time,
-          service_code,
-          services!appointments_service_code_fkey(price)
-        `)
+        .select("id, start_time, service_code")
         .gte("start_time", `${today}T00:00:00`)
         .lt("start_time", `${today}T23:59:59`);
 
-      if (error) {
-        console.error("Error fetching daily appointments:", error);
+      if (appointmentsError) {
+        console.error("Error fetching daily appointments:", {
+          message: appointmentsError.message,
+          details: appointmentsError.details,
+          hint: appointmentsError.hint,
+          code: appointmentsError.code,
+        });
+        // Return 0 instead of throwing to prevent blocking the financial page
         return 0;
       }
 
@@ -148,9 +149,24 @@ export class FinancialService {
         return 0;
       }
 
+      // Get all services to match with appointments
+      const { data: services, error: servicesError } = await supabase
+        .from("services")
+        .select("id, price");
+
+      if (servicesError) {
+        console.error("Error fetching services:", {
+          message: servicesError.message,
+          details: servicesError.details,
+          hint: servicesError.hint,
+          code: servicesError.code,
+        });
+        return 0;
+      }
+
       // Calculate total from service prices
       const total = appointments.reduce((sum, appointment: any) => {
-        const service = appointment.services;
+        const service = services?.find(s => s.id === appointment.service_code);
         const price = service?.price || 0;
         return sum + parseFloat(price.toString());
       }, 0);

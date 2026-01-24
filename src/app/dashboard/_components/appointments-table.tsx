@@ -209,13 +209,13 @@ export function AppointmentsTable({
                     
                     <div className="grid grid-cols-2 gap-3 text-sm">
                       <div>
-                        <p className="text-xs text-muted-foreground mb-1">Médico</p>
+                        <p className="text-xs text-muted-foreground mb-1">Profissional</p>
                         <p className="font-medium text-foreground">
                           {appointment.professional?.name || "N/A"}
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground mb-1">Procedimento</p>
+                        <p className="text-xs text-muted-foreground mb-1">Serviço</p>
                         <p className="font-medium text-foreground truncate">
                           {appointment.service?.code || "N/A"}
                         </p>
@@ -297,10 +297,10 @@ export function AppointmentsTable({
                   Telefone
                 </th>
                 <th className="text-left p-4 font-medium text-xs text-muted-foreground uppercase tracking-wider">
-                  Médico
+                  Profissional
                 </th>
                 <th className="text-left p-4 font-medium text-xs text-muted-foreground uppercase tracking-wider">
-                  Procedimento
+                  Serviço
                 </th>
                 <th className="text-left p-4 font-medium text-xs text-muted-foreground uppercase tracking-wider">
                   Horário Início

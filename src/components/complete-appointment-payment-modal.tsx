@@ -137,8 +137,8 @@ export function CompleteAppointmentPaymentModal({
               <span className="font-medium">{appointment?.customer_name}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Procedimento:</span>
-              <span className="font-medium">{appointment?.service?.code || "Consulta"}</span>
+              <span className="text-muted-foreground">Serviço:</span>
+              <span className="font-medium">{appointment?.service?.code || "Atendimento"}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Data:</span>
