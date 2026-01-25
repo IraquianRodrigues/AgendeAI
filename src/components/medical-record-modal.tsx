@@ -45,7 +45,7 @@ export function MedicalRecordModal({
     soap_objective: "",
     soap_assessment: "",
     soap_plan: "",
-    clinical_notes: "",
+    professional_notes: "",
     observations: "",
     vital_signs: {},
   });
@@ -479,11 +479,11 @@ export function MedicalRecordModal({
                           )}
 
                           {/* Notas Clínicas */}
-                          {record.clinical_notes && (
+                          {record.professional_notes && (
                             <div className="space-y-2">
-                              <h4 className="font-semibold text-sm">Notas Clínicas</h4>
+                              <h4 className="font-semibold text-sm">Notas Profissionais</h4>
                               <div className="bg-background rounded-md p-3">
-                                <p className="text-sm whitespace-pre-wrap">{record.clinical_notes}</p>
+                                <p className="text-sm whitespace-pre-wrap">{record.professional_notes}</p>
                               </div>
                             </div>
                           )}

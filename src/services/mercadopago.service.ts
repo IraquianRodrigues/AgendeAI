@@ -61,7 +61,7 @@ export class MercadoPagoService {
         ...(isLocalhost ? {} : { auto_return: 'approved' as const }),
         external_reference: transactionId,
         notification_url: `${baseUrl}/api/mercadopago/webhook`,
-        statement_descriptor: process.env.NEXT_PUBLIC_CLINIC_NAME || 'OdontoVida',
+        statement_descriptor: process.env.NEXT_PUBLIC_BUSINESS_NAME || 'AgendeAI',
         metadata: {
           transaction_id: transactionId,
         },

@@ -37,7 +37,7 @@ export default function ProfessionalsContent() {
             Profissionais
           </h1>
           <p className="text-sm text-muted-foreground font-medium mt-1 transition-colors">
-            Gerencie e organize a equipe de profissionais da clínica
+            Gerencie e organize a equipe de profissionais da empresa
           </p>
         </div>
 

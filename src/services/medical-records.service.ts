@@ -26,7 +26,7 @@ export interface MedicalRecord {
   id: string;
   client_id: number;
   date: string;
-  clinical_notes: string | null;
+  professional_notes: string | null;
   observations: string | null;
   created_by: string | null;
   created_at: string;
@@ -52,7 +52,7 @@ export interface CreateMedicalRecordInput {
   professional_id: number;
   appointment_id?: number;
   date?: string;
-  clinical_notes?: string;
+  professional_notes?: string;
   observations?: string;
   soap_subjective?: string;
   soap_objective?: string;
@@ -64,7 +64,7 @@ export interface CreateMedicalRecordInput {
 }
 
 export interface UpdateMedicalRecordInput {
-  clinical_notes?: string;
+  professional_notes?: string;
   observations?: string;
   soap_subjective?: string;
   soap_objective?: string;

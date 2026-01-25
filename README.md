@@ -1,16 +1,18 @@
-# 📅 Sistema de Agendamentos para Clínicas
+# 📅 AgendeAI - Sistema de Agendamentos
 
 ![Banner Projeto](https://i.imgur.com/v5KwdDl.png)
 
-Sistema completo de gerenciamento de agendamentos para clínicas e consultórios, desenvolvido com Next.js 15, React 19, React Query, TypeScript e Supabase.
+## 🚀 Sobre o Projeto
+
+Sistema completo de gerenciamento de agendamentos para empresas de estética, salões, barbearias e consultórios, desenvolvido com Next.js 15, React 19, React Query, TypeScript e Supabase.
 
 ## 🔧 Instalação
 
 ### 1. Faça o Fork do projeto e clone o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/agenda-clinicas.git
-cd agenda-clinicas
+git clone https://github.com/seu-usuario/agendeai.git
+cd agendeai
 ```
 
 ### 2. Instale as dependências
@@ -24,7 +26,7 @@ npm install
 Crie um arquivo `.env.local` na raiz do projeto:
 
 ```env
-NEXT_PUBLIC_CLINIC_NAME=Nome do Painel
+NEXT_PUBLIC_BUSINESS_NAME=AgendeAI
 
 # Supabase
 NEXT_PUBLIC_SUPABASE_URL=sua_url_do_supabase
@@ -59,7 +61,7 @@ clientes ──────┘
 
 ### 📋 Tabelas e suas Propriedades
 
-#### 1️⃣ **Table: `professionals`** (Profissionais da Clínica)
+#### 1️⃣ **Table: `professionals`** (Profissionais da Empresa)
 
 | Propriedade  | Tipo        | Obrigatório | Descrição                               |
 | ------------ | ----------- | ----------- | --------------------------------------- |

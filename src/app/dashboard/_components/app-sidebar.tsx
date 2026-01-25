@@ -170,7 +170,7 @@ export function AppSidebar() {
               </div>
               <div className="flex flex-col">
                 <h1 className="text-lg font-bold text-foreground leading-tight">
-                  {process.env.NEXT_PUBLIC_CLINIC_NAME || "Clínica"}
+                  {process.env.NEXT_PUBLIC_BUSINESS_NAME || "Empresa"}
                 </h1>
                 <p className="text-[10px] text-muted-foreground font-semibold tracking-wider uppercase">
                   CRM Inteligente

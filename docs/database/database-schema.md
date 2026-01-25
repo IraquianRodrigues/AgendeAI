@@ -376,7 +376,7 @@ Parcelas dos planos de pagamento.
 
 ### `expenses`
 
-Despesas da clínica.
+Despesas da empresa.
 
 | Coluna           | Tipo               | Descrição           |
 | ---------------- | ------------------ | ------------------- |
@@ -404,25 +404,25 @@ Despesas da clínica.
 
 Registros médicos/prontuários (sistema SOAP).
 
-| Coluna            | Tipo      | Descrição                |
-| ----------------- | --------- | ------------------------ |
-| `id`              | UUID      | Chave primária           |
-| `client_id`       | INTEGER   | FK para clientes         |
-| `professional_id` | INTEGER   | FK para professionals    |
-| `appointment_id`  | INTEGER   | FK para appointments     |
-| `date`            | DATE      | Data do registro         |
-| `clinical_notes`  | TEXT      | Notas clínicas           |
-| `observations`    | TEXT      | Observações              |
-| `soap_subjective` | TEXT      | SOAP - Subjetivo         |
-| `soap_objective`  | TEXT      | SOAP - Objetivo          |
-| `soap_assessment` | TEXT      | SOAP - Avaliação         |
-| `soap_plan`       | TEXT      | SOAP - Plano             |
-| `vital_signs`     | JSONB     | Sinais vitais (JSON)     |
-| `prescriptions`   | JSONB     | Prescrições (JSON array) |
-| `attachments`     | JSONB     | Anexos (JSON array)      |
-| `created_by`      | UUID      | FK para auth.users       |
-| `created_at`      | TIMESTAMP | Data de criação          |
-| `updated_at`      | TIMESTAMP | Data de atualização      |
+| Coluna               | Tipo      | Descrição                |
+| -------------------- | --------- | ------------------------ |
+| `id`                 | UUID      | Chave primária           |
+| `client_id`          | INTEGER   | FK para clientes         |
+| `professional_id`    | INTEGER   | FK para professionals    |
+| `appointment_id`     | INTEGER   | FK para appointments     |
+| `date`               | DATE      | Data do registro         |
+| `professional_notes` | TEXT      | Notas profissionais      |
+| `observations`       | TEXT      | Observações              |
+| `soap_subjective`    | TEXT      | SOAP - Subjetivo         |
+| `soap_objective`     | TEXT      | SOAP - Objetivo          |
+| `soap_assessment`    | TEXT      | SOAP - Avaliação         |
+| `soap_plan`          | TEXT      | SOAP - Plano             |
+| `vital_signs`        | JSONB     | Sinais vitais (JSON)     |
+| `prescriptions`      | JSONB     | Prescrições (JSON array) |
+| `attachments`        | JSONB     | Anexos (JSON array)      |
+| `created_by`         | UUID      | FK para auth.users       |
+| `created_at`         | TIMESTAMP | Data de criação          |
+| `updated_at`         | TIMESTAMP | Data de atualização      |
 
 **Índices:**
 

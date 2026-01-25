@@ -12,7 +12,7 @@ import { ModeToggle } from "@/components/mode-toggle";
 export function AppHeader() {
   const router = useRouter();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const clinicName = process.env.NEXT_PUBLIC_CLINIC_NAME || "Clínica Médica";
+  const businessName = process.env.NEXT_PUBLIC_BUSINESS_NAME || "AgendeAI";
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -42,7 +42,7 @@ export function AppHeader() {
           <div className="hidden md:flex items-center gap-2">
             <Calendar className="h-5 w-5 text-muted-foreground" />
             <h2 className="text-lg font-semibold text-foreground">
-              {clinicName}
+              {businessName}
             </h2>
           </div>
         </div>

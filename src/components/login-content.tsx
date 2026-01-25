@@ -27,7 +27,7 @@ export function LoginContent() {
   const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
   const router = useRouter();
-  const clinicName = process.env.NEXT_PUBLIC_CLINIC_NAME || "OdontoVida";
+  const businessName = process.env.NEXT_PUBLIC_BUSINESS_NAME || "AgendeAI";
   const currentYear = new Date().getFullYear();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -85,7 +85,7 @@ export function LoginContent() {
             <div className="p-2 bg-zinc-700/20 rounded-lg border border-zinc-600/30 backdrop-blur-sm hover:scale-110 transition-transform duration-300">
               <Scissors className="w-6 h-6 text-zinc-300" />
             </div>
-            {clinicName}
+            {businessName}
           </div>
         </div>
 
@@ -145,7 +145,7 @@ export function LoginContent() {
           <div className="p-1.5 bg-zinc-700/10 rounded-lg border border-zinc-600/20">
             <Scissors className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />
           </div>
-          <span className="text-gray-900 dark:text-gray-100">{clinicName}</span>
+          <span className="text-gray-900 dark:text-gray-100">{businessName}</span>
         </div>
 
         <div className="w-full max-w-[400px] space-y-8 animate-fade-in-up animation-delay-100">
@@ -225,7 +225,7 @@ export function LoginContent() {
           </form>
 
           <p className="px-8 text-center text-xs text-gray-400 dark:text-gray-600 mt-8">
-            Sistema restrito. Apenas usuários autorizados da {clinicName}.
+            Sistema restrito. Apenas usuários autorizados da {businessName}.
           </p>
 
           <div className="mt-8 text-center space-y-2">
@@ -233,7 +233,7 @@ export function LoginContent() {
               Desenvolvido com <span className="text-sm align-middle mx-0.5">💙</span> por AutomateAI
             </p>
             <p className="text-xs text-gray-400">
-              © {currentYear} {clinicName}. Todos os direitos reservados.
+              © {currentYear} {businessName}. Todos os direitos reservados.
             </p>
           </div>
         </div>

@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: process.env.NEXT_PUBLIC_CLINIC_NAME
-    ? `Dashboard - ${process.env.NEXT_PUBLIC_CLINIC_NAME}`
+  title: process.env.NEXT_PUBLIC_BUSINESS_NAME
+    ? `Dashboard - ${process.env.NEXT_PUBLIC_BUSINESS_NAME}`
     : "Painel Agendamentos",
   description: "Painel de Agendamentos",
 };

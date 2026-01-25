@@ -82,7 +82,7 @@ export function ClienteDetailsModal({
 
   const [activeTab, setActiveTab] = useState("overview");
   const [notes, setNotes] = useState(cliente?.notes || "");
-  const [clinicalNotes, setClinicalNotes] = useState("");
+  const [professionalNotes, setProfessionalNotes] = useState("");
   const [observations, setObservations] = useState("");
   const [professionalId, setProfessionalId] = useState<number | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -106,7 +106,7 @@ export function ClienteDetailsModal({
   // Update medical record state when data loads
   useMemo(() => {
     if (latestRecord) {
-      setClinicalNotes(latestRecord.clinical_notes || "");
+      setProfessionalNotes(latestRecord.professional_notes || "");
       setObservations(latestRecord.observations || "");
     }
   }, [latestRecord]);

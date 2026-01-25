@@ -65,7 +65,7 @@ export function AppointmentDetailsModal({
   const professional = appointment.professional;
   const isLocked = cliente?.trava || false;
 
-  // Verifica se a data do agendamento é anterior à data atual (no timezone da clínica)
+  // Verifica se a data do agendamento é anterior à data atual (no timezone da empresa)
   const isPastAppointment = isPastDate(appointment.start_time);
 
   const handleWhatsApp = () => {
@@ -73,7 +73,7 @@ export function AppointmentDetailsModal({
     const message = encodeURIComponent(
       `Olá ${
         appointment.customer_name
-      }, tudo bem? Aqui é da clínica. Estamos entrando em contato sobre seu agendamento do dia ${formatDateBR(
+      }, tudo bem? Aqui é da empresa. Estamos entrando em contato sobre seu agendamento do dia ${formatDateBR(
         appointment.start_time
       )} às ${formatTimeBR(appointment.start_time)}.`
     );

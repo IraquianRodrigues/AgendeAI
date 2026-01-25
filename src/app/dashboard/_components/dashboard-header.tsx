@@ -42,7 +42,7 @@ export function DashboardHeader({
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-balance">
-          Agendamentos da Clínica
+          Agendamentos da Empresa
         </h1>
         <p className="text-muted-foreground mt-1 text-sm sm:text-base">
           Gerencie os agendamentos e consultas do dia

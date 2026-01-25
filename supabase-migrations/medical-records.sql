@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS medical_records (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   client_id INTEGER NOT NULL REFERENCES clientes(id) ON DELETE CASCADE,
   date DATE NOT NULL DEFAULT CURRENT_DATE,
-  clinical_notes TEXT,
+  professional_notes TEXT,
   observations TEXT,
   created_by UUID REFERENCES auth.users(id),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,

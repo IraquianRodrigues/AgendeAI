@@ -1,10 +1,10 @@
-export const CLINIC_TIMEZONE =
-  process.env.NEXT_PUBLIC_CLINIC_TIMEZONE || "America/Sao_Paulo";
+export const BUSINESS_TIMEZONE =
+  process.env.NEXT_PUBLIC_BUSINESS_TIMEZONE || "America/Sao_Paulo";
 
 export function formatDateBR(date: Date | string): string {
   const d = typeof date === "string" ? new Date(date) : date;
   return d.toLocaleDateString("pt-BR", {
-    timeZone: CLINIC_TIMEZONE,
+    timeZone: BUSINESS_TIMEZONE,
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
@@ -14,7 +14,7 @@ export function formatDateBR(date: Date | string): string {
 export function formatTimeBR(date: Date | string): string {
   const d = typeof date === "string" ? new Date(date) : date;
   return d.toLocaleTimeString("pt-BR", {
-    timeZone: CLINIC_TIMEZONE,
+    timeZone: BUSINESS_TIMEZONE,
     hour: "2-digit",
     minute: "2-digit",
   });
@@ -27,7 +27,7 @@ export function formatDateTimeBR(date: Date | string): string {
 export function formatDateLongBR(date: Date | string): string {
   const d = typeof date === "string" ? new Date(date) : date;
   return d.toLocaleDateString("pt-BR", {
-    timeZone: CLINIC_TIMEZONE,
+    timeZone: BUSINESS_TIMEZONE,
     weekday: "long",
     day: "2-digit",
     month: "long",
@@ -38,7 +38,7 @@ export function formatDateLongBR(date: Date | string): string {
 export function formatDateFullBR(date: Date | string): string {
   const d = typeof date === "string" ? new Date(date) : date;
   return d.toLocaleDateString("pt-BR", {
-    timeZone: CLINIC_TIMEZONE,
+    timeZone: BUSINESS_TIMEZONE,
     weekday: "long",
     day: "2-digit",
     month: "long",
@@ -70,7 +70,7 @@ export function getEndOfDay(date: Date): Date {
 }
 
 /**
- * Verifica se uma data é anterior à data atual (comparando apenas dia/mês/ano no timezone da clínica)
+ * Verifica se uma data é anterior à data atual (comparando apenas dia/mês/ano no timezone da empresa)
  * @param date - A data a ser verificada
  * @returns true se a data for anterior à data atual
  */
@@ -79,14 +79,14 @@ export function isPastDate(date: Date | string): boolean {
   const now = new Date();
 
   const targetDateStr = targetDate.toLocaleDateString("pt-BR", {
-    timeZone: CLINIC_TIMEZONE,
+    timeZone: BUSINESS_TIMEZONE,
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
   });
 
   const nowDateStr = now.toLocaleDateString("pt-BR", {
-    timeZone: CLINIC_TIMEZONE,
+    timeZone: BUSINESS_TIMEZONE,
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
