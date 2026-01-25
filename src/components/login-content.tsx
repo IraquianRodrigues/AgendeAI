@@ -13,7 +13,8 @@ import {
   LayoutDashboard,
   CalendarCheck,
   Users,
-  Sparkles
+  Sparkles,
+  Scissors
 } from "lucide-react";
 import { toast } from "sonner";
 import { AuthClientService } from "@/services/auth/client.service";
@@ -82,7 +83,7 @@ export function LoginContent() {
         <div className="relative z-10 animate-fade-in-up">
           <div className="flex items-center gap-3 text-2xl font-bold tracking-tight">
             <div className="p-2 bg-zinc-700/20 rounded-lg border border-zinc-600/30 backdrop-blur-sm hover:scale-110 transition-transform duration-300">
-              <LogIn className="w-6 h-6 text-zinc-300" />
+              <Scissors className="w-6 h-6 text-zinc-300" />
             </div>
             {clinicName}
           </div>
@@ -91,11 +92,11 @@ export function LoginContent() {
         {/* Main Content - Animated */}
         <div className="relative z-10 max-w-2xl space-y-8 mt-12 animate-fade-in-up animation-delay-200">
           <h1 className="text-5xl md:text-6xl font-bold tracking-tight leading-[1.1]">
-            Gerencie sua clínica de forma <span className="text-zinc-200 font-extrabold">profissional</span>
+            Gerencie seu negócio de estética de forma <span className="text-zinc-200 font-extrabold">profissional</span>
           </h1>
           <p className="text-lg text-slate-400 max-w-lg leading-relaxed">
             Uma suíte completa de ferramentas para você controlar agendamentos,
-            otimizar o atendimento e maximizar o desempenho da sua clínica.
+            otimizar o atendimento e maximizar o desempenho do seu negócio.
           </p>
           
           {/* Sparkle Badge */}
@@ -127,8 +128,8 @@ export function LoginContent() {
             <div className="w-10 h-10 rounded-xl bg-zinc-700/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
               <Users className="w-5 h-5 text-zinc-300" />
             </div>
-            <h3 className="font-semibold text-sm mb-1">Pacientes</h3>
-            <p className="text-xs text-slate-500">Histórico e prontuários</p>
+            <h3 className="font-semibold text-sm mb-1">Clientes</h3>
+            <p className="text-xs text-slate-500">Histórico e perfis</p>
           </div>
         </div>
       </div>
@@ -142,7 +143,7 @@ export function LoginContent() {
         {/* Mobile Logo */}
         <div className="lg:hidden absolute top-8 left-8 flex items-center gap-2 text-lg font-bold animate-fade-in">
           <div className="p-1.5 bg-zinc-700/10 rounded-lg border border-zinc-600/20">
-            <LogIn className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />
+            <Scissors className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />
           </div>
           <span className="text-gray-900 dark:text-gray-100">{clinicName}</span>
         </div>

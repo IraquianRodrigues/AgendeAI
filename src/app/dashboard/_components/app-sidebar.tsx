@@ -14,38 +14,43 @@ const navItems = [
     href: "/dashboard",
     label: "Dashboard",
     icon: Calendar,
+    allowedRoles: ['admin', 'recepcionista', 'dentista', 'medico'] as const,
   },
   {
     href: "/dashboard/agenda",
     label: "Agenda",
     icon: CalendarDays,
+    allowedRoles: ['admin', 'recepcionista', 'dentista', 'medico'] as const,
   },
   {
     href: "/dashboard/clientes",
     label: "Clientes",
     icon: Users,
+    allowedRoles: ['admin', 'recepcionista', 'dentista', 'medico'] as const,
   },
   {
     href: "/dashboard/profissionais",
     label: "Profissionais",
     icon: UserCog,
+    allowedRoles: ['admin', 'dentista', 'medico'] as const,
   },
   {
     href: "/dashboard/servicos",
     label: "Serviços",
     icon: Briefcase,
+    allowedRoles: ['admin', 'dentista', 'medico'] as const,
   },
   {
     href: "/dashboard/financeiro",
     label: "Financeiro",
     icon: DollarSign,
-    requiresAdmin: true,
+    allowedRoles: ['admin'] as const,
   },
   {
     href: "/dashboard/configuracoes",
     label: "Configurações",
     icon: Settings,
-    requiresAdmin: true,
+    allowedRoles: ['admin'] as const,
   },
 ];
 
@@ -58,12 +63,13 @@ export function AppSidebar() {
   const { hasFinancialAccess, hasMedicalRecordsAccess, profile, role } = useUserRole();
   const supabase = createClient();
 
-  // Filtrar itens de navegação baseado em permissões
+  // Filtrar itens de navegação baseado em permissões de role
   const filteredNavItems = navItems.filter(item => {
-    if (item.requiresAdmin) {
-      return hasFinancialAccess;
-    }
-    return true;
+    // Se não tem allowedRoles definido, mostra para todos
+    if (!item.allowedRoles) return true;
+    
+    // Verifica se o role atual está na lista de permitidos
+    return item.allowedRoles.includes(role as any);
   });
 
   // Load collapsed state from localStorage on mount

@@ -45,6 +45,34 @@ export async function updateSession(request: NextRequest) {
       url.pathname = "/";
       return NextResponse.redirect(url);
     }
+
+    // Role-based access control
+    const roleBasedAccess: Record<string, string[]> = {
+      '/dashboard/profissionais': ['admin', 'dentista', 'medico'],
+      '/dashboard/servicos': ['admin', 'dentista', 'medico'],
+      '/dashboard/financeiro': ['admin'],
+      '/dashboard/configuracoes': ['admin'],
+    };
+
+    const path = request.nextUrl.pathname;
+    const allowedRoles = roleBasedAccess[path];
+
+    if (allowedRoles) {
+      // Buscar perfil do usuário
+      const { data: profile } = await supabase
+        .from('user_profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+      // Verificar se o role tem permissão
+      if (profile && !allowedRoles.includes(profile.role)) {
+        // Redirecionar para dashboard se não tiver permissão
+        const url = request.nextUrl.clone();
+        url.pathname = '/dashboard';
+        return NextResponse.redirect(url);
+      }
+    }
   }
 
   // Redirect authenticated users away from login page
