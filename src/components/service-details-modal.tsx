@@ -157,7 +157,7 @@ export function ServiceDetailsModal({
                   <Label htmlFor="code">Código do Serviço *</Label>
                   <Input
                     id="code"
-                    placeholder="Ex: consulta-geral, exame-rotina"
+                    placeholder="Ex: limpeza-pele, massagem-relaxante"
                     value={code}
                     onChange={(e) => setCode(e.target.value)}
                     disabled={isPending}

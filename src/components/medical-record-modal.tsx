@@ -50,7 +50,7 @@ export function MedicalRecordModal({
     vital_signs: {},
   });
 
-  // Buscar dados do paciente
+  // Buscar dados do cliente
   const { data: clientData } = useQuery({
     queryKey: ["client", patientId],
     queryFn: async () => {
@@ -75,7 +75,7 @@ export function MedicalRecordModal({
     enabled: !!recordId,
   });
 
-  // Buscar histórico de prontuários do paciente
+  // Buscar histórico de prontuários do cliente
   const { data: historyData } = useQuery({
     queryKey: ["medical-records-history", patientId],
     queryFn: () => MedicalRecordsService.getMedicalRecords(patientId),
@@ -147,7 +147,7 @@ export function MedicalRecordModal({
               </div>
               <div>
                 <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                  Prontuário Médico
+                  Prontuário Profissional
                 </span>
                 <p className="text-sm font-normal text-muted-foreground mt-0.5">
                   {clientData?.nome || "Carregando..."}
@@ -162,7 +162,7 @@ export function MedicalRecordModal({
             <TabsList className="grid w-full grid-cols-4 h-12">
               <TabsTrigger value="patient" className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                 <User className="h-4 w-4" />
-                <span className="hidden sm:inline">Paciente</span>
+                <span className="hidden sm:inline">Cliente</span>
               </TabsTrigger>
               <TabsTrigger value="soap" className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                 <FileText className="h-4 w-4" />
@@ -180,7 +180,7 @@ export function MedicalRecordModal({
           </div>
 
           <div className="flex-1 overflow-auto px-6 pb-4">
-            {/* Aba Paciente */}
+            {/* Aba Cliente */}
             <TabsContent value="patient" className="space-y-6 m-0 mt-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="p-4 rounded-lg border bg-card hover:shadow-md transition-shadow">
@@ -230,7 +230,7 @@ export function MedicalRecordModal({
                   </p>
                   <Textarea
                     id="subjective"
-                    placeholder="Ex: Paciente relata dor de cabeça há 3 dias, localizada na região frontal..."
+                    placeholder="Ex: Cliente relata desejo de procedimento estético, histórico de tratamentos anteriores..."
                     value={formData.soap_subjective}
                     onChange={(e) =>
                       setFormData({ ...formData, soap_subjective: e.target.value })
@@ -249,7 +249,7 @@ export function MedicalRecordModal({
                   </p>
                   <Textarea
                     id="objective"
-                    placeholder="Ex: Paciente consciente, orientado. PA: 120/80 mmHg. Ausculta pulmonar sem alterações..."
+                    placeholder="Ex: Avaliação da pele, medidas corporais, análise de áreas de interesse..."
                     value={formData.soap_objective}
                     onChange={(e) =>
                       setFormData({ ...formData, soap_objective: e.target.value })
@@ -314,7 +314,7 @@ export function MedicalRecordModal({
                     <History className="h-8 w-8 text-muted-foreground" />
                   </div>
                   <p className="text-lg font-semibold">Nenhum prontuário anterior</p>
-                  <p className="text-sm text-muted-foreground mt-1">Este é o primeiro atendimento do paciente</p>
+                  <p className="text-sm text-muted-foreground mt-1">Este é o primeiro atendimento do cliente</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -478,7 +478,7 @@ export function MedicalRecordModal({
                             </div>
                           )}
 
-                          {/* Notas Clínicas */}
+                          {/* Notas Profissionais */}
                           {record.professional_notes && (
                             <div className="space-y-2">
                               <h4 className="font-semibold text-sm">Notas Profissionais</h4>

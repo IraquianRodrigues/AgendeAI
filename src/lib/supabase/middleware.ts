@@ -48,8 +48,8 @@ export async function updateSession(request: NextRequest) {
 
     // Role-based access control
     const roleBasedAccess: Record<string, string[]> = {
-      '/dashboard/profissionais': ['admin', 'dentista', 'medico'],
-      '/dashboard/servicos': ['admin', 'dentista', 'medico'],
+      '/dashboard/profissionais': ['admin', 'profissional'],
+      '/dashboard/servicos': ['admin', 'profissional'],
       '/dashboard/financeiro': ['admin'],
       '/dashboard/configuracoes': ['admin'],
     };

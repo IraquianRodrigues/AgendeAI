@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import type { User } from "@supabase/supabase-js";
 
-export type UserRole = "admin" | "recepcionista" | "dentista" | "medico";
+export type UserRole = "admin" | "recepcionista" | "profissional";
 
 export interface UserProfile {
   id: string;

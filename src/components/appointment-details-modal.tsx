@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import {
   Calendar,
   User,
-  Stethoscope,
+  Sparkles,
   FileText,
   MessageCircle,
   Lock,
@@ -181,7 +181,7 @@ export function AppointmentDetailsModal({
         {/* Content com scroll */}
         <div className="flex-1 overflow-y-auto px-6 py-4">
           <div className="space-y-4">
-            {/* Card de Informações do Paciente */}
+            {/* Card de Informações do Cliente */}
             <div className="group relative overflow-hidden rounded-xl border bg-gradient-to-br from-card via-card to-card/50 p-5 shadow-sm transition-all hover:shadow-md hover:border-primary/20">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="relative space-y-3">
@@ -189,7 +189,7 @@ export function AppointmentDetailsModal({
                   <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
                     <User className="h-4.5 w-4.5" />
                   </div>
-                  <h3 className="font-semibold text-lg">Informações do Paciente</h3>
+                  <h3 className="font-semibold text-lg">Informações do Cliente</h3>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
                   <div className="space-y-1">
@@ -243,7 +243,7 @@ export function AppointmentDetailsModal({
               <div className="relative space-y-3">
                 <div className="flex items-center gap-2.5">
                   <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                    <Stethoscope className="h-4.5 w-4.5" />
+                    <Sparkles className="h-4.5 w-4.5" />
                   </div>
                   <h3 className="font-semibold text-lg">Profissional</h3>
                 </div>

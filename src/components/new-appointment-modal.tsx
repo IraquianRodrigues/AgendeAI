@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Calendar, Clock, User, Stethoscope, Briefcase, Loader2 } from "lucide-react";
+import { Calendar, Clock, User, Sparkles, Briefcase, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useCreateAppointment } from "@/services/appointments/use-appointments";
 import { useProfessionals } from "@/services/professionals/use-professionals";
@@ -82,12 +82,12 @@ export function NewAppointmentModal({
 
     // Validações básicas
     if (!customerName.trim()) {
-      toast.error("Por favor, informe o nome do paciente");
+      toast.error("Por favor, informe o nome do cliente");
       return;
     }
 
     if (!customerPhone.trim()) {
-      toast.error("Por favor, informe o telefone do paciente");
+      toast.error("Por favor, informe o telefone do cliente");
       return;
     }
 
@@ -169,7 +169,7 @@ export function NewAppointmentModal({
               Novo Agendamento
             </DialogTitle>
             <DialogDescription className="text-sm mt-1">
-              Crie um agendamento manual para um paciente
+              Crie um agendamento manual para um cliente
             </DialogDescription>
           </DialogHeader>
         </div>
@@ -197,11 +197,11 @@ export function NewAppointmentModal({
               </Select>
             </div>
 
-            {/* Nome do Paciente */}
+            {/* Nome do Cliente */}
             <div className="space-y-2">
               <Label htmlFor="customer-name" className="text-sm font-medium flex items-center gap-2">
                 <User className="h-4 w-4 text-primary" />
-                Nome do Paciente *
+                Nome do Cliente *
               </Label>
               <Input
                 id="customer-name"
@@ -230,7 +230,7 @@ export function NewAppointmentModal({
             {/* Profissional */}
             <div className="space-y-2">
               <Label htmlFor="professional" className="text-sm font-medium flex items-center gap-2">
-                <Stethoscope className="h-4 w-4 text-primary" />
+                <Sparkles className="h-4 w-4 text-primary" />
                 Profissional *
               </Label>
               <Select

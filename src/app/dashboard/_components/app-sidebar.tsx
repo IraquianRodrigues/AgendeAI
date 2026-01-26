@@ -14,31 +14,31 @@ const navItems = [
     href: "/dashboard",
     label: "Dashboard",
     icon: Calendar,
-    allowedRoles: ['admin', 'recepcionista', 'dentista', 'medico'] as const,
+    allowedRoles: ['admin', 'recepcionista', 'profissional'] as const,
   },
   {
     href: "/dashboard/agenda",
     label: "Agenda",
     icon: CalendarDays,
-    allowedRoles: ['admin', 'recepcionista', 'dentista', 'medico'] as const,
+    allowedRoles: ['admin', 'recepcionista', 'profissional'] as const,
   },
   {
     href: "/dashboard/clientes",
     label: "Clientes",
     icon: Users,
-    allowedRoles: ['admin', 'recepcionista', 'dentista', 'medico'] as const,
+    allowedRoles: ['admin', 'recepcionista', 'profissional'] as const,
   },
   {
     href: "/dashboard/profissionais",
     label: "Profissionais",
     icon: UserCog,
-    allowedRoles: ['admin', 'dentista', 'medico'] as const,
+    allowedRoles: ['admin', 'profissional'] as const,
   },
   {
     href: "/dashboard/servicos",
     label: "Serviços",
     icon: Briefcase,
-    allowedRoles: ['admin', 'dentista', 'medico'] as const,
+    allowedRoles: ['admin', 'profissional'] as const,
   },
   {
     href: "/dashboard/financeiro",
@@ -112,8 +112,7 @@ export function AppSidebar() {
   const getRoleDisplay = (userRole: string) => {
     const roleMap: Record<string, string> = {
       admin: "Administrador",
-      dentista: "Dentista",
-      medico: "Médico",
+      profissional: "Profissional",
       recepcionista: "Recepcionista",
     };
     return roleMap[userRole] || userRole;

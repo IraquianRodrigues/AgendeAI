@@ -3,7 +3,7 @@
 import { useProfessionals } from "@/services/professionals/use-professionals";
 import { Card } from "@/components/ui/card";
 import { ProfessionalsTable } from "./professionals-table";
-import { Users, Award, UserCheck, Stethoscope } from "lucide-react";
+import { Users, Award, UserCheck, Sparkles } from "lucide-react";
 import { useMemo } from "react";
 
 export default function ProfessionalsContent() {
@@ -65,7 +65,7 @@ export default function ProfessionalsContent() {
             <Card className="p-6 hover:shadow-lg transition-all duration-300">
               <div className="flex items-center gap-4">
                 <div className="p-3 rounded-xl bg-muted">
-                  <Stethoscope className="h-6 w-6 text-muted-foreground" />
+                  <Sparkles className="h-6 w-6 text-muted-foreground" />
                 </div>
                 <div className="flex-1">
                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">

@@ -54,7 +54,7 @@ export class PDFReportService {
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(24);
     doc.setFont("helvetica", "bold");
-    doc.text("OdontoVida", pageWidth / 2, 45, { align: "center" });
+    doc.text("AgendeAI", pageWidth / 2, 45, { align: "center" });
     
     // Subtítulo
     doc.setFontSize(14);
@@ -304,7 +304,7 @@ export class PDFReportService {
       doc.setTextColor(107, 114, 128); // Gray-500
       doc.setFont("helvetica", "normal");
       doc.text(
-        "Sistema OdontoVida - CRM com Automação e IA Integrada",
+        "Sistema AgendeAI - CRM com Automação e IA Integrada",
         14,
         pageHeight - 14
       );

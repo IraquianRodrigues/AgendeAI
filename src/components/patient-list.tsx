@@ -19,18 +19,18 @@ interface PatientListProps {
 export function PatientList({ searchQuery, onPatientClick }: PatientListProps) {
   const { profile, isAdmin } = useUserRole();
 
-  // Buscar pacientes - todos para admin, apenas do profissional para dentistas
+  // Buscar clientes - todos para admin, apenas do profissional
   const { data: patientsData, isLoading } = useQuery({
     queryKey: ["patients", profile?.id, isAdmin],
     queryFn: async () => {
       if (!profile?.id) return { success: false, data: [] };
       
-      // Se for admin, buscar todos os pacientes
+      // Se for admin, buscar todos os clientes
       if (isAdmin) {
         return MedicalRecordsService.getAllPatients();
       }
       
-      // Se for profissional, buscar apenas seus pacientes
+      // Se for profissional, buscar apenas seus clientes
       const { createClient } = await import("@/lib/supabase/client");
       const supabase = createClient();
       const { data: professionals } = await supabase
@@ -48,7 +48,7 @@ export function PatientList({ searchQuery, onPatientClick }: PatientListProps) {
 
   const patients = patientsData?.data || [];
 
-  // Filtrar pacientes baseado na busca usando useMemo
+  // Filtrar clientes baseado na busca usando useMemo
   const filteredPatients = useMemo(() => {
     if (!searchQuery.trim()) {
       return patients;
@@ -80,11 +80,11 @@ export function PatientList({ searchQuery, onPatientClick }: PatientListProps) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
         <User className="h-12 w-12 text-muted-foreground mb-4" />
-        <h3 className="text-lg font-semibold">Nenhum paciente encontrado</h3>
+        <h3 className="text-lg font-semibold">Nenhum cliente encontrado</h3>
         <p className="text-muted-foreground mt-2">
           {searchQuery
             ? "Tente ajustar sua busca"
-            : "Você ainda não tem pacientes agendados"}
+            : "Você ainda não tem clientes agendados"}
         </p>
       </div>
     );

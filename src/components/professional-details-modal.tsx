@@ -145,7 +145,7 @@ export function ProfessionalDetailsModal({
                   <Label htmlFor="name">Nome *</Label>
                   <Input
                     id="name"
-                    placeholder="Ex: Dr Matheus"
+                    placeholder="Ex: Ana Silva"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     disabled={isPending}
@@ -157,7 +157,7 @@ export function ProfessionalDetailsModal({
                   <Label htmlFor="specialty">Especialidade</Label>
                   <Input
                     id="specialty"
-                    placeholder="Ex: Cardiologia, Dermatologia, Fisioterapia"
+                    placeholder="Ex: Estética Facial, Massagem, Depilação"
                     value={specialty}
                     onChange={(e) => setSpecialty(e.target.value)}
                     disabled={isPending}

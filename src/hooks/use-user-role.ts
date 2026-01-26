@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { UserProfileService } from "@/services/user-profile.service";
 import { createClient } from "@/lib/supabase/client";
 
-export type UserRole = 'admin' | 'recepcionista' | 'dentista' | 'medico';
+export type UserRole = 'admin' | 'recepcionista' | 'profissional';
 
 export function useUserRole() {
   const supabase = createClient();
@@ -32,7 +32,7 @@ export function useUserRole() {
   const role: UserRole = profile?.role || 'recepcionista';
   
   // Permissões baseadas no role
-  const isProfessional = role === 'dentista' || role === 'medico';
+  const isProfessional = role === 'profissional';
   const hasFinancialAccess = role === 'admin'; // Admin tem acesso financeiro
   const hasMedicalRecordsAccess = isProfessional || role === 'admin'; // Admin tem acesso total
   const canManageUsers = role === 'admin';
@@ -43,8 +43,6 @@ export function useUserRole() {
     role,
     isAdmin: role === 'admin',
     isReceptionist: role === 'recepcionista',
-    isDentist: role === 'dentista',
-    isMedico: role === 'medico',
     isProfessional,
     hasFinancialAccess,
     hasMedicalRecordsAccess,
