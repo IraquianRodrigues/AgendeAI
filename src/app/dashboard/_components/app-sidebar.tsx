@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, Users, UserCog, Briefcase, DollarSign, ChevronLeft, ChevronRight, Menu, X, CalendarDays, LogOut, User, Settings } from "lucide-react";
+import { Calendar, Users, UserCog, Briefcase, DollarSign, ChevronLeft, ChevronRight, Menu, X, CalendarDays, LogOut, User, Settings, Scissors } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -142,12 +142,12 @@ export function AppSidebar() {
       <aside
         className={cn(
           "fixed left-0 top-0 z-40 h-screen transition-all duration-300 ease-in-out flex flex-col",
-          // Clean background with border
+          // Clean background with border (System Theme)
           "bg-background border-r border-border",
           "shadow-sm",
           // Desktop
           "hidden md:flex",
-          isCollapsed ? "w-16" : "w-64",
+          isCollapsed ? "w-20" : "w-64",
           // Mobile
           "md:translate-x-0",
           isMobileOpen ? "flex translate-x-0 w-64" : "-translate-x-full"
@@ -159,28 +159,25 @@ export function AppSidebar() {
           isCollapsed ? "justify-center px-2" : "justify-start"
         )}>
           {isCollapsed ? (
-            <div className="bg-foreground rounded-xl p-2.5 flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105">
-              <Calendar className="h-5 w-5 text-background" />
+            <div className="bg-foreground/5 rounded-xl p-2.5 flex items-center justify-center">
+              <Scissors className="h-6 w-6 text-foreground" />
             </div>
           ) : (
-            <div className="flex items-center gap-3 group">
-              <div className="bg-foreground rounded-xl p-2.5 flex items-center justify-center shadow-sm group-hover:shadow-md transition-all duration-300 group-hover:scale-105">
-                <Calendar className="h-5 w-5 text-background" />
+            <div className="flex items-center gap-3 group px-2">
+              <div className="bg-foreground/5 rounded-xl p-2 flex items-center justify-center">
+                <Scissors className="h-5 w-5 text-foreground" />
               </div>
               <div className="flex flex-col">
-                <h1 className="text-lg font-bold text-foreground leading-tight">
-                  {process.env.NEXT_PUBLIC_BUSINESS_NAME || "Empresa"}
+                <h1 className="text-lg font-bold text-foreground leading-none tracking-tight">
+                  {process.env.NEXT_PUBLIC_BUSINESS_NAME || "AutomateAI"}
                 </h1>
-                <p className="text-[10px] text-muted-foreground font-semibold tracking-wider uppercase">
-                  CRM Inteligente
-                </p>
               </div>
             </div>
           )}
         </div>
 
         {/* Navigation Items */}
-        <nav className="flex-1 px-3 py-6 space-y-1.5">
+        <nav className="flex-1 px-3 py-6 space-y-1.5 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           {mounted && filteredNavItems.map((item, index) => {
             const isActive = pathname === item.href;
             const Icon = item.icon;
@@ -198,8 +195,8 @@ export function AppSidebar() {
                   "group relative flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-all duration-300",
                   "animate-in fade-in slide-in-from-left-2",
                   isActive
-                    ? "bg-foreground text-background shadow-sm scale-[1.02]"
-                    : "text-muted-foreground hover:text-foreground hover:bg-accent hover:scale-[1.01]",
+                    ? "bg-foreground text-background shadow-md shadow-foreground/10 translate-x-1"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50 hover:translate-x-1",
                   isCollapsed && "md:justify-center md:px-2"
                 )}
               >
@@ -247,13 +244,6 @@ export function AppSidebar() {
                 </div>
                 <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-background shadow-sm" />
               </div>
-              <button
-                onClick={handleLogout}
-                className="w-full p-2 rounded-lg hover:bg-accent transition-all duration-200 group hover:scale-105"
-                title="Sair"
-              >
-                <LogOut className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" />
-              </button>
             </div>
           ) : (
             <div className="space-y-3">
@@ -273,21 +263,14 @@ export function AppSidebar() {
                   </p>
                 </div>
               </div>
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-all duration-200 group hover:scale-[1.02]"
-              >
-                <LogOut className="h-4 w-4 group-hover:scale-110 transition-transform" />
-                <span>Sair</span>
-              </button>
             </div>
           )}
         </div>
 
-        {/* Collapse Toggle Button */}
+        {/* Collapse Toggle Button - Kept at bottom */}
         <button
           onClick={toggleCollapsed}
-          className="hidden md:flex absolute -right-3 top-20 z-50 h-7 w-7 rounded-full bg-foreground text-background shadow-md hover:shadow-lg transition-all duration-300 items-center justify-center hover:scale-110 border-2 border-background"
+          className="hidden md:flex absolute -right-3 bottom-8 z-50 h-7 w-7 rounded-full bg-foreground text-background shadow-md hover:shadow-lg transition-all duration-300 items-center justify-center hover:scale-110 border-2 border-background"
           title={isCollapsed ? "Expandir sidebar" : "Minimizar sidebar"}
         >
           {isCollapsed ? (

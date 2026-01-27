@@ -35,30 +35,37 @@ export function AppHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-md border-b border-border shadow-sm transition-colors duration-300">
-      <div className="h-16 px-4 pl-16 md:pl-6 flex items-center justify-between">
-        {/* Page Title - will be dynamic based on route */}
-        <div className="flex items-center gap-3">
-          <div className="hidden md:flex items-center gap-2">
-            <Calendar className="h-5 w-5 text-muted-foreground" />
-            <h2 className="text-lg font-semibold text-foreground">
-              {businessName}
+    <header className="sticky top-0 z-30 bg-background/60 backdrop-blur-xl border-b border-border transition-all duration-300">
+      <div className="h-16 px-4 md:px-6 flex items-center justify-between">
+        {/* Page Title / Breadcrumbs */}
+        <div className="flex items-center gap-4">
+          <div className="md:hidden">
+             {/* Mobile spacing for menu button area */}
+             <div className="w-8"></div>
+          </div>
+          <div className="flex flex-col">
+             <h2 className="text-sm font-semibold text-foreground tracking-tight">
+              Visão Geral
             </h2>
+            <p className="text-xs text-muted-foreground hidden md:block">
+              {businessName} / Dashboard
+            </p>
           </div>
         </div>
 
         {/* User/Action Section */}
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-3 items-center">
           <ModeToggle />
+          <div className="h-4 w-px bg-border mx-1"></div>
           <Button
             size="sm"
             onClick={handleLogout}
             variant="ghost"
-            className="gap-2 text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all duration-300"
+            className="h-9 gap-2 text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-all duration-200"
             disabled={isLoggingOut}
           >
             <LogOut className="h-4 w-4" />
-            <span className="hidden sm:inline font-medium">
+            <span className="hidden sm:inline font-medium text-xs">
               {isLoggingOut ? "Saindo..." : "Sair"}
             </span>
           </Button>
