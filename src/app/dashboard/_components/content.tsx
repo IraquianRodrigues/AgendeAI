@@ -43,14 +43,14 @@ export default function DashboardContent() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="space-y-1">
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground transition-colors">
-              Dashboard
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
+              Bem-vindo ao Dashboard
             </h1>
-            <p className="text-sm text-muted-foreground font-medium transition-colors">
+            <p className="text-sm text-muted-foreground">
               Visão geral de {formatDateFullBR(selectedDate)}
             </p>
           </div>
-          <div className="flex items-center gap-3 bg-card p-1 rounded-xl border border-border shadow-sm transition-colors">
+          <div className="flex items-center gap-3">
             <DatePickerButton
               date={selectedDate}
               onDateChange={setSelectedDate}
@@ -61,7 +61,6 @@ export default function DashboardContent() {
         {/* Stats Cards */}
         {!isLoading && !error && (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {/* Total Card */}
             <StatCard
               title="Total de Agendamentos"
               value={stats.total}
@@ -70,7 +69,6 @@ export default function DashboardContent() {
               delay={0}
             />
 
-            {/* Completed Card */}
             <StatCard
               title="Concluídos"
               value={stats.completed}
@@ -79,7 +77,6 @@ export default function DashboardContent() {
               delay={100}
             />
 
-            {/* Pending Card */}
             <StatCard
               title="Pendentes"
               value={stats.pending}

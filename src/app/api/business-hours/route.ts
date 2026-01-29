@@ -23,6 +23,44 @@ export async function GET(request: NextRequest) {
     const dayHours = businessHours.find((h) => h.day_of_week === dayOfWeek);
 
     if (!dayHours || !dayHours.is_open) {
+      // Fallback: Verificar se algum profissional trabalha neste dia
+      const { ProfessionalSchedulesService } = await import(
+        "@/services/professional-schedules/professional-schedules.service"
+      );
+
+      const professionalSchedules =
+        await ProfessionalSchedulesService.getByDay(dayOfWeek);
+
+      if (professionalSchedules.length > 0) {
+        // Encontrar horário mais cedo e mais tarde entre os profissionais
+        const startTimes = professionalSchedules.map((s) =>
+          s.start_time.substring(0, 5)
+        );
+        const endTimes = professionalSchedules.map((s) =>
+          s.end_time.substring(0, 5)
+        );
+
+        const earliestStart = startTimes.sort()[0];
+        const latestEnd = endTimes.sort().reverse()[0];
+
+        // Buscar slots disponíveis baseado nos horários dos profissionais
+        const slots = await getAvailableSlots(date, duration);
+
+        return NextResponse.json({
+          date: dateParam,
+          is_open: true,
+          source: "professional_schedules",
+          business_hours: {
+            open: earliestStart,
+            close: latestEnd,
+          },
+          available_professionals: professionalSchedules.length,
+          available_slots: slots,
+          duration_minutes: duration,
+        });
+      }
+
+      // Nenhum profissional disponível
       return NextResponse.json({
         date: dateParam,
         is_open: false,

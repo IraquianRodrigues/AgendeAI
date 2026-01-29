@@ -110,12 +110,12 @@ export function AppointmentsTable({
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1 group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-foreground transition-colors" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-lime-600 dark:group-focus-within:text-lime-500 transition-colors" />
               <Input
                 placeholder="Buscar por nome do cliente..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-11 h-12 bg-muted/50 border-input focus-visible:bg-background focus-visible:ring-2 focus-visible:ring-ring transition-all rounded-2xl font-medium text-foreground placeholder:text-muted-foreground"
+                className="pl-11 h-12 bg-muted/50 border-input focus-visible:bg-background focus-visible:ring-2 focus-visible:ring-lime-500 focus-visible:border-lime-500 transition-all rounded-2xl font-medium text-foreground placeholder:text-muted-foreground"
               />
             </div>
             <div className="flex gap-2">
@@ -334,13 +334,19 @@ export function AppointmentsTable({
                   return (
                     <tr
                       key={appointment.id}
-                      className={`group transition-colors hover:bg-muted/50 ${isCompleted ? "bg-green-50/30 dark:bg-green-900/10" : ""
-                        }`}
+                      className={`group transition-all hover:bg-muted/50 ${
+                        isCompleted ? "bg-green-50/30 dark:bg-green-900/10" : ""
+                      }`}
                     >
                       <td className="p-4">
                         <div className="flex items-center gap-2">
-                          <span className={`font-medium transition-colors ${isCompleted ? "text-green-700 dark:text-green-400" : "text-foreground group-hover:text-primary"
-                            }`}>
+                          <span
+                            className={`font-medium transition-colors ${
+                              isCompleted
+                                ? "text-green-700 dark:text-green-400"
+                                : "text-foreground"
+                            }`}
+                          >
                             {appointment.customer_name}
                           </span>
                           {isCompleted && (
@@ -416,7 +422,7 @@ export function AppointmentsTable({
                             variant="ghost"
                             size="sm"
                             onClick={() => setSelectedAppointment(appointment)}
-                            className="h-8 px-3 text-xs text-muted-foreground hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+                            className="h-8 px-3 text-xs text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
                           >
                             Ver Detalhes
                           </Button>

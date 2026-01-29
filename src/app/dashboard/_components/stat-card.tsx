@@ -39,7 +39,9 @@ export function StatCard({
   return (
     <div
       className={cn(
-        "group relative overflow-hidden rounded-2xl border border-border bg-card p-6",
+        "group relative overflow-hidden rounded-2xl border p-6",
+        "bg-card",
+        "border-border",
         "shadow-sm hover:shadow-md",
         "transition-all duration-300 ease-out",
         "hover:-translate-y-0.5",
@@ -54,8 +56,9 @@ export function StatCard({
           {/* Icon */}
           <div
             className={cn(
-              "mb-4 inline-flex p-3 rounded-xl bg-muted transition-transform duration-300",
-              "group-hover:scale-105"
+              "mb-4 inline-flex p-3 rounded-xl transition-all duration-300",
+              "group-hover:scale-105",
+              "bg-muted"
             )}
           >
             <Icon className="h-6 w-6 text-foreground" />
@@ -98,11 +101,6 @@ export function StatCard({
             />
           </div>
         )}
-      </div>
-
-      {/* Subtle shine effect on hover */}
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-foreground/[0.02] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
       </div>
     </div>
   );

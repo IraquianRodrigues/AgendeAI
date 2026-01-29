@@ -169,7 +169,7 @@ export function AppSidebar() {
               </div>
               <div className="flex flex-col">
                 <h1 className="text-lg font-bold text-foreground leading-none tracking-tight">
-                  {process.env.NEXT_PUBLIC_BUSINESS_NAME || "AutomateAI"}
+                  {process.env.NEXT_PUBLIC_BUSINESS_NAME || "AgendeAI"}
                 </h1>
               </div>
             </div>
