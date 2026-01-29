@@ -9,6 +9,16 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -38,7 +48,7 @@ export function ServiceDetailsModal({
   const [code, setCode] = useState("");
   const [durationMinutes, setDurationMinutes] = useState("");
   const [price, setPrice] = useState("");
-  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const createMutation = useCreateService();
   const updateMutation = useUpdateService();
@@ -58,7 +68,7 @@ export function ServiceDetailsModal({
 
   useEffect(() => {
     if (!service && !isCreating) {
-      setIsConfirmingDelete(false);
+      setIsDeleteDialogOpen(false);
     }
   }, [service, isCreating]);
 
@@ -109,6 +119,7 @@ export function ServiceDetailsModal({
     try {
       await deleteMutation.mutateAsync(service.id);
       toast.success("Serviço excluído com sucesso!");
+      setIsDeleteDialogOpen(false);
       onClose();
     } catch (error) {
       toast.error("Erro ao excluir serviço");
@@ -230,50 +241,16 @@ export function ServiceDetailsModal({
               </>
             )}
 
-            {isConfirmingDelete && service && (
-              <>
-                <Separator />
-                <div className="space-y-4 p-4 border border-destructive rounded-lg bg-destructive/5">
-                  <p className="font-semibold text-destructive">
-                    Confirmar exclusão
-                  </p>
-                  <p className="text-sm">
-                    Tem certeza que deseja excluir o serviço{" "}
-                    <strong>{service.code}</strong>? Esta ação não pode ser
-                    desfeita.
-                  </p>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="destructive"
-                      onClick={handleDelete}
-                      disabled={isPending}
-                      className="flex-1"
-                    >
-                      {deleteMutation.isPending
-                        ? "Excluindo..."
-                        : "Confirmar Exclusão"}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => setIsConfirmingDelete(false)}
-                      disabled={isPending}
-                      className="flex-1"
-                    >
-                      Cancelar
-                    </Button>
-                  </div>
-                </div>
-              </>
-            )}
+
           </div>
         </div>
 
         <DialogFooter className="px-4 sm:px-6 pb-4 sm:pb-6 pt-3 sm:pt-4 border-t flex-shrink-0">
           <div className="flex flex-col gap-2 sm:gap-3 w-full">
-            {service && !isCreating && !isConfirmingDelete && (
+            {service && !isCreating && (
               <Button
                 variant="destructive"
-                onClick={() => setIsConfirmingDelete(true)}
+                onClick={() => setIsDeleteDialogOpen(true)}
                 disabled={isPending}
                 className="gap-2 w-full sm:w-auto"
                 size="sm"
@@ -292,25 +269,45 @@ export function ServiceDetailsModal({
               >
                 Cancelar
               </Button>
-              {!isConfirmingDelete && (
-                <Button
-                  onClick={handleSave}
-                  disabled={
-                    isPending ||
-                    !code.trim() ||
-                    !durationMinutes ||
-                    parseInt(durationMinutes) <= 0
-                  }
-                  className="w-full sm:w-auto order-1 sm:order-2"
-                  size="sm"
-                >
-                  {isPending ? "Salvando..." : isCreating ? "Criar" : "Salvar"}
-                </Button>
-              )}
+              <Button
+                onClick={handleSave}
+                disabled={
+                  isPending ||
+                  !code.trim() ||
+                  !durationMinutes ||
+                  parseInt(durationMinutes) <= 0
+                }
+                className="w-full sm:w-auto order-1 sm:order-2"
+                size="sm"
+              >
+                {isPending ? "Salvando..." : isCreating ? "Criar" : "Salvar"}
+              </Button>
             </div>
           </div>
         </DialogFooter>
       </DialogContent>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Tem certeza que deseja excluir este serviço?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta ação não pode ser desfeita. O serviço <strong>{service?.code}</strong> será permanentemente removido do sistema.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-red-600 hover:bg-red-700 text-white"
+              disabled={deleteMutation.isPending}
+            >
+              {deleteMutation.isPending ? "Excluindo..." : "Excluir Serviço"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Dialog>
   );
 }

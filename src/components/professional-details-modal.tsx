@@ -9,6 +9,16 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -37,7 +47,7 @@ export function ProfessionalDetailsModal({
 }: ProfessionalDetailsModalProps) {
   const [name, setName] = useState("");
   const [specialty, setSpecialty] = useState("");
-  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const createMutation = useCreateProfessional();
   const updateMutation = useUpdateProfessional();
@@ -57,7 +67,7 @@ export function ProfessionalDetailsModal({
 
   useEffect(() => {
     if (!professional && !isCreating) {
-      setIsConfirmingDelete(false);
+      setIsDeleteDialogOpen(false);
     }
   }, [professional, isCreating]);
 
@@ -97,6 +107,7 @@ export function ProfessionalDetailsModal({
     try {
       await deleteMutation.mutateAsync(professional.id);
       toast.success("Profissional excluído com sucesso!");
+      setIsDeleteDialogOpen(false);
       onClose();
     } catch (error) {
       toast.error("Erro ao excluir profissional");
@@ -205,50 +216,16 @@ export function ProfessionalDetailsModal({
               </>
             )}
 
-            {isConfirmingDelete && professional && (
-              <>
-                <Separator />
-                <div className="space-y-4 p-4 border border-destructive rounded-lg bg-destructive/5">
-                  <p className="font-semibold text-destructive">
-                    Confirmar exclusão
-                  </p>
-                  <p className="text-sm">
-                    Tem certeza que deseja excluir o profissional{" "}
-                    <strong>{professional.name}</strong>? Esta ação não pode ser
-                    desfeita.
-                  </p>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="destructive"
-                      onClick={handleDelete}
-                      disabled={isPending}
-                      className="flex-1"
-                    >
-                      {deleteMutation.isPending
-                        ? "Excluindo..."
-                        : "Confirmar Exclusão"}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => setIsConfirmingDelete(false)}
-                      disabled={isPending}
-                      className="flex-1"
-                    >
-                      Cancelar
-                    </Button>
-                  </div>
-                </div>
-              </>
-            )}
+
           </div>
         </div>
 
         <DialogFooter className="px-4 sm:px-6 pb-4 sm:pb-6 pt-3 sm:pt-4 border-t flex-shrink-0">
           <div className="flex flex-col gap-2 sm:gap-3 w-full">
-            {professional && !isCreating && !isConfirmingDelete && (
+            {professional && !isCreating && (
               <Button
                 variant="destructive"
-                onClick={() => setIsConfirmingDelete(true)}
+                onClick={() => setIsDeleteDialogOpen(true)}
                 disabled={isPending}
                 className="gap-2 w-full sm:w-auto"
                 size="sm"
@@ -267,20 +244,40 @@ export function ProfessionalDetailsModal({
               >
                 Cancelar
               </Button>
-              {!isConfirmingDelete && (
-                <Button
-                  onClick={handleSave}
-                  disabled={isPending || !name.trim()}
-                  className="w-full sm:w-auto order-1 sm:order-2"
-                  size="sm"
-                >
-                  {isPending ? "Salvando..." : isCreating ? "Criar" : "Salvar"}
-                </Button>
-              )}
+              <Button
+                onClick={handleSave}
+                disabled={isPending || !name.trim()}
+                className="w-full sm:w-auto order-1 sm:order-2"
+                size="sm"
+              >
+                {isPending ? "Salvando..." : isCreating ? "Criar" : "Salvar"}
+              </Button>
             </div>
           </div>
         </DialogFooter>
       </DialogContent>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Tem certeza que deseja excluir este profissional?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta ação não pode ser desfeita. O profissional <strong>{professional?.name}</strong> será permanentemente removido do sistema.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-red-600 hover:bg-red-700 text-white"
+              disabled={deleteMutation.isPending}
+            >
+              {deleteMutation.isPending ? "Excluindo..." : "Excluir Profissional"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Dialog>
   );
 }
