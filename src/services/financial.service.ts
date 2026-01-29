@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
+import { getLocalDateString } from "@/lib/utils/date";
 import type {
   Transaction,
   CreateTransactionInput,
@@ -20,6 +21,8 @@ export class FinancialService {
     endDate?: string;
   }) {
     try {
+      console.log('🛠️ [FinancialService] getTransactions chamado com filtros:', filters);
+      
       let query = supabase
         .from("transactions")
         .select(`
@@ -30,27 +33,40 @@ export class FinancialService {
         .order("due_date", { ascending: false });
 
       if (filters?.clientId) {
+        console.log('🔍 Aplicando filtro clientId:', filters.clientId);
         query = query.eq("client_id", filters.clientId);
       }
       if (filters?.status) {
+        console.log('🔍 Aplicando filtro status:', filters.status);
         query = query.eq("status", filters.status);
       }
       if (filters?.type) {
+        console.log('🔍 Aplicando filtro type:', filters.type);
         query = query.eq("type", filters.type);
       }
       if (filters?.professionalId) {
+        console.log('🔍 Aplicando filtro professionalId:', filters.professionalId);
         query = query.eq("professional_id", filters.professionalId);
       }
       if (filters?.startDate) {
+        console.log('📅 Aplicando filtro startDate (gte):', filters.startDate);
         query = query.gte("due_date", filters.startDate);
       }
       if (filters?.endDate) {
+        console.log('📅 Aplicando filtro endDate (lte):', filters.endDate);
         query = query.lte("due_date", filters.endDate);
       }
 
       const { data, error } = await query;
 
       if (error) throw error;
+      
+      console.log('✅ [FinancialService] Transações retornadas:', data?.length || 0);
+      if (data && data.length > 0) {
+        console.log('📆 Primeira transação - due_date:', data[0].due_date);
+        console.log('📆 Última transação - due_date:', data[data.length - 1].due_date);
+      }
+      
       return { success: true, data: data as Transaction[] };
     } catch (error: any) {
       return { success: false, error: error.message };
@@ -125,7 +141,7 @@ export class FinancialService {
 
   static async getDailyAppointmentsReceivable(): Promise<number> {
     try {
-      const today = new Date().toISOString().split('T')[0];
+      const today = getLocalDateString();
       
       // Get today's appointments
       const { data: appointments, error: appointmentsError } = await supabase
@@ -181,8 +197,8 @@ export class FinancialService {
   static async getFinancialMetrics(): Promise<{ success: boolean; data?: FinancialMetrics; error?: string }> {
     try {
       const now = new Date();
-      const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
-      const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
+      const firstDayOfMonth = getLocalDateString(new Date(now.getFullYear(), now.getMonth(), 1));
+      const lastDayOfMonth = getLocalDateString(new Date(now.getFullYear(), now.getMonth() + 1, 0));
 
       // Get all transactions
       const { data: transactions, error } = await supabase
@@ -191,7 +207,7 @@ export class FinancialService {
 
       if (error) throw error;
 
-      const today = new Date().toISOString().split('T')[0];
+      const today = getLocalDateString();
 
       // Calculate metrics
       const totalReceivable = transactions
@@ -261,7 +277,7 @@ export class FinancialService {
         .from("transactions")
         .update({
           status: "pago",
-          paid_date: new Date().toISOString().split('T')[0],
+          paid_date: getLocalDateString(),
           payment_method: paymentMethod,
         })
         .eq("id", id)

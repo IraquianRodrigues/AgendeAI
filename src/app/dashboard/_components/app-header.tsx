@@ -61,11 +61,11 @@ export function AppHeader() {
             size="sm"
             onClick={handleLogout}
             variant="ghost"
-            className="h-9 gap-2 text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-all duration-200"
+            className="h-11 gap-2 text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-all duration-200 px-3"
             disabled={isLoggingOut}
           >
-            <LogOut className="h-4 w-4" />
-            <span className="hidden sm:inline font-medium text-xs">
+            <LogOut className="h-5 w-5" />
+            <span className="hidden sm:inline font-medium text-sm">
               {isLoggingOut ? "Saindo..." : "Sair"}
             </span>
           </Button>

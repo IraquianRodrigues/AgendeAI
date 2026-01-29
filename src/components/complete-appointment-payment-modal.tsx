@@ -24,6 +24,7 @@ import type { AppointmentWithRelations } from "@/types/database.types";
 import { useClienteByTelefone } from "@/services/clientes/use-clientes";
 import { useDeleteAppointment } from "@/services/appointments/use-appointments";
 import { formatDateBR } from "@/lib/date-utils";
+import { getLocalDateString } from "@/lib/utils/date";
 
 interface CompleteAppointmentPaymentModalProps {
   isOpen: boolean;
@@ -89,8 +90,8 @@ export function CompleteAppointmentPaymentModal({
         amount: amount,
         payment_method: paymentMethod,
         status: "pago",
-        due_date: new Date().toISOString().split("T")[0],
-        paid_date: new Date().toISOString().split("T")[0],
+        due_date: getLocalDateString(new Date(appointment.start_time)),
+        paid_date: getLocalDateString(),
       });
 
       if (result.success) {

@@ -157,23 +157,24 @@ export function ProfessionalScheduleModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-lg">
+      <DialogContent className="max-w-[95vw] sm:max-w-lg max-h-[90vh] p-0 flex flex-col">
+        <DialogHeader className="px-5 sm:px-6 pt-5 sm:pt-6 pb-4 flex-shrink-0">
+          <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl">
             <Calendar className="h-5 w-5 text-foreground" />
             Agenda de {professional?.name}
           </DialogTitle>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
             Configure os dias e horários em que este profissional trabalha
           </p>
         </DialogHeader>
 
         {isLoading ? (
-          <div className="flex items-center justify-center p-8">
+          <div className="flex items-center justify-center p-8 flex-1">
             <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
           </div>
         ) : (
-          <div className="space-y-3 py-4">
+          <div className="flex-1 overflow-y-auto min-h-0 px-5 sm:px-6">
+            <div className="space-y-3 py-4 pr-2">
             {/* Lista de dias da semana */}
             {Object.entries(DAYS_OF_WEEK).map(([dayKey, dayName]) => {
               const day = parseInt(dayKey);
@@ -182,10 +183,10 @@ export function ProfessionalScheduleModal({
               return (
                 <div
                   key={day}
-                  className="flex items-center gap-4 p-4 rounded-lg border bg-card"
+                  className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-4 rounded-lg border bg-card"
                 >
                   {/* Toggle e nome do dia */}
-                  <div className="flex items-center gap-3 min-w-[140px]">
+                  <div className="flex items-center gap-3 sm:min-w-[140px]">
                     <Switch
                       checked={schedule.enabled}
                       onCheckedChange={() => handleToggleDay(day)}
@@ -205,8 +206,8 @@ export function ProfessionalScheduleModal({
 
                   {/* Horários */}
                   {schedule.enabled ? (
-                    <div className="flex items-center gap-3 flex-1">
-                      <div className="space-y-1">
+                    <div className="flex items-center gap-2 sm:gap-3 flex-1">
+                      <div className="space-y-1 flex-1">
                         <Label
                           htmlFor={`start-${day}`}
                           className="text-xs text-muted-foreground"
@@ -220,11 +221,11 @@ export function ProfessionalScheduleModal({
                           onChange={(e) =>
                             handleTimeChange(day, "start_time", e.target.value)
                           }
-                          className="h-9 w-[100px]"
+                          className="h-10 w-full sm:w-[100px]"
                         />
                       </div>
 
-                      <div className="space-y-1">
+                      <div className="space-y-1 flex-1">
                         <Label
                           htmlFor={`end-${day}`}
                           className="text-xs text-muted-foreground"
@@ -238,7 +239,7 @@ export function ProfessionalScheduleModal({
                           onChange={(e) =>
                             handleTimeChange(day, "end_time", e.target.value)
                           }
-                          className="h-9 w-[100px]"
+                          className="h-10 w-full sm:w-[100px]"
                         />
                       </div>
                     </div>
@@ -250,23 +251,24 @@ export function ProfessionalScheduleModal({
                 </div>
               );
             })}
+            </div>
           </div>
         )}
 
         {/* Botões de ação */}
-        <div className="flex justify-end gap-2 pt-4 border-t">
+        <div className="flex flex-col sm:flex-row justify-end gap-2 px-5 sm:px-6 py-4 border-t flex-shrink-0">
           <Button
             variant="outline"
             onClick={onClose}
             disabled={isSaving}
-            className="min-w-[100px]"
+            className="min-w-[100px] w-full sm:w-auto order-2 sm:order-1"
           >
             Fechar
           </Button>
           <Button
             onClick={handleSave}
             disabled={isSaving}
-            className="min-w-[140px]"
+            className="min-w-[140px] w-full sm:w-auto order-1 sm:order-2"
           >
             {isSaving ? (
               <>

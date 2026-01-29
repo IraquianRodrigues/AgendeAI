@@ -36,8 +36,22 @@ export function FinancialReportModal({
 }: FinancialReportModalProps) {
   const [selectedType, setSelectedType] = useState<TransactionType | "all">("all");
   const [selectedProfessional, setSelectedProfessional] = useState<number | "all">("all");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  
+  // Definir datas padrão: primeiro dia do mês até último dia do mês
+  const getDefaultStartDate = () => {
+    const now = new Date();
+    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+    return firstDay.toISOString().split('T')[0];
+  };
+  
+  const getDefaultEndDate = () => {
+    const now = new Date();
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    return lastDay.toISOString().split('T')[0];
+  };
+  
+  const [startDate, setStartDate] = useState(getDefaultStartDate());
+  const [endDate, setEndDate] = useState(getDefaultEndDate());
   const [isGenerating, setIsGenerating] = useState(false);
 
   const { data: professionals, isLoading: loadingProfessionals } = useProfessionals();
@@ -53,6 +67,9 @@ export function FinancialReportModal({
       if (startDate) filters.startDate = startDate;
       if (endDate) filters.endDate = endDate;
 
+      console.log("🔍 [PDF Report] Filtros aplicados:", filters);
+      console.log("📅 [PDF Report] Datas - Início:", startDate, "Fim:", endDate);
+
       const result = await FinancialService.getTransactions(filters);
 
       if (!result.success || !result.data) {
@@ -60,15 +77,18 @@ export function FinancialReportModal({
         return;
       }
 
+      console.log("📊 [PDF Report] Transações retornadas:", result.data.length);
+      console.log("📋 [PDF Report] Transações:", result.data);
+
       const transactions = result.data;
 
-      // Calcular totais
+      // Calcular totais - incluindo TODAS as transações filtradas
       const totalReceitas = transactions
-        .filter((t) => t.type === "receita" && t.status === "pago")
+        .filter((t) => t.type === "receita")
         .reduce((sum, t) => sum + parseFloat(t.amount.toString()), 0);
 
       const totalDespesas = transactions
-        .filter((t) => t.type === "despesa" && t.status === "pago")
+        .filter((t) => t.type === "despesa")
         .reduce((sum, t) => sum + parseFloat(t.amount.toString()), 0);
 
       const lucroLiquido = totalReceitas - totalDespesas;

@@ -124,10 +124,10 @@ export function AppSidebar() {
       <Button
         variant="ghost"
         size="icon"
-        className="fixed top-4 left-4 z-50 md:hidden bg-background/95 backdrop-blur-md border border-border/50 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+        className="fixed top-4 left-4 z-50 md:hidden h-12 w-12 bg-background/95 backdrop-blur-md border border-border/50 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
         onClick={() => setIsMobileOpen(!isMobileOpen)}
       >
-        {isMobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        {isMobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
       </Button>
 
       {/* Mobile Overlay */}
@@ -192,7 +192,7 @@ export function AppSidebar() {
                   animationDelay: `${index * 50}ms`,
                 }}
                 className={cn(
-                  "group relative flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-all duration-300",
+                  "group relative flex items-center gap-3 rounded-xl px-3 py-3.5 text-sm font-medium transition-all duration-300 min-h-[44px]",
                   "animate-in fade-in slide-in-from-left-2",
                   isActive
                     ? "bg-foreground text-background shadow-md shadow-foreground/10 translate-x-1"

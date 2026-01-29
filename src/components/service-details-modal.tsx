@@ -133,8 +133,8 @@ export function ServiceDetailsModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] p-0 flex flex-col">
-        <DialogHeader className="px-4 sm:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4 flex-shrink-0">
+      <DialogContent className="max-w-[95vw] sm:max-w-2xl max-h-[90vh] p-0 flex flex-col">
+        <DialogHeader className="px-5 sm:px-6 pt-5 sm:pt-6 pb-4 flex-shrink-0">
           <DialogTitle className="text-lg sm:text-xl md:text-2xl">
             {isCreating ? "Novo Serviço" : "Editar Serviço"}
           </DialogTitle>
@@ -145,7 +145,7 @@ export function ServiceDetailsModal({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex-1 overflow-y-auto min-h-0 px-4 sm:px-6">
+        <div className="flex-1 overflow-y-auto min-h-0 px-5 sm:px-6">
           <div className="space-y-4 sm:space-y-6 pb-4 sm:pb-6 pr-2 sm:pr-4">
             {service && !isCreating && (
               <>
@@ -253,7 +253,6 @@ export function ServiceDetailsModal({
                 onClick={() => setIsDeleteDialogOpen(true)}
                 disabled={isPending}
                 className="gap-2 w-full sm:w-auto"
-                size="sm"
               >
                 <Trash2 className="h-4 w-4" />
                 Excluir
@@ -265,7 +264,6 @@ export function ServiceDetailsModal({
                 onClick={onClose}
                 disabled={isPending}
                 className="w-full sm:w-auto order-2 sm:order-1"
-                size="sm"
               >
                 Cancelar
               </Button>
@@ -278,7 +276,6 @@ export function ServiceDetailsModal({
                   parseInt(durationMinutes) <= 0
                 }
                 className="w-full sm:w-auto order-1 sm:order-2"
-                size="sm"
               >
                 {isPending ? "Salvando..." : isCreating ? "Criar" : "Salvar"}
               </Button>

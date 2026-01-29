@@ -39,9 +39,14 @@ export function FinancialTable({ transactions, isLoading, onRefresh }: Financial
     }).format(value);
   };
 
+
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("pt-BR");
+    // Parse YYYY-MM-DD directly to avoid timezone conversion
+    // new Date("2026-01-29") interprets as UTC midnight, which in UTC-3 is the previous day
+    const [year, month, day] = dateString.split('-');
+    return `${day}/${month}/${year}`;
   };
+
 
   const getStatusBadge = (status: string) => {
     const variants: Record<string, { variant: any; label: string }> = {
@@ -73,6 +78,23 @@ export function FinancialTable({ transactions, isLoading, onRefresh }: Financial
       </Badge>
     );
   };
+
+
+  const getPaymentMethodLabel = (method: string | null | undefined) => {
+    if (!method) return "-";
+    
+    const labels: Record<string, string> = {
+      dinheiro: "💵 Dinheiro",
+      pix: "📱 PIX",
+      cartao_credito: "💳 Crédito",
+      cartao_debito: "💳 Débito",
+      boleto: "📄 Boleto",
+      transferencia: "🏦 Transferência",
+    };
+    
+    return labels[method] || method;
+  };
+
 
   const handleMarkAsPaid = async (id: string) => {
     setProcessingId(id);
@@ -169,13 +191,12 @@ export function FinancialTable({ transactions, isLoading, onRefresh }: Financial
               </TableCell>
               <TableCell>{getStatusBadge(transaction.status)}</TableCell>
               <TableCell>
-                {/* MERCADO PAGO DESATIVADO TEMPORARIAMENTE */}
-                {/* {transaction.type === "receita" && transaction.status === "pendente" && (
-                  <MercadoPagoPaymentButton 
-                    transaction={transaction} 
-                    onSuccess={onRefresh}
-                  />
-                )} */}
+                <span className="text-sm text-muted-foreground">
+                  {transaction.status === "pago" 
+                    ? getPaymentMethodLabel(transaction.payment_method)
+                    : "-"
+                  }
+                </span>
               </TableCell>
               <TableCell className="text-right">
                 <DropdownMenu>

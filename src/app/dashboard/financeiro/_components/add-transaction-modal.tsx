@@ -22,6 +22,7 @@ import { FinancialService } from "@/services/financial.service";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import type { CreateTransactionInput } from "@/types/financial";
+import { getLocalDateString } from "@/lib/utils/date";
 
 interface AddTransactionModalProps {
   isOpen: boolean;
@@ -46,7 +47,7 @@ export function AddTransactionModal({ isOpen, onClose, onSuccess }: AddTransacti
     amount: 0,
     payment_method: "dinheiro",
     status: "pendente",
-    due_date: new Date().toISOString().split("T")[0],
+    due_date: getLocalDateString(),
   });
 
   useEffect(() => {
@@ -88,12 +89,20 @@ export function AddTransactionModal({ isOpen, onClose, onSuccess }: AddTransacti
 
     setIsSubmitting(true);
 
-    // Para despesas, usar um ID genérico ou remover o client_id
-    const transactionData = formData.type === "despesa" 
-      ? { ...formData, client_id: undefined }
-      : formData;
+    // Preparar dados da transação
+    let transactionData: CreateTransactionInput = { ...formData };
+    
+    // Para despesas, remover o client_id
+    if (formData.type === "despesa") {
+      transactionData.client_id = undefined;
+    }
+    
+    // Se status é "pago", garantir que paid_date está definido
+    if (formData.status === "pago" && !formData.paid_date) {
+      transactionData.paid_date = getLocalDateString();
+    }
 
-    const result = await FinancialService.createTransaction(transactionData as CreateTransactionInput);
+    const result = await FinancialService.createTransaction(transactionData);
 
     if (result.success) {
       toast.success("Transação criada com sucesso!");
@@ -140,7 +149,7 @@ export function AddTransactionModal({ isOpen, onClose, onSuccess }: AddTransacti
       amount: 0,
       payment_method: "dinheiro",
       status: "pendente",
-      due_date: new Date().toISOString().split("T")[0],
+      due_date: getLocalDateString(),
     });
     setGeneratePaymentLink(false);
   };

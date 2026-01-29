@@ -203,30 +203,27 @@ export function ProfessionalsTable({
                       <div className="flex gap-2">
                         <Button
                           variant="outline"
-                          size="sm"
                           onClick={() => setProfessionalForServices(professional)}
-                          className="flex-1 gap-2"
+                          className="flex-1 gap-2 min-h-[44px]"
                         >
-                          <Briefcase className="h-3.5 w-3.5" />
+                          <Briefcase className="h-4 w-4" />
                           Serviços
                         </Button>
                         <Button
                           variant="outline"
-                          size="sm"
                           onClick={() => setSelectedProfessional(professional)}
-                          className="flex-1 gap-2 transition-colors"
+                          className="flex-1 gap-2 transition-colors min-h-[44px]"
                         >
-                          <Edit2 className="h-3.5 w-3.5" />
+                          <Edit2 className="h-4 w-4" />
                           Editar
                         </Button>
                       </div>
                       <Button
                         variant="outline"
-                        size="sm"
                         onClick={() => setProfessionalForSchedule(professional)}
-                        className="w-full gap-2"
+                        className="w-full gap-2 min-h-[44px]"
                       >
-                        <Clock className="h-3.5 w-3.5" />
+                        <Clock className="h-4 w-4" />
                         Configurar Horários
                       </Button>
                     </div>
@@ -249,26 +246,26 @@ export function ProfessionalsTable({
                 <div className="flex items-center gap-2">
                   <Button
                     variant="outline"
-                    size="sm"
                     onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                     disabled={currentPage === 1}
+                    className="min-h-[44px]"
                   >
-                    <ChevronLeft className="h-4 w-4" />
-                    Anterior
+                    <ChevronLeft className="h-5 w-5" />
+                    <span className="hidden sm:inline ml-1">Anterior</span>
                   </Button>
                   <div className="text-sm font-medium px-4">
                     Página {currentPage} de {totalPages}
                   </div>
                   <Button
                     variant="outline"
-                    size="sm"
                     onClick={() =>
                       setCurrentPage((p) => Math.min(totalPages, p + 1))
                     }
                     disabled={currentPage === totalPages}
+                    className="min-h-[44px]"
                   >
-                    Próxima
-                    <ChevronRight className="h-4 w-4" />
+                    <span className="hidden sm:inline mr-1">Próxima</span>
+                    <ChevronRight className="h-5 w-5" />
                   </Button>
                 </div>
               </div>

@@ -81,14 +81,14 @@ export default function ProfessionalsContent() {
             {/* Most Common Specialty */}
             <Card className="p-6 hover:shadow-lg transition-all duration-300">
               <div className="flex items-center gap-4">
-                <div className="p-3 rounded-xl bg-muted">
+                <div className="p-3 rounded-xl bg-muted flex-shrink-0">
                   <Award className="h-6 w-6 text-muted-foreground" />
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                     Mais Comum
                   </p>
-                  <p className="text-lg font-bold text-foreground mt-1 truncate">
+                  <p className="text-base sm:text-lg font-bold text-foreground mt-1 break-words">
                     {stats.mostCommonSpecialty}
                   </p>
                 </div>

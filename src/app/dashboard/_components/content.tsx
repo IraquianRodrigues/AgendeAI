@@ -39,18 +39,18 @@ export default function DashboardContent() {
 
   return (
     <div className="min-h-screen bg-muted/40 transition-colors duration-300">
-      <div className="container mx-auto p-4 lg:p-10 space-y-8">
+      <div className="container mx-auto p-3 sm:p-6 lg:p-10 space-y-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-          <div className="space-y-1">
-            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
+          <div className="space-y-1 animate-in fade-in slide-in-from-bottom-2 duration-500">
+            <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text">
               Bem-vindo ao Dashboard
             </h1>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground font-medium animate-in fade-in slide-in-from-bottom-2 duration-500" style={{ animationDelay: "100ms" }}>
               Visão geral de {formatDateFullBR(selectedDate)}
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 animate-in fade-in slide-in-from-bottom-2 duration-500" style={{ animationDelay: "200ms" }}>
             <DatePickerButton
               date={selectedDate}
               onDateChange={setSelectedDate}
@@ -60,7 +60,7 @@ export default function DashboardContent() {
 
         {/* Stats Cards */}
         {!isLoading && !error && (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <StatCard
               title="Total de Agendamentos"
               value={stats.total}

@@ -248,7 +248,7 @@ export function LoginContent() {
                <div className="flex items-center space-x-2">
                 <Checkbox 
                   id="remember" 
-                  className="h-5 w-5 border-2 border-zinc-700 data-[state=checked]:bg-white data-[state=checked]:text-black data-[state=checked]:border-white transition-all duration-200" 
+                  className="h-6 w-6 border-2 border-zinc-700 data-[state=checked]:bg-white data-[state=checked]:text-black data-[state=checked]:border-white transition-all duration-200" 
                 />
                 <label
                   htmlFor="remember"

@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -8,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Filter, X } from "lucide-react";
+import { Filter, X, Calendar } from "lucide-react";
 import { useProfessionals } from "@/services/professionals/use-professionals";
 import type { TransactionType, TransactionStatus } from "@/types/financial";
 
@@ -16,9 +17,13 @@ interface FinancialFiltersProps {
   selectedType: TransactionType | "all";
   selectedProfessional: number | "all";
   selectedStatus: TransactionStatus | "all";
+  selectedStartDate: string;
+  selectedEndDate: string;
   onTypeChange: (type: TransactionType | "all") => void;
   onProfessionalChange: (professionalId: number | "all") => void;
   onStatusChange: (status: TransactionStatus | "all") => void;
+  onStartDateChange: (date: string) => void;
+  onEndDateChange: (date: string) => void;
   onClearFilters: () => void;
 }
 
@@ -26,9 +31,13 @@ export function FinancialFilters({
   selectedType,
   selectedProfessional,
   selectedStatus,
+  selectedStartDate,
+  selectedEndDate,
   onTypeChange,
   onProfessionalChange,
   onStatusChange,
+  onStartDateChange,
+  onEndDateChange,
   onClearFilters,
 }: FinancialFiltersProps) {
   const { data: professionals, isLoading: loadingProfessionals } = useProfessionals();
@@ -36,7 +45,9 @@ export function FinancialFilters({
   const hasActiveFilters = 
     selectedType !== "all" || 
     selectedProfessional !== "all" || 
-    selectedStatus !== "all";
+    selectedStatus !== "all" ||
+    selectedStartDate !== "" ||
+    selectedEndDate !== "";
 
   return (
     <div className="flex flex-col gap-4 p-4 bg-muted/30 rounded-lg border border-border">
@@ -58,7 +69,7 @@ export function FinancialFilters({
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
         {/* Filtro de Tipo */}
         <div className="space-y-2">
           <label className="text-xs font-medium text-muted-foreground">
@@ -145,6 +156,34 @@ export function FinancialFilters({
               <SelectItem value="cancelado">Cancelado</SelectItem>
             </SelectContent>
           </Select>
+        </div>
+
+        {/* Filtro de Data */}
+        <div className="space-y-2">
+          <label className="text-xs font-medium text-muted-foreground flex items-center gap-1">
+            <Calendar className="h-3 w-3" />
+            Período
+          </label>
+          <div className="flex gap-2">
+            <div className="flex-1">
+              <Input
+                type="date"
+                value={selectedStartDate}
+                onChange={(e) => onStartDateChange(e.target.value)}
+                placeholder="Data inicial"
+                className="h-9 text-xs"
+              />
+            </div>
+            <div className="flex-1">
+              <Input
+                type="date"
+                value={selectedEndDate}
+                onChange={(e) => onEndDateChange(e.target.value)}
+                placeholder="Data final"
+                className="h-9 text-xs"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>

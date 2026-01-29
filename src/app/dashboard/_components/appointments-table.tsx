@@ -100,7 +100,7 @@ export function AppointmentsTable({
 
   return (
     <>
-      <div className="bg-card rounded-[32px] shadow-[0_2px_20px_-4px_rgba(0,0,0,0.02)] overflow-hidden transition-colors dark:shadow-none">
+      <div className="bg-card rounded-lg shadow-[0_2px_12px_rgb(0,0,0,0.04),0_8px_24px_rgb(0,0,0,0.02)] overflow-hidden transition-colors dark:shadow-none">
         <div className="p-8 space-y-6 border-b border-border">
           <div className="space-y-1">
             <h2 className="text-xl font-semibold text-foreground transition-colors">Agendamentos do Dia</h2>
@@ -110,12 +110,12 @@ export function AppointmentsTable({
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1 group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-lime-600 dark:group-focus-within:text-lime-500 transition-colors" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-foreground transition-colors" />
               <Input
                 placeholder="Buscar por nome do cliente..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-11 h-12 bg-muted/50 border-input focus-visible:bg-background focus-visible:ring-2 focus-visible:ring-lime-500 focus-visible:border-lime-500 transition-all rounded-2xl font-medium text-foreground placeholder:text-muted-foreground"
+                className="pl-11 h-12 bg-muted/50 border-input focus-visible:bg-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-ring transition-all rounded-lg font-medium text-foreground placeholder:text-muted-foreground"
               />
             </div>
             <div className="flex gap-2">
@@ -124,7 +124,7 @@ export function AppointmentsTable({
                 onValueChange={setSelectedProfessionalId}
                 disabled={isLoadingProfessionals}
               >
-                <SelectTrigger className="w-full sm:w-[250px] h-12 bg-muted/50 border-input focus:bg-background focus:ring-2 focus:ring-ring transition-all rounded-2xl font-medium text-foreground">
+                <SelectTrigger className="w-full sm:w-[250px] h-12 bg-muted/50 border-input focus:bg-background focus:ring-2 focus:ring-ring transition-all rounded-lg font-medium text-foreground">
                   <SelectValue placeholder="Todos os profissionais" />
                 </SelectTrigger>
                 <SelectContent>
@@ -172,7 +172,7 @@ export function AppointmentsTable({
               return (
                 <div
                   key={appointment.id}
-                  className={`p-4 border rounded-2xl transition-all ${
+                  className={`p-4 border rounded-lg transition-all duration-300 hover:border-border/80 ${
                     isCompleted
                       ? "bg-green-50/30 border-green-100 dark:bg-green-900/20 dark:border-green-900/50"
                       : "bg-card border-border"
@@ -263,7 +263,7 @@ export function AppointmentsTable({
                           variant="outline"
                           size="sm"
                           onClick={() => setAppointmentForPayment(appointment)}
-                          className="flex-1 h-9 text-xs border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-800 dark:hover:text-green-300 transition-colors"
+                          className="flex-1 h-9 text-xs bg-black dark:bg-white !text-white dark:!text-black hover:bg-zinc-900 dark:hover:bg-zinc-100 border border-border shadow-[0_2px_8px_rgba(0,0,0,0.12)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.16)] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105"
                         >
                           <CheckCircle2 className="h-3.5 w-3.5 mr-1.5" />
                           Concluir
@@ -334,7 +334,7 @@ export function AppointmentsTable({
                   return (
                     <tr
                       key={appointment.id}
-                      className={`group transition-all hover:bg-muted/50 ${
+                      className={`group transition-all duration-300 hover:bg-muted/50 ${
                         isCompleted ? "bg-green-50/30 dark:bg-green-900/10" : ""
                       }`}
                     >
@@ -412,7 +412,7 @@ export function AppointmentsTable({
                               variant="outline"
                               size="sm"
                               onClick={() => setAppointmentForPayment(appointment)}
-                              className="h-8 px-3 text-xs border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-800 dark:hover:text-green-300 transition-colors"
+                              className="h-8 px-3 text-xs bg-black dark:bg-white !text-white dark:!text-black hover:bg-zinc-900 dark:hover:bg-zinc-100 border border-border shadow-[0_2px_8px_rgba(0,0,0,0.12)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.16)] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105"
                             >
                               <CheckCircle2 className="h-3.5 w-3.5 mr-1.5" />
                               Concluir

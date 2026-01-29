@@ -39,12 +39,16 @@ export function StatCard({
   return (
     <div
       className={cn(
-        "group relative overflow-hidden rounded-2xl border p-6",
-        "bg-card",
-        "border-border",
-        "shadow-sm hover:shadow-md",
-        "transition-all duration-300 ease-out",
-        "hover:-translate-y-0.5",
+        "group relative overflow-hidden rounded-lg border p-6",
+        "bg-card border-border",
+        // Sharp geometry with layered shadows
+        "shadow-[0_1px_2px_rgb(0,0,0,0.04),0_4px_12px_rgb(0,0,0,0.03)]",
+        "hover:shadow-[0_4px_8px_rgb(0,0,0,0.06),0_12px_24px_rgb(0,0,0,0.04)]",
+        "dark:shadow-none dark:hover:shadow-none",
+        // Spring physics animation
+        "transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
+        "hover:scale-[1.02] hover:-translate-y-1",
+        // Entrance animation
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
         className
       )}
@@ -53,15 +57,15 @@ export function StatCard({
       {/* Content */}
       <div className="relative flex items-start justify-between">
         <div className="flex-1">
-          {/* Icon */}
+          {/* Icon with rotation on hover */}
           <div
             className={cn(
-              "mb-4 inline-flex p-3 rounded-xl transition-all duration-300",
-              "group-hover:scale-105",
+              "mb-4 inline-flex p-3 rounded-lg transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
+              "group-hover:scale-110 group-hover:rotate-6",
               "bg-muted"
             )}
           >
-            <Icon className="h-6 w-6 text-foreground" />
+            <Icon className="h-6 w-6 text-foreground transition-colors" />
           </div>
 
           {/* Title */}
@@ -102,6 +106,16 @@ export function StatCard({
           </div>
         )}
       </div>
+
+      {/* Reduced motion support */}
+      <style jsx>{`
+        @media (prefers-reduced-motion: reduce) {
+          .group {
+            transition: none !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
+

@@ -24,6 +24,8 @@ export default function FinanceiroPage() {
   const [selectedType, setSelectedType] = useState<TransactionType | "all">("all");
   const [selectedProfessional, setSelectedProfessional] = useState<number | "all">("all");
   const [selectedStatus, setSelectedStatus] = useState<TransactionStatus | "all">("all");
+  const [selectedStartDate, setSelectedStartDate] = useState<string>("");
+  const [selectedEndDate, setSelectedEndDate] = useState<string>("");
 
   const loadData = async () => {
     setIsLoading(true);
@@ -39,6 +41,8 @@ export default function FinanceiroPage() {
     if (selectedType !== "all") filters.type = selectedType;
     if (selectedProfessional !== "all") filters.professionalId = selectedProfessional;
     if (selectedStatus !== "all") filters.status = selectedStatus;
+    if (selectedStartDate) filters.startDate = selectedStartDate;
+    if (selectedEndDate) filters.endDate = selectedEndDate;
 
     const transactionsResult = await FinancialService.getTransactions(filters);
     if (transactionsResult.success && transactionsResult.data) {
@@ -52,7 +56,7 @@ export default function FinanceiroPage() {
 
   useEffect(() => {
     loadData();
-  }, [selectedType, selectedProfessional, selectedStatus]);
+  }, [selectedType, selectedProfessional, selectedStatus, selectedStartDate, selectedEndDate]);
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("pt-BR", {
@@ -213,13 +217,19 @@ export default function FinanceiroPage() {
             selectedType={selectedType}
             selectedProfessional={selectedProfessional}
             selectedStatus={selectedStatus}
+            selectedStartDate={selectedStartDate}
+            selectedEndDate={selectedEndDate}
             onTypeChange={setSelectedType}
             onProfessionalChange={setSelectedProfessional}
             onStatusChange={setSelectedStatus}
+            onStartDateChange={setSelectedStartDate}
+            onEndDateChange={setSelectedEndDate}
             onClearFilters={() => {
               setSelectedType("all");
               setSelectedProfessional("all");
               setSelectedStatus("all");
+              setSelectedStartDate("");
+              setSelectedEndDate("");
             }}
           />
 
