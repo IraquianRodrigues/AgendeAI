@@ -261,28 +261,49 @@ export class NotificationService {
     type: Notification["type"],
     appointment: any
   ): { title: string; message: string } {
-    const clientName = appointment.client_name || "Cliente";
+    const clientName = appointment.client_name || appointment.customer_name || "Cliente";
     const serviceName = appointment.service_name || "Serviço";
-    const date = new Date(appointment.date).toLocaleDateString("pt-BR");
-    const time = appointment.time;
+    
+    // Formatar data e hora
+    let dateStr = "data não definida";
+    let timeStr = "horário não definido";
+    
+    if (appointment.start_time) {
+      try {
+        const date = new Date(appointment.start_time);
+        
+        // Formatar data: dd/MM/yyyy
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        dateStr = `${day}/${month}/${year}`;
+        
+        // Formatar hora: HH:mm (sem segundos, sem timezone)
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        timeStr = `${hours}:${minutes}`;
+      } catch (e) {
+        console.error("Erro ao formatar data:", e);
+      }
+    }
 
     switch (type) {
       case "new_appointment":
         return {
           title: "🎉 Novo Agendamento!",
-          message: `${clientName} agendou ${serviceName} para ${date} às ${time}`,
+          message: `${clientName} agendou ${serviceName} para ${dateStr} às ${timeStr}`,
         };
 
       case "cancelled_appointment":
         return {
           title: "❌ Agendamento Cancelado",
-          message: `${clientName} cancelou ${serviceName} de ${date} às ${time}`,
+          message: `${clientName} cancelou ${serviceName} de ${dateStr} às ${timeStr}`,
         };
 
       case "updated_appointment":
         return {
           title: "🔄 Agendamento Atualizado",
-          message: `${clientName} atualizou o agendamento de ${serviceName} para ${date} às ${time}`,
+          message: `${clientName} atualizou o agendamento de ${serviceName} para ${dateStr} às ${timeStr}`,
         };
 
       default:

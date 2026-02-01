@@ -77,37 +77,124 @@ export function NotificationProvider({
 
   // Inscrever-se para mudanças em agendamentos
   useEffect(() => {
-    if (!currentUserId) return;
+    if (!currentUserId) {
+      console.log("⚠️ NotificationProvider: Aguardando currentUserId...");
+      return;
+    }
+
+    console.log("✅ NotificationProvider: Iniciando subscription com userId:", currentUserId);
 
     const handleNewAppointment = async (appointment: any) => {
-      // Criar notificação
-      const { title, message } = NotificationService.formatNotificationMessage(
-        "new_appointment",
-        appointment
-      );
+      console.log("🎉 NOVO AGENDAMENTO DETECTADO:", appointment);
+      
+      try {
+        const supabase = createClient();
+        
+        // Buscar dados básicos do agendamento
+        const { data: fullAppointment, error: appointmentError } = await supabase
+          .from("appointments")
+          .select("*")
+          .eq("id", appointment.id)
+          .single();
 
-      await NotificationService.createNotification({
-        user_id: currentUserId,
-        type: "new_appointment",
-        title,
-        message,
-        appointment_id: appointment.id,
-      });
+        if (appointmentError || !fullAppointment) {
+          console.error("❌ Erro ao buscar agendamento:", appointmentError);
+          return;
+        }
 
-      // Mostrar toast
-      toast.success(title, {
-        description: message,
-        duration: 5000,
-      });
+        console.log("📦 Dados do agendamento:", fullAppointment);
 
-      // Recarregar notificações
-      await loadNotifications();
+        // Buscar service separadamente
+        const { data: service } = await supabase
+          .from("services")
+          .select("code")
+          .eq("id", fullAppointment.service_code)
+          .single();
+
+        // Buscar professional separadamente
+        const { data: professional } = await supabase
+          .from("professionals")
+          .select("name")
+          .eq("id", fullAppointment.professional_code)
+          .single();
+
+        console.log("🔍 Service:", service);
+        console.log("👤 Professional:", professional);
+
+        // Formatar dados para a notificação
+        const appointmentData = {
+          ...fullAppointment,
+          client_name: fullAppointment.customer_name || "Cliente",
+          service_name: service?.code || "Serviço",
+          professional_name: professional?.name || "Profissional",
+          // start_time já está presente em fullAppointment
+        };
+        
+        console.log("📝 Dados formatados:", appointmentData);
+
+        // Criar notificação
+        const { title, message } = NotificationService.formatNotificationMessage(
+          "new_appointment",
+          appointmentData
+        );
+
+        console.log("💬 Mensagem:", { title, message });
+
+        const result = await NotificationService.createNotification({
+          user_id: currentUserId,
+          type: "new_appointment",
+          title,
+          message,
+          appointment_id: appointment.id,
+        });
+
+        console.log("💾 Resultado da criação:", result);
+
+        // Mostrar toast
+        toast.success(title, {
+          description: message,
+          duration: 5000,
+        });
+
+        // Recarregar notificações
+        await loadNotifications();
+      } catch (err) {
+        console.error("❌ Erro geral:", err);
+      }
     };
 
     const handleCancelledAppointment = async (appointment: any) => {
+      console.log("❌ CANCELAMENTO DETECTADO:", appointment);
+      
+      // Buscar dados completos do agendamento
+      const supabase = createClient();
+      const { data: fullAppointment, error } = await supabase
+        .from("appointments")
+        .select(`
+          *,
+          service:services!appointments_service_code_fkey(id, code, duration_minutes, price),
+          professional:professionals!appointments_professional_code_fkey(id, name, code)
+        `)
+        .eq("id", appointment.id)
+        .single();
+
+      if (error) {
+        console.error("❌ Erro ao buscar dados do agendamento:", error);
+        return;
+      }
+
+      const appointmentData = {
+        ...fullAppointment,
+        client_name: fullAppointment.customer_name || "Cliente",
+        service_name: fullAppointment.service?.code || "Serviço",
+        professional_name: fullAppointment.professional?.name || "Profissional",
+        date: fullAppointment.start_time,
+        time: fullAppointment.start_time,
+      };
+      
       const { title, message } = NotificationService.formatNotificationMessage(
         "cancelled_appointment",
-        appointment
+        appointmentData
       );
 
       await NotificationService.createNotification({
@@ -127,12 +214,43 @@ export function NotificationProvider({
     };
 
     const handleUpdatedAppointment = async (appointment: any) => {
+      console.log("🔄 ATUALIZAÇÃO DETECTADA:", appointment);
+      
       // Ignorar se for cancelamento (já tratado acima)
-      if (appointment.status === "cancelado") return;
+      if (appointment.status === "cancelado") {
+        console.log("⏭️ Ignorando - é cancelamento");
+        return;
+      }
+
+      // Buscar dados completos do agendamento
+      const supabase = createClient();
+      const { data: fullAppointment, error } = await supabase
+        .from("appointments")
+        .select(`
+          *,
+          service:services!appointments_service_code_fkey(id, code, duration_minutes, price),
+          professional:professionals!appointments_professional_code_fkey(id, name, code)
+        `)
+        .eq("id", appointment.id)
+        .single();
+
+      if (error) {
+        console.error("❌ Erro ao buscar dados do agendamento:", error);
+        return;
+      }
+
+      const appointmentData = {
+        ...fullAppointment,
+        client_name: fullAppointment.customer_name || "Cliente",
+        service_name: fullAppointment.service?.code || "Serviço",
+        professional_name: fullAppointment.professional?.name || "Profissional",
+        date: fullAppointment.start_time,
+        time: fullAppointment.start_time,
+      };
 
       const { title, message } = NotificationService.formatNotificationMessage(
         "updated_appointment",
-        appointment
+        appointmentData
       );
 
       await NotificationService.createNotification({
@@ -152,14 +270,18 @@ export function NotificationProvider({
     };
 
     // Inscrever-se
+    console.log("🔌 Conectando ao Supabase Realtime...");
     const channel = NotificationService.subscribeToAppointments(
       handleNewAppointment,
       handleCancelledAppointment,
       handleUpdatedAppointment
     );
 
+    console.log("✅ Subscription ativa:", channel);
+
     // Cleanup
     return () => {
+      console.log("🔌 Desconectando do Realtime...");
       NotificationService.unsubscribe();
     };
   }, [currentUserId]);
