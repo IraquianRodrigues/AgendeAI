@@ -25,6 +25,7 @@ import { useClienteByTelefone } from "@/services/clientes/use-clientes";
 import { useDeleteAppointment } from "@/services/appointments/use-appointments";
 import { formatDateBR } from "@/lib/date-utils";
 import { getLocalDateString } from "@/lib/utils/date";
+import { PaymentFeeDisplay } from "@/app/dashboard/financeiro/_components/payment-fee-display";
 
 interface CompleteAppointmentPaymentModalProps {
   isOpen: boolean;
@@ -80,6 +81,22 @@ export function CompleteAppointmentPaymentModal({
       console.log('👨‍⚕️ Professional ID:', appointment.professional_id);
       console.log('👨‍⚕️ Professional Code:', appointment.professional_code);
       
+      // Calcular taxa e valor total
+      const PAYMENT_FEES: Record<string, number> = {
+        'dinheiro': 0,
+        'pix': 1,
+        'cartao_debito': 2,
+        'cartao_credito': 3,
+        'boleto': 0,
+        'transferencia': 0,
+      };
+      
+      const feePercentage = PAYMENT_FEES[paymentMethod] || 0;
+      const feeAmount = (amount * feePercentage) / 100;
+      const totalAmount = amount + feeAmount; // Cliente paga: serviço + taxa
+      
+      console.log('💰 Cálculo:', { amount, feePercentage, feeAmount, totalAmount });
+      
       // Criar transação financeira
       const result = await FinancialService.createTransaction({
         client_id: cliente.id.toString(),
@@ -87,7 +104,7 @@ export function CompleteAppointmentPaymentModal({
         type: "receita",
         category: appointment.service?.code || "Consulta",
         description: "",
-        amount: amount,
+        amount: totalAmount, // Salvar valor total (serviço + taxa)
         payment_method: paymentMethod,
         status: "pago",
         due_date: getLocalDateString(new Date(appointment.start_time)),
@@ -176,15 +193,21 @@ export function CompleteAppointmentPaymentModal({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="dinheiro">💵 Dinheiro</SelectItem>
-                <SelectItem value="pix">📱 PIX</SelectItem>
-                <SelectItem value="cartao_credito">💳 Cartão de Crédito</SelectItem>
-                <SelectItem value="cartao_debito">💳 Cartão de Débito</SelectItem>
-                <SelectItem value="boleto">📄 Boleto</SelectItem>
-                <SelectItem value="transferencia">🏦 Transferência</SelectItem>
+                <SelectItem value="dinheiro">💵 Dinheiro (0% taxa)</SelectItem>
+                <SelectItem value="pix">🔷 PIX (1% taxa)</SelectItem>
+                <SelectItem value="cartao_credito">💳 Cartão de Crédito (3% taxa)</SelectItem>
+                <SelectItem value="cartao_debito">💳 Cartão de Débito (2% taxa)</SelectItem>
+                <SelectItem value="boleto">📄 Boleto (0% taxa)</SelectItem>
+                <SelectItem value="transferencia">🏦 Transferência (0% taxa)</SelectItem>
               </SelectContent>
             </Select>
           </div>
+
+          {/* Exibir informações de taxa */}
+          <PaymentFeeDisplay 
+            paymentMethod={paymentMethod} 
+            amount={amount} 
+          />
 
           {/* Buttons */}
           <div className="flex gap-3 pt-4">

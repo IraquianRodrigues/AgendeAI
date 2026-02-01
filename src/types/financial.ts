@@ -19,6 +19,10 @@ export interface Transaction {
   due_date: string;
   paid_date?: string | null;
   notes?: string | null;
+  // Payment fee fields
+  payment_fee_percentage?: number | null;
+  payment_fee_amount?: number | null;
+  net_amount?: number | null;
   created_at: string;
   updated_at: string;
   // Mercado Pago fields
@@ -107,6 +111,9 @@ export interface CreateTransactionInput {
   due_date: string;
   paid_date?: string;
   notes?: string;
+  payment_fee_percentage?: number;
+  payment_fee_amount?: number;
+  net_amount?: number;
 }
 
 export interface UpdateTransactionInput {
@@ -118,4 +125,7 @@ export interface UpdateTransactionInput {
   due_date?: string;
   paid_date?: string;
   notes?: string;
+  payment_fee_percentage?: number;
+  payment_fee_amount?: number;
+  net_amount?: number;
 }

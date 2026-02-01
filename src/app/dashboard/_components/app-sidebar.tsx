@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, Users, UserCog, Briefcase, DollarSign, ChevronLeft, ChevronRight, Menu, X, CalendarDays, LogOut, User, Settings, Scissors } from "lucide-react";
+import { Calendar, Users, UserCog, Briefcase, DollarSign, ChevronLeft, ChevronRight, Menu, X, CalendarDays, LogOut, User, Settings, Scissors, BarChart3 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -44,6 +44,12 @@ const navItems = [
     href: "/dashboard/financeiro",
     label: "Financeiro",
     icon: DollarSign,
+    allowedRoles: ['admin'] as const,
+  },
+  {
+    href: "/dashboard/analytics",
+    label: "Analytics",
+    icon: BarChart3,
     allowedRoles: ['admin'] as const,
   },
   {
@@ -195,7 +201,7 @@ export function AppSidebar() {
                   "group relative flex items-center gap-3 rounded-xl px-3 py-3.5 text-sm font-medium transition-all duration-300 min-h-[44px]",
                   "animate-in fade-in slide-in-from-left-2",
                   isActive
-                    ? "bg-foreground text-background shadow-md shadow-foreground/10 translate-x-1"
+                    ? "bg-primary text-primary-foreground shadow-md shadow-primary/10 translate-x-1"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50 hover:translate-x-1",
                   isCollapsed && "md:justify-center md:px-2"
                 )}

@@ -53,8 +53,8 @@
   --popover: oklch(1 0 0); /* Pure white */
   --popover-foreground: oklch(0.15 0 0); /* Very dark gray */
 
-  /* Primary - Neutral dark gray for main actions */
-  --primary: oklch(0.15 0 0); /* Very dark gray #1A1A1A */
+  /* Primary - Vinho Metálico da Barbearia #A62C2B */
+  --primary: oklch(0.45 0.15 25); /* Vinho metálico #A62C2B */
   --primary-foreground: oklch(0.98 0 0); /* Off-white */
 
   /* Secondary - Light gray backgrounds */
@@ -75,7 +75,7 @@
   /* Borders and inputs - Light gray */
   --border: oklch(0.91 0 0); /* Light gray #E5E7EB */
   --input: oklch(0.91 0 0); /* Light gray #E5E7EB */
-  --ring: oklch(0.5 0 0); /* Medium gray for focus rings */
+  --ring: oklch(0.45 0.15 25); /* Vinho metálico para focus rings */
 
   /* Charts - Neutral grays only */
   --chart-1: oklch(0.3 0 0); /* Dark gray */
@@ -87,12 +87,12 @@
   /* Sidebar - Clean white with subtle borders */
   --sidebar: oklch(1 0 0); /* Pure white */
   --sidebar-foreground: oklch(0.15 0 0); /* Very dark gray */
-  --sidebar-primary: oklch(0.15 0 0); /* Very dark gray for active items */
+  --sidebar-primary: oklch(0.45 0.15 25); /* Vinho metálico para itens ativos */
   --sidebar-primary-foreground: oklch(0.98 0 0); /* Off-white */
   --sidebar-accent: oklch(0.96 0 0); /* Very light gray for hover */
   --sidebar-accent-foreground: oklch(0.15 0 0); /* Very dark gray */
   --sidebar-border: oklch(0.91 0 0); /* Light gray */
-  --sidebar-ring: oklch(0.5 0 0); /* Medium gray */
+  --sidebar-ring: oklch(0.45 0.15 25); /* Vinho metálico */
 }
 
 .dark {

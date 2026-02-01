@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { FinancialService } from "@/services/financial.service";
 import { toast } from "sonner";
+import { DeleteConfirmationModal } from "@/components/delete-confirmation-modal";
 // import { MercadoPagoPaymentButton } from "@/components/mercadopago-payment-button"; // DESATIVADO TEMPORARIAMENTE
 
 interface FinancialTableProps {
@@ -31,6 +32,8 @@ interface FinancialTableProps {
 
 export function FinancialTable({ transactions, isLoading, onRefresh }: FinancialTableProps) {
   const [processingId, setProcessingId] = useState<string | null>(null);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [transactionToDelete, setTransactionToDelete] = useState<string | null>(null);
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("pt-BR", {
@@ -110,11 +113,18 @@ export function FinancialTable({ transactions, isLoading, onRefresh }: Financial
     setProcessingId(null);
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Tem certeza que deseja excluir esta transação?")) return;
+  const handleDeleteClick = (id: string) => {
+    setTransactionToDelete(id);
+    setDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!transactionToDelete) return;
     
-    setProcessingId(id);
-    const result = await FinancialService.deleteTransaction(id);
+    setProcessingId(transactionToDelete);
+    setDeleteModalOpen(false);
+    
+    const result = await FinancialService.deleteTransaction(transactionToDelete);
     
     if (result.success) {
       toast.success("Transação excluída!");
@@ -124,6 +134,7 @@ export function FinancialTable({ transactions, isLoading, onRefresh }: Financial
     }
     
     setProcessingId(null);
+    setTransactionToDelete(null);
   };
 
   if (isLoading) {
@@ -221,7 +232,7 @@ export function FinancialTable({ transactions, isLoading, onRefresh }: Financial
                       </DropdownMenuItem>
                     )}
                     <DropdownMenuItem
-                      onClick={() => handleDelete(transaction.id)}
+                      onClick={() => handleDeleteClick(transaction.id)}
                       className="gap-2 text-red-600"
                     >
                       <X className="h-4 w-4" />
@@ -234,6 +245,15 @@ export function FinancialTable({ transactions, isLoading, onRefresh }: Financial
           ))}
         </TableBody>
       </Table>
+
+      {/* Modal de confirmação de exclusão */}
+      <DeleteConfirmationModal
+        isOpen={deleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        title="Tem certeza que deseja excluir esta transação?"
+        description="Esta ação não pode ser desfeita. A transação será permanentemente removida do sistema."
+      />
     </div>
   );
 }

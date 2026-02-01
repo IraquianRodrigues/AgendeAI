@@ -69,7 +69,7 @@ export function FinancialFilters({
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[2fr_1.2fr_1fr_1.8fr] gap-3">
         {/* Filtro de Tipo */}
         <div className="space-y-2">
           <label className="text-xs font-medium text-muted-foreground">

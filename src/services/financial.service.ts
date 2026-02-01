@@ -9,6 +9,37 @@ import type {
 
 const supabase = createClient();
 
+// Taxas de maquinetas por método de pagamento
+const PAYMENT_FEES: Record<string, number> = {
+  'dinheiro': 0,
+  'pix': 1,
+  'cartao_debito': 2,
+  'cartao_credito': 3,
+  'boleto': 0,
+  'transferencia': 0,
+};
+
+// Função auxiliar para calcular taxa
+function calculatePaymentFee(amount: number, paymentMethod?: string) {
+  if (!paymentMethod) {
+    return {
+      payment_fee_percentage: 0,
+      payment_fee_amount: 0,
+      net_amount: amount,
+    };
+  }
+
+  const feePercentage = PAYMENT_FEES[paymentMethod] || 0;
+  const feeAmount = (amount * feePercentage) / 100;
+  const netAmount = amount - feeAmount;
+
+  return {
+    payment_fee_percentage: feePercentage,
+    payment_fee_amount: feeAmount,
+    net_amount: netAmount,
+  };
+}
+
 export class FinancialService {
   // ==================== TRANSACTIONS ====================
   
@@ -94,9 +125,19 @@ export class FinancialService {
 
   static async createTransaction(input: CreateTransactionInput) {
     try {
+      // Calcular taxas se método de pagamento for fornecido
+      const feeData = input.payment_method 
+        ? calculatePaymentFee(input.amount, input.payment_method)
+        : { payment_fee_percentage: 0, payment_fee_amount: 0, net_amount: input.amount };
+
+      const transactionData = {
+        ...input,
+        ...feeData,
+      };
+
       const { data, error } = await supabase
         .from("transactions")
-        .insert([input])
+        .insert([transactionData])
         .select()
         .single();
 
@@ -109,9 +150,33 @@ export class FinancialService {
 
   static async updateTransaction(id: string, input: UpdateTransactionInput) {
     try {
+      let updateData = { ...input };
+
+      // Se amount ou payment_method mudaram, recalcular taxas
+      if (input.amount !== undefined || input.payment_method !== undefined) {
+        // Buscar transação atual para pegar valores faltantes
+        const { data: currentTransaction } = await supabase
+          .from("transactions")
+          .select("amount, payment_method")
+          .eq("id", id)
+          .single();
+
+        const amount = input.amount ?? currentTransaction?.amount ?? 0;
+        const paymentMethod = input.payment_method ?? currentTransaction?.payment_method;
+
+        const feeData = paymentMethod
+          ? calculatePaymentFee(amount, paymentMethod)
+          : { payment_fee_percentage: 0, payment_fee_amount: 0, net_amount: amount };
+
+        updateData = {
+          ...updateData,
+          ...feeData,
+        };
+      }
+
       const { data, error } = await supabase
         .from("transactions")
-        .update(input)
+        .update(updateData)
         .eq("id", id)
         .select()
         .single();

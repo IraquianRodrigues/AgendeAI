@@ -23,6 +23,7 @@ import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import type { CreateTransactionInput } from "@/types/financial";
 import { getLocalDateString } from "@/lib/utils/date";
+import { PaymentFeeDisplay } from "./payment-fee-display";
 
 interface AddTransactionModalProps {
   isOpen: boolean;
@@ -317,29 +318,39 @@ export function AddTransactionModal({ isOpen, onClose, onSuccess }: AddTransacti
             </Select>
           </div>
 
-          {/* Método de Pagamento (se pago) */}
-          {formData.status === "pago" && (
-            <div className="space-y-2">
-              <Label htmlFor="payment_method">Método de Pagamento *</Label>
-              <Select
-                value={formData.payment_method}
-                onValueChange={(value: any) =>
-                  setFormData({ ...formData, payment_method: value })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="dinheiro">Dinheiro</SelectItem>
-                  <SelectItem value="pix">PIX</SelectItem>
-                  <SelectItem value="cartao_credito">Cartão de Crédito</SelectItem>
-                  <SelectItem value="cartao_debito">Cartão de Débito</SelectItem>
-                  <SelectItem value="boleto">Boleto</SelectItem>
-                  <SelectItem value="transferencia">Transferência</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          {/* Método de Pagamento */}
+          {formData.status !== "cancelado" && (
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="payment_method">Método de Pagamento {formData.status === "pago" ? "*" : ""}</Label>
+                <Select
+                  value={formData.payment_method}
+                  onValueChange={(value: any) =>
+                    setFormData({ ...formData, payment_method: value })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="dinheiro">💵 Dinheiro (0% taxa)</SelectItem>
+                    <SelectItem value="pix">🔷 PIX (1% taxa)</SelectItem>
+                    <SelectItem value="cartao_debito">💳 Cartão de Débito (2% taxa)</SelectItem>
+                    <SelectItem value="cartao_credito">💳 Cartão de Crédito (3% taxa)</SelectItem>
+                    <SelectItem value="boleto">📄 Boleto (0% taxa)</SelectItem>
+                    <SelectItem value="transferencia">🏦 Transferência (0% taxa)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Exibir informações de taxa */}
+              {formData.payment_method && (
+                <PaymentFeeDisplay 
+                  paymentMethod={formData.payment_method} 
+                  amount={formData.amount} 
+                />
+              )}
+            </>
           )}
 
           {/* MERCADO PAGO DESATIVADO TEMPORARIAMENTE */}

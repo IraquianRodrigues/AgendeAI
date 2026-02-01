@@ -8,6 +8,7 @@ import { AuthClientService } from "@/services/auth/client.service";
 import { toast } from "sonner";
 import { useState } from "react";
 import { ModeToggle } from "@/components/mode-toggle";
+import { NotificationBell } from "@/components/notification-bell";
 
 export function AppHeader() {
   const router = useRouter();
@@ -56,6 +57,7 @@ export function AppHeader() {
         {/* User/Action Section */}
         <div className="flex gap-3 items-center">
           <ModeToggle />
+          <NotificationBell />
           <div className="h-4 w-px bg-border mx-1"></div>
           <Button
             size="sm"
